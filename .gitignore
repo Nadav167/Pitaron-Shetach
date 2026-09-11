@@ -7,7 +7,7 @@ node_modules/
 *.env
 
 # Expo
-app/.expo/
+.expo/
 app/dist/
 app/web-build/
 *.jks
