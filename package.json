@@ -1,0 +1,13 @@
+{
+  "name": "campingil",
+  "private": true,
+  "workspaces": [
+    "app",
+    "server"
+  ],
+  "scripts": {
+    "app": "npm run start --workspace app",
+    "server": "npm run dev --workspace server",
+    "typecheck": "npm run typecheck --workspace app && npm run typecheck --workspace server"
+  }
+}

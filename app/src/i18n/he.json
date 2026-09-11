@@ -1,0 +1,54 @@
+{
+  "common": {
+    "appName": "קמפינג ישראל",
+    "loading": "טוען...",
+    "error": "משהו השתבש",
+    "retry": "נסה שוב",
+    "free": "חינם",
+    "perNight": "ללילה",
+    "night": "לילה"
+  },
+  "tabs": {
+    "map": "מפה",
+    "favorites": "מועדפים",
+    "settings": "הגדרות"
+  },
+  "home": {
+    "title": "מצאו חניון לילה",
+    "subtitle": "כל אתרי הקמפינג והחניה הלילית בישראל, במקום אחד",
+    "listView": "רשימה",
+    "mapView": "מפה",
+    "emptySites": "לא נמצאו אתרים"
+  },
+  "site": {
+    "openingHours": "שעות פתיחה",
+    "amenities": "שירותים",
+    "contact": "יצירת קשר",
+    "price": "מחיר",
+    "region": "אזור",
+    "addToFavorites": "הוסף למועדפים",
+    "removeFromFavorites": "הסר ממועדפים",
+    "amenity": {
+      "water": "מים",
+      "electricity": "חשמל",
+      "toilets": "שירותים",
+      "shower": "מקלחות",
+      "shade": "צל",
+      "picnicTables": "שולחנות פיקניק",
+      "wasteDisposal": "פינוי אשפה",
+      "fourByFourRequired": "נדרש רכב שטח",
+      "cellReception": "קליטה סלולרית"
+    }
+  },
+  "favorites": {
+    "title": "המועדפים שלי",
+    "empty": "עדיין לא הוספתם אתרים למועדפים"
+  },
+  "settings": {
+    "title": "הגדרות",
+    "language": "שפה",
+    "hebrew": "עברית",
+    "english": "אנגלית",
+    "about": "אודות"
+  }
+}

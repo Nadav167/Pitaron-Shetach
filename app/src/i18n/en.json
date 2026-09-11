@@ -1,0 +1,54 @@
+{
+  "common": {
+    "appName": "CampingIL",
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "free": "Free",
+    "perNight": "per night",
+    "night": "night"
+  },
+  "tabs": {
+    "map": "Map",
+    "favorites": "Favorites",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "Find a night camp",
+    "subtitle": "Every overnight parking and camping site in Israel, in one place",
+    "listView": "List",
+    "mapView": "Map",
+    "emptySites": "No sites found"
+  },
+  "site": {
+    "openingHours": "Opening hours",
+    "amenities": "Amenities",
+    "contact": "Contact",
+    "price": "Price",
+    "region": "Region",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "amenity": {
+      "water": "Water",
+      "electricity": "Electricity",
+      "toilets": "Toilets",
+      "shower": "Showers",
+      "shade": "Shade",
+      "picnicTables": "Picnic tables",
+      "wasteDisposal": "Waste disposal",
+      "fourByFourRequired": "4x4 required",
+      "cellReception": "Cell reception"
+    }
+  },
+  "favorites": {
+    "title": "My favorites",
+    "empty": "You haven't saved any sites yet"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "hebrew": "Hebrew",
+    "english": "English",
+    "about": "About"
+  }
+}
