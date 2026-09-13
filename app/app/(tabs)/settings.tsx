@@ -1,35 +1,47 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Constants from "expo-constants";
+import { List, SegmentedButtons, Text } from "react-native-paper";
 import { useLocale } from "@/context/LocaleContext";
-import LanguageToggle from "@/components/LanguageToggle";
-import { colors, spacing, typography } from "@/constants/theme";
+import { colors, spacing } from "@/constants/theme";
+import type { Locale } from "@/types/site";
 
 export default function SettingsScreen() {
-  const { t } = useLocale();
+  const { locale, setLocale, t } = useLocale();
   const version = Constants.expoConfig?.version ?? "0.1.0";
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t("settings.title")}</Text>
+      <Text variant="headlineSmall" style={styles.title}>
+        {t("settings.title")}
+      </Text>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t("settings.language")}</Text>
-        <LanguageToggle />
-      </View>
+      <List.Section>
+        <List.Subheader>{t("settings.language")}</List.Subheader>
+        <SegmentedButtons
+          style={styles.segmented}
+          value={locale}
+          onValueChange={(value) => setLocale(value as Locale)}
+          buttons={[
+            { value: "he", label: t("settings.hebrew") },
+            { value: "en", label: t("settings.english") },
+          ]}
+        />
+      </List.Section>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>{t("settings.about")}</Text>
-        <Text style={styles.value}>CampingIL v{version}</Text>
-      </View>
+      <List.Section>
+        <List.Subheader>{t("settings.about")}</List.Subheader>
+        <List.Item
+          title={`CampingIL v${version}`}
+          left={(props) => <List.Icon {...props} icon="information-outline" />}
+        />
+      </List.Section>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background, padding: spacing.md },
-  title: { ...typography.title, color: colors.text, marginBottom: spacing.lg },
-  section: { marginBottom: spacing.lg },
-  sectionTitle: { ...typography.subtitle, color: colors.text, marginBottom: spacing.sm },
-  value: { ...typography.body, color: colors.textMuted },
+  title: { marginBottom: spacing.sm },
+  segmented: { marginHorizontal: spacing.md, marginTop: spacing.xs },
 });

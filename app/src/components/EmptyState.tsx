@@ -1,11 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { colors, spacing, typography } from "@/constants/theme";
+import { StyleSheet, View } from "react-native";
+import { Text } from "react-native-paper";
+import { colors, spacing } from "@/constants/theme";
 
 export default function EmptyState({ message }: { message: string }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>{message}</Text>
+      <Text variant="bodyMedium" style={styles.text}>
+        {message}
+      </Text>
     </View>
   );
 }
@@ -18,7 +21,6 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   text: {
-    ...typography.body,
     color: colors.textMuted,
     textAlign: "center",
   },

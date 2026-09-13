@@ -1,12 +1,13 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Text } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useSites } from "@/hooks/useSites";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useLocale } from "@/context/LocaleContext";
 import SiteList from "@/components/SiteList";
 import EmptyState from "@/components/EmptyState";
-import { colors, spacing, typography } from "@/constants/theme";
+import { colors, spacing } from "@/constants/theme";
 import type { Site } from "@/types/site";
 
 export default function FavoritesScreen() {
@@ -20,7 +21,9 @@ export default function FavoritesScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{t("favorites.title")}</Text>
+      <Text variant="headlineSmall" style={styles.title}>
+        {t("favorites.title")}
+      </Text>
       {favoriteSites.length === 0 ? (
         <EmptyState message={t("favorites.empty")} />
       ) : (
@@ -32,5 +35,5 @@ export default function FavoritesScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
-  title: { ...typography.title, color: colors.text, padding: spacing.md },
+  title: { padding: spacing.md },
 });
