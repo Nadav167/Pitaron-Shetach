@@ -1,4 +1,4 @@
-import { Site } from "@/types/site";
+import type { Campsite } from "@/types/campsite";
 
 const API_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -23,8 +23,12 @@ async function request<T>(path: string): Promise<T> {
 }
 
 export const api = {
-  getSites: () => request<Site[]>("/sites"),
-  getSiteById: (id: string) => request<Site>(`/sites/${id}`),
+  getCampsites: () => request<Campsite[]>("/sites"),
+  getCampsiteById: (id: string) => request<Campsite>(`/sites/${id}`),
+  /** @deprecated Prefer the campsite-named methods. */
+  getSites: () => request<Campsite[]>("/sites"),
+  /** @deprecated Prefer the campsite-named methods. */
+  getSiteById: (id: string) => request<Campsite>(`/sites/${id}`),
 };
 
 export { ApiError };

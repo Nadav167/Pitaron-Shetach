@@ -6,7 +6,9 @@
     "retry": "נסה שוב",
     "free": "חינם",
     "perNight": "ללילה",
-    "night": "לילה"
+    "night": "לילה",
+    "priceUnknown": "מחיר לא ידוע",
+    "unknown": "לא ידוע"
   },
   "tabs": {
     "map": "מפה",
@@ -18,7 +20,25 @@
     "subtitle": "כל אתרי הקמפינג והחניה הלילית בישראל, במקום אחד",
     "listView": "רשימה",
     "mapView": "מפה",
-    "emptySites": "לא נמצאו אתרים"
+    "emptySites": "לא נמצאו אתרים",
+    "unmappableNote": "{count} אתרים אינם מוצגים במפה כי אין להם מיקום מאומת",
+    "filter": {
+      "all": "הכל",
+      "official": "רשמיים",
+      "unofficial": "לא רשמיים"
+    }
+  },
+  "region": {
+    "North": "צפון",
+    "Golan": "גולן",
+    "Galilee": "גליל",
+    "Carmel": "כרמל",
+    "Center": "מרכז",
+    "Jerusalem": "ירושלים",
+    "Negev": "נגב",
+    "DeadSea": "ים המלח",
+    "Arava": "ערבה",
+    "Eilat": "אילת"
   },
   "site": {
     "openingHours": "שעות פתיחה",
@@ -28,6 +48,23 @@
     "region": "אזור",
     "addToFavorites": "הוסף למועדפים",
     "removeFromFavorites": "הסר ממועדפים",
+    "unofficialWarning": "אתר לא רשמי (ייתכנו שינויים בפרטים)",
+    "official": "רשמי",
+    "officialLong": "חניון לילה רשמי של רשות הטבע והגנים",
+    "navigate": "ניווט",
+    "navigateWaze": "Waze",
+    "navigateGoogleMaps": "Google Maps",
+    "navigationFailed": "לא הצלחנו לפתוח את אפליקציית הניווט",
+    "viewDetails": "לפרטים",
+    "noCoordinates": "מיקום מדויק לא אומת",
+    "noCoordinatesLong": "לא מצאנו נקודת ציון מאומתת לאתר הזה, ולכן כפתורי הניווט מחפשים לפי שם. ודאו את המיקום לפני הנסיעה.",
+    "checkInOut": "כניסה ויציאה",
+    "checkIn": "כניסה עד",
+    "checkOut": "פינוי עד",
+    "photoPlaceholderOnly": "התמונה באתר המקור היא להמחשה בלבד",
+    "sourcePage": "עמוד המקור",
+    "dataFrom": "מקור הנתונים",
+    "coordsFrom": "מקור נקודת הציון",
     "amenity": {
       "water": "מים",
       "electricity": "חשמל",

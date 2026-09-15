@@ -1,11 +1,25 @@
 import { useEffect, useState } from "react";
-import { Site } from "@/types/site";
+import type { Campsite } from "@/types/campsite";
 import { api } from "@/api/client";
-import { mockSites } from "@/data/mockSites";
+import { getCampsiteById } from "@/data/campsites";
 
-export function useSite(id: string | undefined) {
-  const [site, setSite] = useState<Site | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+type UseCampsiteResult = {
+  campsite: Campsite | undefined;
+  /** Alias kept so older call sites reading `site` keep working. */
+  site: Campsite | undefined;
+  loading: boolean;
+  error: string | null;
+};
+
+/**
+ * Same offline-first order as `useCampsites`: resolve from the bundled dataset
+ * immediately so the detail screen paints, then replace with API data if the
+ * backend answers.
+ */
+export function useCampsite(id: string | undefined): UseCampsiteResult {
+  const bundled = getCampsiteById(id);
+  const [remote, setRemote] = useState<Campsite | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -16,13 +30,11 @@ export function useSite(id: string | undefined) {
       setLoading(true);
       setError(null);
       try {
-        const data = await api.getSiteById(id as string);
-        if (!cancelled) setSite(data);
+        const data = await api.getCampsiteById(id as string);
+        if (!cancelled && data) setRemote(data);
       } catch (err) {
         if (!cancelled) {
-          const fallback = mockSites.find((s) => s.id === id);
-          setSite(fallback);
-          setError(err instanceof Error ? err.message : "Failed to load site");
+          setError(err instanceof Error ? err.message : "Failed to load campsite");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -35,5 +47,15 @@ export function useSite(id: string | undefined) {
     };
   }, [id]);
 
-  return { site, loading, error };
+  const campsite = remote ?? bundled;
+
+  return {
+    campsite,
+    site: campsite,
+    loading: loading && !campsite,
+    error: campsite ? null : error,
+  };
 }
+
+/** @deprecated Prefer `useCampsite`. */
+export const useSite = useCampsite;

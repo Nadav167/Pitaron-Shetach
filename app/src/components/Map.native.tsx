@@ -1,25 +1,42 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import MapView, { Marker, UrlTile } from "react-native-maps";
-import { Site } from "@/types/site";
+import { StyleSheet, View } from "react-native";
+import MapView, { Callout, Marker, UrlTile } from "react-native-maps";
+import { Text } from "react-native-paper";
+import type { Campsite } from "@/types/campsite";
+import { localized } from "@/types/campsite";
+import { useLocale } from "@/context/LocaleContext";
+import { colors, radius, spacing } from "@/constants/theme";
 
 type Props = {
-  sites: Site[];
-  onSelectSite?: (site: Site) => void;
+  campsites: Campsite[];
+  onSelectCampsite?: (campsite: Campsite) => void;
 };
 
 /**
  * Native (iOS/Android) map. Uses react-native-maps with a raw OpenStreetMap
- * tile overlay (via UrlTile) instead of Google/Apple map tiles, so no API
- * key is required — mirrors the OSM tiles used by Map.web.tsx (Leaflet).
+ * tile overlay (UrlTile) instead of Google/Apple tiles, so no API key is
+ * required — mirrors the OSM tiles Map.web.tsx uses via Leaflet.
  *
- * OSM tile usage policy requires attribution and reasonable request volume;
- * swap the tile URL for a paid tile provider before shipping at scale.
+ * OSM tile policy requires attribution and reasonable request volume; swap the
+ * tile URL for a paid provider before shipping at scale.
+ *
+ * The callout carries the non-official warning but NOT the Waze/Google Maps
+ * buttons: touches on individual controls inside a Callout don't propagate
+ * reliably on Android (the whole callout is one tappable surface). Tapping it
+ * opens the detail screen, where the navigation buttons live and work.
  */
-export default function Map({ sites, onSelectSite }: Props) {
+export default function Map({ campsites, onSelectCampsite }: Props) {
+  const { locale, t } = useLocale();
+
+  // Sites with no verified coordinates can't be pinned; they remain in the list.
+  const mappable = campsites.filter(
+    (campsite): campsite is Campsite & { coordinates: { lat: number; lng: number } } =>
+      campsite.coordinates !== null
+  );
+
   const initialRegion = {
-    latitude: sites[0]?.coordinates.lat ?? 31.5,
-    longitude: sites[0]?.coordinates.lng ?? 34.8,
+    latitude: mappable[0]?.coordinates.lat ?? 31.5,
+    longitude: mappable[0]?.coordinates.lng ?? 34.8,
     latitudeDelta: 4,
     longitudeDelta: 4,
   };
@@ -27,18 +44,66 @@ export default function Map({ sites, onSelectSite }: Props) {
   return (
     <MapView style={styles.map} initialRegion={initialRegion}>
       <UrlTile urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png" maximumZ={19} />
-      {sites.map((site) => (
-        <Marker
-          key={site.id}
-          coordinate={{ latitude: site.coordinates.lat, longitude: site.coordinates.lng }}
-          title={site.translations.he.name}
-          onPress={() => onSelectSite?.(site)}
-        />
-      ))}
+      {mappable.map((campsite) => {
+        const name = localized(campsite.name, locale);
+        const price = campsite.pricing.isFree
+          ? t("common.free")
+          : campsite.pricing.perNight != null
+          ? `₪${campsite.pricing.perNight}`
+          : t("common.priceUnknown");
+
+        return (
+          <Marker
+            key={campsite.id}
+            coordinate={{
+              latitude: campsite.coordinates.lat,
+              longitude: campsite.coordinates.lng,
+            }}
+            // Official sites are pinned in forest green, non-official in amber,
+            // matching the pin colours on web.
+            pinColor={campsite.isOfficial ? colors.primary : colors.accent}
+          >
+            <Callout tooltip={false} onPress={() => onSelectCampsite?.(campsite)}>
+              <View style={styles.callout}>
+                <Text variant="titleSmall" numberOfLines={2}>
+                  {name}
+                </Text>
+                <Text variant="bodySmall" style={styles.muted}>
+                  {`${t(`region.${campsite.region}`)} · ${price}`}
+                </Text>
+
+                {!campsite.isOfficial && (
+                  <View style={styles.warning}>
+                    <Text variant="labelSmall" style={styles.warningText}>
+                      {`⚠️ ${t("site.unofficialWarning")}`}
+                    </Text>
+                  </View>
+                )}
+
+                <Text variant="labelSmall" style={styles.cta}>
+                  {t("site.viewDetails")}
+                </Text>
+              </View>
+            </Callout>
+          </Marker>
+        );
+      })}
     </MapView>
   );
 }
 
 const styles = StyleSheet.create({
   map: { flex: 1 },
+  callout: { minWidth: 180, padding: spacing.sm, gap: spacing.xs },
+  muted: { color: colors.textMuted },
+  warning: {
+    backgroundColor: "#FBF0E2",
+    borderColor: colors.accent,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.sm,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs / 2,
+  },
+  warningText: { color: "#8A5A1C" },
+  cta: { color: colors.primary, marginTop: spacing.xs },
 });

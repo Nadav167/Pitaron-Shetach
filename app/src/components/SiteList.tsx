@@ -1,29 +1,31 @@
 import React from "react";
 import { FlatList, StyleSheet } from "react-native";
-import { Site } from "@/types/site";
+import type { Campsite } from "@/types/campsite";
 import SiteCard from "./SiteCard";
 import EmptyState from "./EmptyState";
 import { spacing } from "@/constants/theme";
 import { useLocale } from "@/context/LocaleContext";
 
 type Props = {
-  sites: Site[];
-  onSelectSite: (site: Site) => void;
+  campsites: Campsite[];
+  onSelectCampsite: (campsite: Campsite) => void;
 };
 
-export default function SiteList({ sites, onSelectSite }: Props) {
+export default function SiteList({ campsites, onSelectCampsite }: Props) {
   const { t } = useLocale();
 
-  if (sites.length === 0) {
+  if (campsites.length === 0) {
     return <EmptyState message={t("home.emptySites")} />;
   }
 
   return (
     <FlatList
-      data={sites}
-      keyExtractor={(site) => site.id}
+      data={campsites}
+      keyExtractor={(campsite) => campsite.id}
       contentContainerStyle={styles.content}
-      renderItem={({ item }) => <SiteCard site={item} onPress={() => onSelectSite(item)} />}
+      renderItem={({ item }) => (
+        <SiteCard campsite={item} onPress={() => onSelectCampsite(item)} />
+      )}
     />
   );
 }

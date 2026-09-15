@@ -1,36 +1,56 @@
 import React from "react";
-import { ScrollView, StyleSheet, View, Linking } from "react-native";
+import { Image, Linking, ScrollView, StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { ActivityIndicator, Appbar, Button, Chip, List, Text } from "react-native-paper";
-import { useSite } from "@/hooks/useSite";
+import { ActivityIndicator, Appbar, Button, Chip, Divider, List, Text } from "react-native-paper";
+import { useCampsite } from "@/hooks/useSite";
 import { useLocale } from "@/context/LocaleContext";
 import { useFavorites } from "@/context/FavoritesContext";
-import { colors, spacing } from "@/constants/theme";
+import { colors, radius, spacing } from "@/constants/theme";
 import EmptyState from "@/components/EmptyState";
-import type { Amenities } from "@/types/site";
+import UnofficialNotice from "@/components/UnofficialNotice";
+import NavigationButtons from "@/components/NavigationButtons";
+import { localized, type Amenities } from "@/types/campsite";
 
-export default function SiteDetailScreen() {
+export default function CampsiteDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { site, loading, error } = useSite(id);
+  const { campsite, loading, error } = useCampsite(id);
   const { locale, t } = useLocale();
   const { isFavorite, toggleFavorite } = useFavorites();
   const router = useRouter();
 
-  const translation = site?.translations[locale] ?? site?.translations.he;
-  const favorite = site ? isFavorite(site.id) : false;
-  const amenityEntries = site ? (Object.entries(site.amenities) as [keyof Amenities, boolean][]) : [];
-  const activeAmenities = amenityEntries.filter(([, enabled]) => enabled);
+  const name = campsite ? localized(campsite.name, locale) : "";
+  const description = campsite?.description ? localized(campsite.description, locale) : "";
+  const favorite = campsite ? isFavorite(campsite.id) : false;
+
+  // An amenity key that's absent means "unknown", not "absent" — only keys the
+  // scraper positively confirmed are shown.
+  const knownAmenities = campsite
+    ? (Object.entries(campsite.amenities) as [keyof Amenities, boolean | undefined][]).filter(
+        ([, enabled]) => enabled === true
+      )
+    : [];
+
+  const cover = campsite?.photos.find((photo) => !photo.isPlaceholder);
+  const placeholderOnly = !cover && (campsite?.photos.length ?? 0) > 0;
+
+  const priceLabel = !campsite
+    ? ""
+    : campsite.pricing.isFree
+    ? t("common.free")
+    : campsite.pricing.perNight != null
+    ? `₪${campsite.pricing.perNight} ${t("common.perNight")}`
+    : t("common.priceUnknown");
 
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.appbar} elevated>
         <Appbar.BackAction onPress={() => router.back()} />
-        <Appbar.Content title={translation?.name ?? ""} />
-        {site && (
+        <Appbar.Content title={name} />
+        {campsite && (
           <Appbar.Action
             icon={favorite ? "heart" : "heart-outline"}
             iconColor={favorite ? colors.danger : colors.text}
-            onPress={() => toggleFavorite(site.id)}
+            onPress={() => toggleFavorite(campsite.id)}
           />
         )}
       </Appbar.Header>
@@ -39,87 +59,144 @@ export default function SiteDetailScreen() {
         <View style={styles.center}>
           <ActivityIndicator color={colors.primary} />
         </View>
-      ) : !site || !translation ? (
+      ) : !campsite ? (
         <EmptyState message={error ?? t("common.error")} />
       ) : (
         <ScrollView contentContainerStyle={styles.content}>
-          {translation.description ? (
+          {cover && <Image source={{ uri: cover.url }} style={styles.cover} resizeMode="cover" />}
+          {placeholderOnly && (
+            <Text variant="labelSmall" style={styles.muted}>
+              {t("site.photoPlaceholderOnly")}
+            </Text>
+          )}
+
+          {!campsite.isOfficial && <UnofficialNotice variant="full" />}
+
+          {campsite.isOfficial && (
+            <Chip icon="shield-check" style={styles.officialChip} mode="flat">
+              {t("site.officialLong")}
+            </Chip>
+          )}
+
+          {description ? (
             <Text variant="bodyMedium" style={styles.description}>
-              {translation.description}
+              {description}
             </Text>
           ) : null}
+
+          <Text variant="titleMedium" style={styles.sectionTitle}>
+            {t("site.navigate")}
+          </Text>
+          <NavigationButtons campsite={campsite} size="full" />
+          {!campsite.coordinates && (
+            <Text variant="labelSmall" style={styles.noCoords}>
+              {t("site.noCoordinatesLong")}
+            </Text>
+          )}
 
           <Button
             mode={favorite ? "outlined" : "contained"}
             icon={favorite ? "heart-off-outline" : "heart-outline"}
             style={styles.favoriteButton}
-            onPress={() => toggleFavorite(site.id)}
+            onPress={() => toggleFavorite(campsite.id)}
           >
             {favorite ? t("site.removeFromFavorites") : t("site.addToFavorites")}
           </Button>
 
+          <Divider />
+
           <List.Section>
             <List.Item
               title={t("site.price")}
-              description={site.pricePerNight ? `₪${site.pricePerNight} ${t("common.perNight")}` : t("common.free")}
+              description={
+                campsite.pricing.note ? `${priceLabel} — ${campsite.pricing.note}` : priceLabel
+              }
+              descriptionNumberOfLines={3}
               left={(props) => <List.Icon {...props} icon="cash-multiple" />}
             />
             <List.Item
               title={t("site.region")}
-              description={site.region}
+              description={t(`region.${campsite.region}`)}
               left={(props) => <List.Icon {...props} icon="map-marker-outline" />}
             />
             <List.Item
               title={t("site.openingHours")}
-              description={site.openingHours.note ?? "-"}
+              description={campsite.openingHours.note ?? t("common.unknown")}
+              descriptionNumberOfLines={4}
               left={(props) => <List.Icon {...props} icon="clock-outline" />}
             />
+            {(campsite.openingHours.checkIn || campsite.openingHours.checkOut) && (
+              <List.Item
+                title={t("site.checkInOut")}
+                description={[
+                  campsite.openingHours.checkIn && `${t("site.checkIn")}: ${campsite.openingHours.checkIn}`,
+                  campsite.openingHours.checkOut && `${t("site.checkOut")}: ${campsite.openingHours.checkOut}`,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+                left={(props) => <List.Icon {...props} icon="login-variant" />}
+              />
+            )}
           </List.Section>
 
-          <Text variant="titleMedium" style={styles.sectionTitle}>
-            {t("site.amenities")}
-          </Text>
-          <View style={styles.chipRow}>
-            {activeAmenities.length === 0 ? (
-              <Text variant="bodyMedium" style={styles.muted}>
-                -
+          {knownAmenities.length > 0 && (
+            <>
+              <Text variant="titleMedium" style={styles.sectionTitle}>
+                {t("site.amenities")}
               </Text>
-            ) : (
-              activeAmenities.map(([key]) => (
-                <Chip key={key} style={styles.chip} icon="check-circle-outline">
-                  {t(`site.amenity.${key}`)}
-                </Chip>
-              ))
-            )}
-          </View>
+              <View style={styles.chipRow}>
+                {knownAmenities.map(([key]) => (
+                  <Chip key={key} style={styles.chip} icon="check-circle-outline">
+                    {t(`site.amenity.${key}`)}
+                  </Chip>
+                ))}
+              </View>
+            </>
+          )}
 
-          {(site.contact.phone || site.contact.website || site.contact.email) && (
-            <List.Section>
+          {(campsite.contact.phone || campsite.contact.website || campsite.contact.email) && (
+            <>
               <Text variant="titleMedium" style={styles.sectionTitle}>
                 {t("site.contact")}
               </Text>
-              {site.contact.phone && (
-                <List.Item
-                  title={site.contact.phone}
-                  left={(props) => <List.Icon {...props} icon="phone-outline" />}
-                  onPress={() => Linking.openURL(`tel:${site.contact.phone}`)}
-                />
-              )}
-              {site.contact.website && (
-                <List.Item
-                  title={site.contact.website}
-                  left={(props) => <List.Icon {...props} icon="web" />}
-                  onPress={() => Linking.openURL(site.contact.website!)}
-                />
-              )}
-              {site.contact.email && (
-                <List.Item
-                  title={site.contact.email}
-                  left={(props) => <List.Icon {...props} icon="email-outline" />}
-                  onPress={() => Linking.openURL(`mailto:${site.contact.email}`)}
-                />
-              )}
-            </List.Section>
+              <List.Section>
+                {campsite.contact.phone && (
+                  <List.Item
+                    title={campsite.contact.phone}
+                    left={(props) => <List.Icon {...props} icon="phone-outline" />}
+                    onPress={() => Linking.openURL(`tel:${campsite.contact.phone}`)}
+                  />
+                )}
+                {campsite.contact.website && (
+                  <List.Item
+                    title={t("site.sourcePage")}
+                    description={campsite.source.name}
+                    left={(props) => <List.Icon {...props} icon="web" />}
+                    onPress={() => Linking.openURL(campsite.contact.website!)}
+                  />
+                )}
+                {campsite.contact.email && (
+                  <List.Item
+                    title={campsite.contact.email}
+                    left={(props) => <List.Icon {...props} icon="email-outline" />}
+                    onPress={() => Linking.openURL(`mailto:${campsite.contact.email}`)}
+                  />
+                )}
+              </List.Section>
+            </>
+          )}
+
+          {/* Provenance. Scraped data goes stale and occasionally lands a pin in
+              the wrong place; showing where a record came from lets someone
+              check the source rather than trust us blindly. */}
+          <Divider style={styles.divider} />
+          <Text variant="labelSmall" style={styles.muted}>
+            {`${t("site.dataFrom")}: ${campsite.source.name}`}
+          </Text>
+          {campsite.source.coordsSource && (
+            <Text variant="labelSmall" style={styles.muted}>
+              {`${t("site.coordsFrom")}: ${campsite.source.coordsSource}`}
+            </Text>
           )}
         </ScrollView>
       )}
@@ -130,12 +207,16 @@ export default function SiteDetailScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.background },
   appbar: { backgroundColor: colors.background },
-  content: { padding: spacing.lg },
+  content: { padding: spacing.lg, gap: spacing.sm, paddingBottom: spacing.xl },
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
-  description: { color: colors.textMuted, marginBottom: spacing.md },
-  favoriteButton: { marginBottom: spacing.md },
-  sectionTitle: { marginTop: spacing.md, marginBottom: spacing.sm },
+  cover: { width: "100%", height: 200, borderRadius: radius.md },
+  officialChip: { alignSelf: "flex-start" },
+  description: { color: colors.textMuted, marginTop: spacing.xs },
+  sectionTitle: { marginTop: spacing.md },
+  favoriteButton: { marginVertical: spacing.md },
   chipRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   chip: { marginBottom: spacing.xs },
   muted: { color: colors.textMuted },
+  noCoords: { color: colors.textMuted, fontStyle: "italic", marginTop: spacing.xs },
+  divider: { marginTop: spacing.lg, marginBottom: spacing.sm },
 });

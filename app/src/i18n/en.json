@@ -6,7 +6,9 @@
     "retry": "Retry",
     "free": "Free",
     "perNight": "per night",
-    "night": "night"
+    "night": "night",
+    "priceUnknown": "Price unknown",
+    "unknown": "Unknown"
   },
   "tabs": {
     "map": "Map",
@@ -18,7 +20,25 @@
     "subtitle": "Every overnight parking and camping site in Israel, in one place",
     "listView": "List",
     "mapView": "Map",
-    "emptySites": "No sites found"
+    "emptySites": "No sites found",
+    "unmappableNote": "{count} sites aren't on the map — no verified location",
+    "filter": {
+      "all": "All",
+      "official": "Official",
+      "unofficial": "Non-official"
+    }
+  },
+  "region": {
+    "North": "North",
+    "Golan": "Golan",
+    "Galilee": "Galilee",
+    "Carmel": "Carmel",
+    "Center": "Center",
+    "Jerusalem": "Jerusalem",
+    "Negev": "Negev",
+    "DeadSea": "Dead Sea",
+    "Arava": "Arava",
+    "Eilat": "Eilat"
   },
   "site": {
     "openingHours": "Opening hours",
@@ -28,6 +48,23 @@
     "region": "Region",
     "addToFavorites": "Add to favorites",
     "removeFromFavorites": "Remove from favorites",
+    "unofficialWarning": "Non-official site (details may vary)",
+    "official": "Official",
+    "officialLong": "Official Nature and Parks Authority night camping ground",
+    "navigate": "Navigate",
+    "navigateWaze": "Waze",
+    "navigateGoogleMaps": "Google Maps",
+    "navigationFailed": "Couldn't open the navigation app",
+    "viewDetails": "Details",
+    "noCoordinates": "Exact location unverified",
+    "noCoordinatesLong": "We couldn't verify coordinates for this site, so the navigation buttons search by name instead. Confirm the location before you set out.",
+    "checkInOut": "Check-in and check-out",
+    "checkIn": "Arrive by",
+    "checkOut": "Leave by",
+    "photoPlaceholderOnly": "The source site's photo is an illustration, not this place",
+    "sourcePage": "Source page",
+    "dataFrom": "Data from",
+    "coordsFrom": "Coordinates from",
     "amenity": {
       "water": "Water",
       "electricity": "Electricity",

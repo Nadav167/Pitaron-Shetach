@@ -1,26 +1,34 @@
-import { useEffect, useState } from "react";
-import { Site } from "@/types/site";
+import { useEffect, useMemo, useState } from "react";
+import type { Campsite } from "@/types/campsite";
 import { api } from "@/api/client";
-import { mockSites } from "@/data/mockSites";
+import { campsites as bundledCampsites, generatedAt } from "@/data/campsites";
 
-type UseSitesResult = {
-  sites: Site[];
+type UseCampsitesResult = {
+  campsites: Campsite[];
+  /** Alias kept so older call sites reading `sites` keep working. */
+  sites: Campsite[];
   loading: boolean;
   error: string | null;
-  usingMockData: boolean;
+  /** True while showing the JSON bundled at build time rather than live API data. */
+  usingBundledData: boolean;
+  /** When the bundled dataset was scraped — surfaced so stale data is visible. */
+  dataGeneratedAt: string;
 };
 
 /**
- * Fetches sites from the backend API. Falls back to bundled mock data when
- * the API isn't configured/reachable yet, so the UI is demoable before the
- * backend + Supabase are wired up. Remove the fallback once the API is the
- * only source of truth.
+ * Campsites come from the bundled dataset first, then upgrade to API data if
+ * the backend is configured and reachable.
+ *
+ * That order is deliberate and the reverse of the usual pattern: this app is
+ * used where there is no signal, so it renders instantly from the JSON scraped
+ * into the bundle and only swaps in fresher records once the network answers.
+ * The user never sees a spinner over an empty list just because they're in a
+ * canyon.
  */
-export function useSites(): UseSitesResult {
-  const [sites, setSites] = useState<Site[]>([]);
-  const [loading, setLoading] = useState(true);
+export function useCampsites(): UseCampsitesResult {
+  const [remote, setRemote] = useState<Campsite[] | null>(null);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [usingMockData, setUsingMockData] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -29,16 +37,13 @@ export function useSites(): UseSitesResult {
       setLoading(true);
       setError(null);
       try {
-        const data = await api.getSites();
-        if (!cancelled) {
-          setSites(data);
-          setUsingMockData(false);
-        }
+        const data = await api.getCampsites();
+        if (!cancelled && Array.isArray(data) && data.length > 0) setRemote(data);
       } catch (err) {
+        // Not surfaced as a failure: the bundled data is a legitimate answer,
+        // not a degraded one. Recorded for the settings/debug screen only.
         if (!cancelled) {
-          setSites(mockSites);
-          setUsingMockData(true);
-          setError(err instanceof Error ? err.message : "Failed to load sites");
+          setError(err instanceof Error ? err.message : "Failed to load campsites");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -51,5 +56,20 @@ export function useSites(): UseSitesResult {
     };
   }, []);
 
-  return { sites, loading, error, usingMockData };
+  const campsites = remote ?? bundledCampsites;
+
+  return useMemo(
+    () => ({
+      campsites,
+      sites: campsites,
+      loading: loading && campsites.length === 0,
+      error,
+      usingBundledData: remote === null,
+      dataGeneratedAt: generatedAt,
+    }),
+    [campsites, loading, error, remote]
+  );
 }
+
+/** @deprecated Prefer `useCampsites`. */
+export const useSites = useCampsites;
