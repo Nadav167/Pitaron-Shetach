@@ -28,3 +28,8 @@ A cross-platform mobile app and website for locating night camps and campsites i
 
 \- Document complex logic, especially geospatial queries or external API integrations.
 
+
+
+## Current status
+
+See `docs/HANDOFF.md` for where work left off and what to do next.
