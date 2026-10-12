@@ -1,0 +1,1598 @@
+{
+  "generatedAt": "2026-09-15T12:23:40.051Z",
+  "sources": [
+    {
+      "name": "parks.org.il",
+      "url": "https://www.parks.org.il/%d7%94%d7%96%d7%9e%d7%a0%d7%95%d7%aa-%d7%9c%d7%97%d7%a0%d7%99%d7%95%d7%a0%d7%99-%d7%9c%d7%99%d7%9c%d7%94/",
+      "isOfficial": true,
+      "count": 18
+    },
+    {
+      "name": "gocamping.co.il",
+      "url": "https://www.gocamping.co.il/%d7%90%d7%aa%d7%a8%d7%99-%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%91%d7%99%d7%a9%d7%a8%d7%90%d7%9c/",
+      "isOfficial": false,
+      "count": 19
+    }
+  ],
+  "campsites": [
+    {
+      "id": "inpa-achziv-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי אכזיב וחוף אכזיב",
+        "en": "Achziv National Park Campground"
+      },
+      "coordinates": {
+        "lat": 33.04826,
+        "lng": 35.10547
+      },
+      "isOfficial": true,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": 76,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.04826%2C35.10547&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.04826%2C35.10547&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2026/07/4040studio-109.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-9823263",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%90%d7%9b%d7%96%d7%99%d7%91-%d7%95%d7%97%d7%95%d7%a3-%d7%90%d7%9b%d7%96%d7%99%d7%91/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%90%d7%9b%d7%96%d7%99%d7%91-%d7%95%d7%97%d7%95%d7%a3-%d7%90%d7%9b%d7%96%d7%99%d7%91/",
+        "coordsSource": "Google Maps embed marker named 'חניון לילה אכזיב'; tiuli disagrees by ~750m",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-gan-hashlosha-sachne-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי גן השלושה (סחנה)",
+        "en": "Gan HaShlosha (Sachne) National Park Campground"
+      },
+      "coordinates": {
+        "lat": 32.5045,
+        "lng": 35.4466
+      },
+      "isOfficial": true,
+      "region": "North",
+      "pricing": {
+        "perNight": 76,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 18:00 עד השעה 20:00 לכל המאוחר. ביום ו' הכניסה החל מהשעה 17:00",
+        "checkIn": "20:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.5045%2C35.4466&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.5045%2C35.4466&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/06/5c20a8ed89d7b.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6586219",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%92%d7%9f-%d7%94%d7%a9%d7%9c%d7%95%d7%a9%d7%94-%d7%a1%d7%97%d7%a0%d7%94/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%92%d7%9f-%d7%94%d7%a9%d7%9c%d7%95%d7%a9%d7%94-%d7%a1%d7%97%d7%a0%d7%94/",
+        "coordsSource": "tiuli.com Waze deep-link, ~180m from OSM park centroid",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-besor-eshkol-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי הבשור (אשכול)",
+        "en": "Besor (Eshkol) National Park Campground"
+      },
+      "coordinates": {
+        "lat": 31.3032,
+        "lng": 34.4925
+      },
+      "isOfficial": true,
+      "region": "Negev",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה מהשעה 15:00 עד השעה 21:00 לכל המאוחר",
+        "checkIn": "21:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.3032%2C34.4925&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.3032%2C34.4925&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2026/08/4040studio-137.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%94%D7%91%D7%A9%D7%95%D7%A8-%D7%90%D7%A9%D7%9B%D7%95%D7%9C/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%94%D7%91%D7%A9%D7%95%D7%A8-%D7%90%D7%A9%D7%9B%D7%95%D7%9C/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-horshat-tal-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי חורשת טל",
+        "en": "Horshat Tal National Park Campground"
+      },
+      "coordinates": {
+        "lat": 33.22135,
+        "lng": 35.62973
+      },
+      "isOfficial": true,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": 76,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה מהשעה 15:00 עד השעה 20:30 לכל המאוחר; פינוי עד 12:00",
+        "checkIn": "20:30",
+        "checkOut": "12:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.22135%2C35.62973&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.22135%2C35.62973&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2017/08/churshat-tal-doron-nisim-6-e1512576174446.jpg"
+        },
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2022/06/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%97%D7%95%D7%A8%D7%A9%D7%AA-%D7%98%D7%9C.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6942440",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%97%d7%95%d7%a8%d7%a9%d7%aa-%d7%98%d7%9c/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%97%d7%95%d7%a8%d7%a9%d7%aa-%d7%98%d7%9c/",
+        "coordsSource": "tiuli.com Waze deep-link, cross-checked against OSM way 395346577",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "alsoListedOn": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%97%d7%95%d7%a8%d7%a9%d7%aa-%d7%98%d7%9c/"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-kokhav-hayarden-belvoir-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי כוכב הירדן",
+        "en": "Kokhav HaYarden (Belvoir) National Park Campground"
+      },
+      "coordinates": {
+        "lat": 32.5917,
+        "lng": 35.5183
+      },
+      "isOfficial": true,
+      "region": "North",
+      "pricing": {
+        "perNight": 47,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.5917%2C35.5183&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.5917%2C35.5183&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/unnamed-file-6-e1518291734302.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6581766",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%9b%d7%95%d7%9b%d7%91-%d7%94%d7%99%d7%a8%d7%93%d7%9f/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%9b%d7%95%d7%9b%d7%91-%d7%94%d7%99%d7%a8%d7%93%d7%9f/",
+        "coordsSource": "tiuli.com Waze deep-link; campsite sits below/west of the fortress itself",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-yehiam-fortress-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי מבצר יחיעם",
+        "en": "Yehiam Fortress National Park Campground"
+      },
+      "coordinates": {
+        "lat": 32.99465,
+        "lng": 35.22157
+      },
+      "isOfficial": true,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.99465%2C35.22157&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.99465%2C35.22157&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2017/09/unnamed-file-29.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-8276600",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%9e%d7%91%d7%a6%d7%a8-%d7%99%d7%97%d7%99%d7%a2%d7%9d/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%9e%d7%91%d7%a6%d7%a8-%d7%99%d7%97%d7%99%d7%a2%d7%9d/",
+        "coordsSource": "tiuli.com Waze deep-link, cross-checked against OSM (40m apart)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-mamshit-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי ממשית – החאן הנבטי",
+        "en": "Mamshit National Park Campground"
+      },
+      "coordinates": {
+        "lat": 31.0272684,
+        "lng": 35.065248
+      },
+      "isOfficial": true,
+      "region": "Negev",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "קיץ: הכניסה לחניון הלילה מהשעה 15:00 עד השעה 22:00 לכל המאוחר; חורף: עד השעה 21:00",
+        "checkIn": "22:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.0272684%2C35.065248&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.0272684%2C35.065248&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2024/10/4040studio-141-e1786511968228.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9E%D7%9E%D7%A9%D7%99%D7%AA-%D7%94%D7%97%D7%90%D7%9F-%D7%94%D7%A0%D7%91%D7%98%D7%99/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9E%D7%9E%D7%A9%D7%99%D7%AA-%D7%94%D7%97%D7%90%D7%9F-%D7%94%D7%A0%D7%91%D7%98%D7%99/",
+        "coordsSource": "tiuli.com Waze deep-link; note the OSM 'Mamshit' point is a Dimona neighbourhood, not the park",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-maayan-harod-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי מעיין חרוד",
+        "en": "Ma'ayan Harod National Park Campground"
+      },
+      "coordinates": {
+        "lat": 32.550527,
+        "lng": 35.35736
+      },
+      "isOfficial": true,
+      "region": "North",
+      "pricing": {
+        "perNight": 76,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.550527%2C35.35736&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.550527%2C35.35736&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/06/5c24ce5db6bf0.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6532211",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%9e%d7%a2%d7%99%d7%99%d7%9f-%d7%97%d7%a8%d7%95%d7%93/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%9e%d7%a2%d7%99%d7%99%d7%9f-%d7%97%d7%a8%d7%95%d7%93/",
+        "coordsSource": "tiuli.com Waze deep-link",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-masada-west-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי מצדה מערב – מחנה מצדה",
+        "en": "Masada West Campground"
+      },
+      "coordinates": {
+        "lat": 31.3113,
+        "lng": 35.346
+      },
+      "isOfficial": true,
+      "region": "DeadSea",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "קיץ: הכניסה לחניון הלילה מהשעה 15:00 עד השעה 22:00 לכל המאוחר; חורף: עד השעה 21:00. הגישה מכביש 3199 מערד בלבד, לא מכביש 90",
+        "checkIn": "22:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.3113%2C35.346&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.3113%2C35.346&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%9E%D7%A6%D7%93%D7%94.-%D7%9C%D7%99%D7%9E%D7%95%D7%A8-%D7%A7%D7%98%D7%9F-%D7%A4%D7%A8%D7%99%D7%93%D7%9E%D7%9F-e1786523499196.jpeg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9E%D7%A6%D7%93%D7%94-%D7%9E%D7%A2%D7%A8%D7%91-%D7%9E%D7%97%D7%A0%D7%94-%D7%9E%D7%A6%D7%93%D7%94/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%9E%D7%A6%D7%93%D7%94-%D7%9E%D7%A2%D7%A8%D7%91-%D7%9E%D7%97%D7%A0%D7%94-%D7%9E%D7%A6%D7%93%D7%94/",
+        "coordsSource": "tiuli.com Waze deep-link; west side of the mountain, access via route 3199 from Arad only",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-yarkon-sources-tel-afek-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי מקורות הירקון",
+        "en": "Yarkon Sources (Tel Afek) National Park Campground"
+      },
+      "coordinates": {
+        "lat": 32.1143,
+        "lng": 34.9139
+      },
+      "isOfficial": true,
+      "region": "Center",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.1143%2C34.9139&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.1143%2C34.9139&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2026/08/4040studio-36.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%99%d7%a8%d7%a7%d7%95%d7%9f/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%99%d7%a8%d7%a7%d7%95%d7%9f/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-ashkelon-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי תל אשקלון",
+        "en": "Ashkelon National Park Campground"
+      },
+      "coordinates": {
+        "lat": 31.662477,
+        "lng": 34.546367
+      },
+      "isOfficial": true,
+      "region": "Center",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.662477%2C34.546367&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.662477%2C34.546367&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2023/12/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%AA%D7%9C-%D7%90%D7%A9%D7%A7%D7%9C%D7%95%D7%9F-%D7%A6%D7%99%D7%9C%D7%95%D7%9D-%D7%90%D7%A8%D7%9B%D7%99%D7%95%D7%9F-%D7%94%D7%A8%D7%A9%D7%95%D7%AA-2.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "08-6736444",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%aa%d7%9c-%d7%90%d7%a9%d7%a7%d7%9c%d7%95%d7%9f/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%92%d7%9f-%d7%9c%d7%90%d7%95%d7%9e%d7%99-%d7%aa%d7%9c-%d7%90%d7%a9%d7%a7%d7%9c%d7%95%d7%9f/",
+        "coordsSource": "tiuli.com Waze deep-link",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-tel-arad-national-park-campground",
+      "name": {
+        "he": "חניון לילה גן לאומי תל ערד – החאן הכנעני",
+        "en": "Tel Arad National Park Campground"
+      },
+      "coordinates": {
+        "lat": 31.2787,
+        "lng": 35.1253
+      },
+      "isOfficial": true,
+      "region": "Negev",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "קיץ: הכניסה לחניון הלילה מהשעה 15:00 עד השעה 22:00 לכל המאוחר; חורף: עד השעה 21:00",
+        "checkIn": "22:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.2787%2C35.1253&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.2787%2C35.1253&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/4040studio-136-e1786508806931.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%AA%D7%9C-%D7%A2%D7%A8%D7%93-%D7%94%D7%97%D7%90%D7%9F-%D7%94%D7%9B%D7%A0%D7%A2%D7%A0%D7%99/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%92%D7%9F-%D7%9C%D7%90%D7%95%D7%9E%D7%99-%D7%AA%D7%9C-%D7%A2%D7%A8%D7%93-%D7%94%D7%97%D7%90%D7%9F-%D7%94%D7%9B%D7%A0%D7%A2%D7%A0%D7%99/",
+        "coordsSource": "tiuli.com Waze deep-link; note the OSM 'Tel A'rad' point is the Bedouin village, not the park",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-castel-national-park-campground",
+      "name": {
+        "he": "חניון לילה הקסטל",
+        "en": "Castel National Park Campground"
+      },
+      "coordinates": {
+        "lat": 31.7965,
+        "lng": 35.1432
+      },
+      "isOfficial": true,
+      "region": "Jerusalem",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה החל מהשעה 15:00 עד השעה 20:00 לכל המאוחר",
+        "checkIn": "20:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.7965%2C35.1432&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.7965%2C35.1432&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/IMG-20160628-WA0003.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "02-5955012",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%94%d7%a7%d7%a1%d7%98%d7%9c/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%94%d7%a7%d7%a1%d7%98%d7%9c/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-beerot-campsite-makhtesh-ramon",
+      "name": {
+        "he": "חניון לילה חאן בארות – מכתש רמון",
+        "en": "Be'erot Campsite, Makhtesh Ramon"
+      },
+      "coordinates": {
+        "lat": 30.6193,
+        "lng": 34.9187
+      },
+      "isOfficial": true,
+      "region": "Negev",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "קיץ: הכניסה לחניון הלילה מהשעה 15:00 עד השעה 22:00 לכל המאוחר; חורף: עד השעה 21:00",
+        "checkIn": "22:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=30.6193%2C34.9187&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=30.6193%2C34.9187&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/4040studio-65-e1786529600980.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%97%D7%90%D7%9F-%D7%91%D7%90%D7%A8%D7%95%D7%AA-%D7%9E%D7%9B%D7%AA%D7%A9-%D7%A8%D7%9E%D7%95%D7%9F/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%97%D7%90%D7%9F-%D7%91%D7%90%D7%A8%D7%95%D7%AA-%D7%9E%D7%9B%D7%AA%D7%A9-%D7%A8%D7%9E%D7%95%D7%9F/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-mishmar-hacarmel-farm-campground",
+      "name": {
+        "he": "חניון לילה חוות משמר הכרמל",
+        "en": "Mishmar HaCarmel Farm Campground"
+      },
+      "coordinates": {
+        "lat": 32.7542,
+        "lng": 35.0259
+      },
+      "isOfficial": true,
+      "region": "Carmel",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה מהשעה 15:00 עד השעה 19:00 לכל המאוחר",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.7542%2C35.0259&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.7542%2C35.0259&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/MG_9891-e1518290308563.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-8220005",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%97%d7%95%d7%95%d7%aa-%d7%9e%d7%a9%d7%9e%d7%a8-%d7%94%d7%9b%d7%a8%d7%9e%d7%9c/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%97%d7%95%d7%95%d7%aa-%d7%9e%d7%a9%d7%9e%d7%a8-%d7%94%d7%9b%d7%a8%d7%9e%d7%9c/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp, single source)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-yotvata-hai-bar-nature-reserve-campground",
+      "name": {
+        "he": "חניון לילה שמורת טבע חי-בר יוטבתה",
+        "en": "Yotvata Hai-Bar Nature Reserve Campground"
+      },
+      "coordinates": {
+        "lat": 29.8364,
+        "lng": 35.0284
+      },
+      "isOfficial": true,
+      "region": "Arava",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "קיץ: הכניסה לחניון הלילה מהשעה 15:00 עד השעה 22:00 לכל המאוחר; חורף: עד השעה 21:00",
+        "checkIn": "22:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=29.8364%2C35.0284&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=29.8364%2C35.0284&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/IMG_0655-e1518119005309.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%97%D7%99-%D7%91%D7%A8-%D7%99%D7%95%D7%98%D7%91%D7%AA%D7%94/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%D7%97%D7%A0%D7%99%D7%95%D7%9F-%D7%9C%D7%99%D7%9C%D7%94-%D7%97%D7%99-%D7%91%D7%A8-%D7%99%D7%95%D7%98%D7%91%D7%AA%D7%94/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-yehudiya-forest-nature-reserve-campground",
+      "name": {
+        "he": "חניון לילה שמורת טבע יהודיה",
+        "en": "Yehudiya Forest Nature Reserve Campground"
+      },
+      "coordinates": {
+        "lat": 32.99276,
+        "lng": 35.68179
+      },
+      "isOfficial": true,
+      "region": "Golan",
+      "pricing": {
+        "perNight": 64,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה מהשעה 17:00 עד השעה 19:00",
+        "checkIn": "19:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.99276%2C35.68179&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.99276%2C35.68179&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2026/05/4040studio-78-Medium-e1785836829483.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6962817",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%a9%d7%9e%d7%95%d7%a8%d7%aa-%d7%98%d7%91%d7%a2-%d7%99%d7%94%d7%95%d7%93%d7%99%d7%94/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%a9%d7%9e%d7%95%d7%a8%d7%aa-%d7%98%d7%91%d7%a2-%d7%99%d7%94%d7%95%d7%93%d7%99%d7%94/",
+        "coordsSource": "tiuli.com Waze deep-link",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "inpa-nahal-amud-nature-reserve-campground",
+      "name": {
+        "he": "חניון לילה שמורת טבע נחל עמוד",
+        "en": "Nahal Amud Nature Reserve Campground"
+      },
+      "coordinates": {
+        "lat": 32.9723,
+        "lng": 35.4599
+      },
+      "isOfficial": true,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": 47,
+        "currency": "ILS",
+        "isFree": false,
+        "note": "מחיר לינת שטח באוהל פרטי, מבוגר. תעריפי ילד/חייל/בקתה שונים."
+      },
+      "openingHours": {
+        "note": "הכניסה לחניון הלילה מהשעה 15:00 עד השעה 19:00 לכל המאוחר; פינוי עד 11:00",
+        "checkIn": "19:00",
+        "checkOut": "11:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.9723%2C35.4599&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.9723%2C35.4599&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://static.parks.org.il/wp-content/uploads/2018/02/IMG_3865-e1518117792580.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6999984",
+        "website": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%a9%d7%9e%d7%95%d7%a8%d7%aa-%d7%98%d7%91%d7%a2-%d7%a0%d7%97%d7%9c-%d7%a2%d7%9e%d7%95%d7%93/"
+      },
+      "source": {
+        "name": "parks.org.il",
+        "url": "https://www.parks.org.il/camping/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%a9%d7%9e%d7%95%d7%a8%d7%aa-%d7%98%d7%91%d7%a2-%d7%a0%d7%97%d7%9c-%d7%a2%d7%9e%d7%95%d7%93/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp, single source)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-telalim-night-campground-carmel",
+      "name": {
+        "he": "קמפינג חניון לילה טללים בכרמל",
+        "en": "Telalim Night Campground, Carmel"
+      },
+      "coordinates": {
+        "lat": 32.7623,
+        "lng": 35.0141
+      },
+      "isOfficial": false,
+      "region": "Carmel",
+      "pricing": {
+        "perNight": 0,
+        "currency": "ILS",
+        "isFree": true
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.7623%2C35.0141&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.7623%2C35.0141&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2021/09/PSX_20210926_135514.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "*3639",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%98%d7%9c%d7%9c%d7%99%d7%9d-%d7%91%d7%9b%d7%a8%d7%9e%d7%9c/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9c%d7%99%d7%9c%d7%94-%d7%98%d7%9c%d7%9c%d7%99%d7%9d-%d7%91%d7%9b%d7%a8%d7%9e%d7%9c/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-ein-zivan-night-campground",
+      "name": {
+        "he": "קמפינג חניון עין זיוון",
+        "en": "Ein Zivan Night Campground"
+      },
+      "coordinates": {
+        "lat": 33.0943823,
+        "lng": 35.7982855
+      },
+      "isOfficial": false,
+      "region": "Golan",
+      "pricing": {
+        "perNight": 0,
+        "currency": "ILS",
+        "isFree": true
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.0943823%2C35.7982855&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.0943823%2C35.7982855&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2021/08/PSX_20210814_102814.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "1-800-350-550",
+        "website": "https://www.gocamping.co.il/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%a2%d7%99%d7%9f-%d7%96%d7%99%d7%95%d7%95%d7%9f-%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%91%d7%97%d7%99%d7%a0%d7%9d-%d7%91%d7%92%d7%95%d7%9c%d7%9f/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%a2%d7%99%d7%9f-%d7%96%d7%99%d7%95%d7%95%d7%9f-%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%91%d7%97%d7%99%d7%a0%d7%9d-%d7%91%d7%92%d7%95%d7%9c%d7%9f/",
+        "coordsSource": "OpenStreetMap marker= param on the source page",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-yaar-haayalim-deer-forest-camping",
+      "name": {
+        "he": "קמפינג יער האיילים",
+        "en": "Ya'ar HaAyalim (Deer Forest) Camping"
+      },
+      "coordinates": {
+        "lat": 33.1949,
+        "lng": 35.7462
+      },
+      "isOfficial": false,
+      "region": "Golan",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.1949%2C35.7462&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.1949%2C35.7462&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/tent-548022_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "050-5229450",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%99%d7%a2%d7%a8-%d7%94%d7%90%d7%99%d7%99%d7%9c%d7%99%d7%9d/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%99%d7%a2%d7%a8-%d7%94%d7%90%d7%99%d7%99%d7%9c%d7%99%d7%9d/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp)",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-yaar-hapeiot-fairy-forest-camping-beit-oren",
+      "name": {
+        "he": "קמפינג יער הפיות",
+        "en": "Ya'ar HaPeiot (Fairy Forest) Camping, Beit Oren"
+      },
+      "coordinates": {
+        "lat": 32.73189,
+        "lng": 35.0026387
+      },
+      "isOfficial": false,
+      "region": "Carmel",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.73189%2C35.0026387&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.73189%2C35.0026387&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/HMJG4587.jpeg"
+        }
+      ],
+      "contact": {
+        "phone": "054-4908107",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%99%d7%a2%d7%a8-%d7%94%d7%a4%d7%99%d7%95%d7%aa/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%99%d7%a2%d7%a8-%d7%94%d7%a4%d7%99%d7%95%d7%aa/",
+        "coordsSource": "OpenStreetMap marker= param on the source page",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-peace-forest-camping-jerusalem",
+      "name": {
+        "he": "קמפינג יער השלום ירושלים",
+        "en": "Peace Forest Camping, Jerusalem"
+      },
+      "coordinates": {
+        "lat": 31.7612496,
+        "lng": 35.2278452
+      },
+      "isOfficial": false,
+      "region": "Jerusalem",
+      "pricing": {
+        "perNight": 45,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.7612496%2C35.2278452&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.7612496%2C35.2278452&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2015/06/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%99%D7%A2%D7%A8-%D7%94%D7%A9%D7%9C%D7%95%D7%9D.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "055-4543657",
+        "website": "https://www.gocamping.co.il/camping-jerusalem-peace-forest/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/camping-jerusalem-peace-forest/",
+        "coordsSource": "tiuli.com Waze deep-link; source page's own OSM link differs by ~330m",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-yardenit-camping",
+      "name": {
+        "he": "קמפינג ירדנית",
+        "en": "Yardenit Camping"
+      },
+      "coordinates": {
+        "lat": 32.711005,
+        "lng": 35.5711
+      },
+      "isOfficial": false,
+      "region": "North",
+      "pricing": {
+        "perNight": 0,
+        "currency": "ILS",
+        "isFree": true
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.711005%2C35.5711&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.711005%2C35.5711&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2022/09/%D7%A8%D7%95%D7%91-%D7%A8%D7%95%D7%99-%D7%91%D7%99%D7%A8%D7%93%D7%9F.jpg"
+        }
+      ],
+      "contact": {
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%99%d7%a8%d7%93%d7%a0%d7%99%d7%aa/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%99%d7%a8%d7%93%d7%a0%d7%99%d7%aa/",
+        "coordsSource": "tiuli.com point-of-interest Waze deep-link ('הירדנית')",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-maayan-baruch-holiday-village-camping",
+      "name": {
+        "he": "קמפינג כפר הנופש מעיין ברוך",
+        "en": "Ma'ayan Baruch Holiday Village Camping"
+      },
+      "coordinates": {
+        "lat": 33.2270121,
+        "lng": 35.6144678
+      },
+      "isOfficial": false,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": 90,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {
+        "note": "כניסה לקמפינג 15:00–21:30, צ'ק אאוט 12:00 למחרת",
+        "checkIn": "21:30",
+        "checkOut": "12:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.2270121%2C35.6144678&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.2270121%2C35.6144678&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2021/05/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%9E%D7%A2%D7%99%D7%99%D7%9F-%D7%91%D7%A8%D7%95%D7%9A.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "053-4257288",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9b%d7%a4%d7%a8-%d7%a0%d7%95%d7%a4%d7%a9-%d7%9e%d7%a2%d7%99%d7%99%d7%9f-%d7%91%d7%a8%d7%95%d7%9a/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9b%d7%a4%d7%a8-%d7%a0%d7%95%d7%a4%d7%a9-%d7%9e%d7%a2%d7%99%d7%99%d7%9f-%d7%91%d7%a8%d7%95%d7%9a/",
+        "coordsSource": "tiuli.com Waze deep-link",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-kfar-kedem-spring-campground-hoshaya",
+      "name": {
+        "he": "קמפינג כפר קדם חניון מעיין",
+        "en": "Kfar Kedem Spring Campground, Hoshaya"
+      },
+      "coordinates": {
+        "lat": 32.7577,
+        "lng": 35.2994
+      },
+      "isOfficial": false,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.7577%2C35.2994&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.7577%2C35.2994&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/camping-1289930_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "04-6566331",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9b%d7%a4%d7%a8-%d7%a7%d7%93%d7%9d-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9e%d7%a2%d7%99%d7%99%d7%9f/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9b%d7%a4%d7%a8-%d7%a7%d7%93%d7%9d-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9e%d7%a2%d7%99%d7%99%d7%9f/",
+        "coordsSource": "tiuli.com Waze deep-link for the Kfar Kedem visitor site, not necessarily the spring campground",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-matayelim-dafna-camping",
+      "name": {
+        "he": "קמפינג מטיילים דפנה",
+        "en": "Matayelim Dafna Camping"
+      },
+      "coordinates": {
+        "lat": 33.229855,
+        "lng": 35.6421376
+      },
+      "isOfficial": false,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {
+        "note": "צ'ק אין 14:00 (בשבת מ-16:00), צ'ק אאוט 11:00 (בשבת עד 15:00)",
+        "checkIn": "14:00",
+        "checkOut": "11:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.229855%2C35.6421376&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.229855%2C35.6421376&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2023/05/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%93%D7%A4%D7%A0%D7%94-%D7%90%D7%95%D7%94%D7%9C%D7%99-%D7%A7%D7%95%D7%9C%D7%9E%D7%9F.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "053-5891739",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%98%d7%99%d7%99%d7%9c%d7%99%d7%9d-%d7%93%d7%a4%d7%a0%d7%94/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%98%d7%99%d7%99%d7%9c%d7%99%d7%9d-%d7%93%d7%a4%d7%a0%d7%94/",
+        "coordsSource": "tiuli.com Waze deep-link",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-mataim-camping-upper-galilee",
+      "name": {
+        "he": "קמפינג מטעים בגליל העליון",
+        "en": "Mata'im Camping, Upper Galilee"
+      },
+      "coordinates": null,
+      "isOfficial": false,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {
+        "note": "הקמפינג סגור זמנית"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?q=%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92%20%D7%9E%D7%98%D7%A2%D7%99%D7%9D%20%D7%91%D7%92%D7%9C%D7%99%D7%9C%20%D7%94%D7%A2%D7%9C%D7%99%D7%95%D7%9F&navigate=yes",
+        "googleMaps": "https://www.google.com/maps/search/?api=1&query=%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92%20%D7%9E%D7%98%D7%A2%D7%99%D7%9D%20%D7%91%D7%92%D7%9C%D7%99%D7%9C%20%D7%94%D7%A2%D7%9C%D7%99%D7%95%D7%9F"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2022/06/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%91%D7%92%D7%9C%D7%99%D7%9C-%D7%94%D7%A2%D7%9C%D7%99%D7%95%D7%9F.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "053-5409700",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%98%d7%a2%d7%99%d7%9d-%d7%91%d7%92%d7%9c%d7%99%d7%9c-%d7%94%d7%a2%d7%9c%d7%99%d7%95%d7%9f/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%98%d7%a2%d7%99%d7%9d-%d7%91%d7%92%d7%9c%d7%99%d7%9c-%d7%94%d7%a2%d7%9c%d7%99%d7%95%d7%9f/",
+        "coordsSource": "No coordinate found — source page carries only a name-query map embed",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-nes-harim-field-forest-center-camping",
+      "name": {
+        "he": "קמפינג מרכז שדה ויער נס הרים",
+        "en": "Nes Harim Field & Forest Center Camping"
+      },
+      "coordinates": {
+        "lat": 31.7429772,
+        "lng": 35.0487208
+      },
+      "isOfficial": false,
+      "region": "Jerusalem",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=31.7429772%2C35.0487208&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.7429772%2C35.0487208&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%A0%D7%A1-%D7%94%D7%A8%D7%99%D7%9D.jpeg"
+        }
+      ],
+      "contact": {
+        "phone": "02-6360196",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%a8%d7%9b%d7%96-%d7%a9%d7%93%d7%94-%d7%95%d7%99%d7%a2%d7%a8-%d7%a0%d7%a1-%d7%94%d7%a8%d7%99%d7%9d/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%a8%d7%9b%d7%96-%d7%a9%d7%93%d7%94-%d7%95%d7%99%d7%a2%d7%a8-%d7%a0%d7%a1-%d7%94%d7%a8%d7%99%d7%9d/",
+        "coordsSource": "amudanan.co.il point for the KKL field & forest center",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-meshek-malul-camping-moshav-shaal",
+      "name": {
+        "he": "קמפינג משק מלול מושב שעל בגולן",
+        "en": "Meshek Malul Camping, Moshav Sha'al"
+      },
+      "coordinates": {
+        "lat": 33.1166371,
+        "lng": 35.7187153
+      },
+      "isOfficial": false,
+      "region": "Golan",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.1166371%2C35.7187153&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.1166371%2C35.7187153&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2025/05/%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92-%D7%9E%D7%A9%D7%A7-%D7%9E%D7%9C%D7%95%D7%9C.jpeg"
+        }
+      ],
+      "contact": {
+        "phone": "052-7331357",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%a9%d7%a7-%d7%9e%d7%9c%d7%95%d7%9c-%d7%9e%d7%95%d7%a9%d7%91-%d7%a9%d7%a2%d7%9c-%d7%91%d7%92%d7%95%d7%9c%d7%9f/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%9e%d7%a9%d7%a7-%d7%9e%d7%9c%d7%95%d7%9c-%d7%9e%d7%95%d7%a9%d7%91-%d7%a9%d7%a2%d7%9c-%d7%91%d7%92%d7%95%d7%9c%d7%9f/",
+        "coordsSource": "OpenStreetMap marker= param on the source page",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-al-hahatzbani-camping-beit-hillel",
+      "name": {
+        "he": "קמפינג על החצבני",
+        "en": "Al HaHatzbani Camping, Beit Hillel"
+      },
+      "coordinates": null,
+      "isOfficial": false,
+      "region": "Galilee",
+      "pricing": {
+        "perNight": 85,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {
+        "note": "צ'ק אין 14:00–21:00, צ'ק אאוט עד 12:00; פעיל בתקופה החמה שבין פסח לסוכות",
+        "checkIn": "21:00",
+        "checkOut": "12:00"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?q=%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92%20%D7%A2%D7%9C%20%D7%94%D7%97%D7%A6%D7%91%D7%A0%D7%99&navigate=yes",
+        "googleMaps": "https://www.google.com/maps/search/?api=1&query=%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92%20%D7%A2%D7%9C%20%D7%94%D7%97%D7%A6%D7%91%D7%A0%D7%99"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2026/07/Haz5-1.jpg"
+        }
+      ],
+      "contact": {
+        "phone": "055-4315598",
+        "website": "https://www.gocamping.co.il/hazbani-campsite/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/hazbani-campsite/",
+        "coordsSource": "No coordinate found — no source page carried numeric coordinates",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-nahariya-seaside-camping",
+      "name": {
+        "he": "קמפינג על הים בנהריה",
+        "en": "Nahariya Seaside Camping"
+      },
+      "coordinates": null,
+      "isOfficial": false,
+      "region": "North",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?q=%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92%20%D7%A2%D7%9C%20%D7%94%D7%99%D7%9D%20%D7%91%D7%A0%D7%94%D7%A8%D7%99%D7%94&navigate=yes",
+        "googleMaps": "https://www.google.com/maps/search/?api=1&query=%D7%A7%D7%9E%D7%A4%D7%99%D7%A0%D7%92%20%D7%A2%D7%9C%20%D7%94%D7%99%D7%9D%20%D7%91%D7%A0%D7%94%D7%A8%D7%99%D7%94"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2023/08/BB22F3A7-3096-4A4F-AA6F-9230715BDBCB.jpeg"
+        }
+      ],
+      "contact": {
+        "phone": "04-6667777",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a2%d7%9c-%d7%94%d7%99%d7%9d-%d7%91%d7%a0%d7%94%d7%a8%d7%99%d7%94-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9b%d7%91%d7%99%d7%a9-%d7%94%d7%a4%d7%98%d7%a8%d7%95%d7%9c/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a2%d7%9c-%d7%94%d7%99%d7%9d-%d7%91%d7%a0%d7%94%d7%a8%d7%99%d7%94-%d7%97%d7%a0%d7%99%d7%95%d7%9f-%d7%9b%d7%91%d7%99%d7%a9-%d7%94%d7%a4%d7%98%d7%a8%d7%95%d7%9c/",
+        "coordsSource": "No coordinate found — a same-nicknamed candidate resolved 60km away and was rejected",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-fata-morgana-camping-neot-hakikar",
+      "name": {
+        "he": "קמפינג פאטה מורגנה",
+        "en": "Fata Morgana Camping, Neot HaKikar"
+      },
+      "coordinates": {
+        "lat": 30.92917,
+        "lng": 35.3837299
+      },
+      "isOfficial": false,
+      "region": "DeadSea",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=30.92917%2C35.3837299&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=30.92917%2C35.3837299&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/camping-1289930_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "052-3445746",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a4%d7%90%d7%98%d7%94-%d7%9e%d7%95%d7%a8%d7%92%d7%a0%d7%94/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a4%d7%90%d7%98%d7%94-%d7%9e%d7%95%d7%a8%d7%92%d7%a0%d7%94/",
+        "coordsSource": "amudanan.co.il point; tiuli disagrees by ~800m",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-jordan-park-camping",
+      "name": {
+        "he": "קמפינג פארק הירדן",
+        "en": "Jordan Park Camping"
+      },
+      "coordinates": {
+        "lat": 32.9087394,
+        "lng": 35.6274819
+      },
+      "isOfficial": false,
+      "region": "North",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {
+        "note": "עדכון 10.10.2023: פארק הירדן סגור עד הודעה חדשה"
+      },
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.9087394%2C35.6274819&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.9087394%2C35.6274819&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/tent-1208201_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "04-6923422",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a4%d7%90%d7%a8%d7%a7-%d7%94%d7%99%d7%a8%d7%93%d7%9f/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a4%d7%90%d7%a8%d7%a7-%d7%94%d7%99%d7%a8%d7%93%d7%9f/",
+        "coordsSource": "tiuli.com Waze deep-link",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-kesem-hamidbar-camping-neot-hakikar",
+      "name": {
+        "he": "קמפינג קסם המדבר",
+        "en": "Kesem HaMidbar Camping, Neot HaKikar"
+      },
+      "coordinates": {
+        "lat": 30.9332,
+        "lng": 35.3763
+      },
+      "isOfficial": false,
+      "region": "DeadSea",
+      "pricing": {
+        "perNight": 70,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=30.9332%2C35.3763&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=30.9332%2C35.3763&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/camping-1289930_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "052-8991358",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a7%d7%a1%d7%9d-%d7%94%d7%9e%d7%93%d7%91%d7%a8/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a7%d7%a1%d7%9d-%d7%94%d7%9e%d7%93%d7%91%d7%a8/",
+        "coordsSource": "tiuli.com Waze deep-link (4 dp); lands ~70m from the Fata Morgana point",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-keshet-yehonatan-camping",
+      "name": {
+        "he": "קמפינג קשת יהונתן",
+        "en": "Keshet Yehonatan Camping"
+      },
+      "coordinates": {
+        "lat": 32.9783123,
+        "lng": 35.8076722
+      },
+      "isOfficial": false,
+      "region": "Golan",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=32.9783123%2C35.8076722&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.9783123%2C35.8076722&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/camping-1646504_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "04-6851100",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a7%d7%a9%d7%aa-%d7%99%d7%94%d7%95%d7%a0%d7%aa%d7%9f/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a7%d7%a9%d7%aa-%d7%99%d7%94%d7%95%d7%a0%d7%aa%d7%9f/",
+        "coordsSource": "amudanan.co.il point for the moshav guesthouse, not a surveyed pitch",
+        "scrapedAt": "2026-09-15T12:23:40.051Z",
+        "needsReview": true
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    },
+    {
+      "id": "gc-shaal-meshek-levy-camping",
+      "name": {
+        "he": "קמפינג שעל משק לוי",
+        "en": "Sha'al – Meshek Levy Camping"
+      },
+      "coordinates": {
+        "lat": 33.171404,
+        "lng": 35.721674
+      },
+      "isOfficial": false,
+      "region": "Golan",
+      "pricing": {
+        "perNight": null,
+        "currency": "ILS",
+        "isFree": false
+      },
+      "openingHours": {},
+      "navigationUrls": {
+        "waze": "https://waze.com/ul?ll=33.171404%2C35.721674&navigate=yes&zoom=17",
+        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.171404%2C35.721674&travelmode=driving"
+      },
+      "amenities": {},
+      "photos": [
+        {
+          "url": "https://www.gocamping.co.il/wp-content/uploads/2018/07/camping-1845906_1920.jpg",
+          "isPlaceholder": true
+        }
+      ],
+      "contact": {
+        "phone": "052-8633143",
+        "website": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a9%d7%a2%d7%9c/"
+      },
+      "source": {
+        "name": "gocamping.co.il",
+        "url": "https://www.gocamping.co.il/%d7%a7%d7%9e%d7%a4%d7%99%d7%a0%d7%92-%d7%a9%d7%a2%d7%9c/",
+        "coordsSource": "tiuli.com Waze deep-link for the farm, which is where the camping is run",
+        "scrapedAt": "2026-09-15T12:23:40.051Z"
+      },
+      "updatedAt": "2026-09-15T12:23:40.051Z"
+    }
+  ]
+}

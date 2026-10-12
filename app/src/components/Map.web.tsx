@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -6,7 +6,8 @@ import type { Campsite } from "@/types/campsite";
 import { localized } from "@/types/campsite";
 import { navigationUrlsFor } from "@/lib/navigation";
 import { useLocale } from "@/context/LocaleContext";
-import { colors } from "@/constants/theme";
+import { useThemeColors } from "@/context/ThemeContext";
+import type { ColorTokens } from "@/constants/theme";
 
 /**
  * Leaflet's CSS ships its default marker icons as relative `url(images/...)`
@@ -31,30 +32,32 @@ L.Icon.Default.mergeOptions({
 
 /**
  * Official and non-official sites get visually distinct pins, because that
- * distinction is the whole point of the unified dataset: a green shield pin is
- * a Parks Authority campground with published prices and a booking system, an
- * amber pin is a third-party listing that may be out of date.
+ * distinction is the whole point of the unified dataset: a green pin is a
+ * Parks Authority campground with published prices and a booking system, an
+ * amber pin is a third-party listing that may be out of date. Each pin
+ * carries a small tent glyph (matching the mockup's map pins, which weren't
+ * plain teardrops either) rather than an empty circle.
  *
  * Built as inline-SVG divIcons so they carry no external image dependency.
+ * Colors come from the current theme, so pins re-render correctly in dark
+ * mode instead of using the light-mode palette unconditionally.
  */
-function pinIcon(isOfficial: boolean) {
-  const fill = isOfficial ? colors.primary : colors.accent;
+function pinIcon(fill: string) {
   const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="40" viewBox="0 0 28 40">
-      <path d="M14 0C6.3 0 0 6.3 0 14c0 10.5 14 26 14 26s14-15.5 14-26c0-7.7-6.3-14-14-14z" fill="${fill}"/>
-      <circle cx="14" cy="14" r="5.5" fill="#FFFFFF"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="38" viewBox="0 0 40 48">
+      <path d="M20 47S3 27.8 3 17a17 17 0 1 1 34 0c0 10.8-17 30-17 30Z" fill="${fill}"/>
+      <circle cx="20" cy="17" r="11" fill="#FFFFFF"/>
+      <path d="M20 10 27 22H13Z" fill="${fill}"/>
+      <path d="M20 15 24 22H16Z" fill="#FFFFFF"/>
     </svg>`;
   return L.divIcon({
     html: svg,
     className: "campingil-pin",
-    iconSize: [28, 40],
-    iconAnchor: [14, 40],
-    popupAnchor: [0, -36],
+    iconSize: [32, 38],
+    iconAnchor: [16, 38],
+    popupAnchor: [0, -34],
   });
 }
-
-const OFFICIAL_ICON = pinIcon(true);
-const UNOFFICIAL_ICON = pinIcon(false);
 
 type Props = {
   campsites: Campsite[];
@@ -72,6 +75,11 @@ type Props = {
  */
 export default function Map({ campsites, onSelectCampsite }: Props) {
   const { locale, t } = useLocale();
+  const colors = useThemeColors();
+
+  const officialIcon = useMemo(() => pinIcon(colors.primary), [colors.primary]);
+  const unofficialIcon = useMemo(() => pinIcon(colors.accent), [colors.accent]);
+  const linkStyle = useMemo(() => linkStyleFor(colors), [colors]);
 
   // Sites with no verified coordinates can't be pinned — they stay in the list
   // view instead. Never invent a position to make the map look fuller.
@@ -103,12 +111,12 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
           <Marker
             key={campsite.id}
             position={[campsite.coordinates.lat, campsite.coordinates.lng]}
-            icon={campsite.isOfficial ? OFFICIAL_ICON : UNOFFICIAL_ICON}
+            icon={campsite.isOfficial ? officialIcon : unofficialIcon}
           >
             <Popup>
               <div dir={locale === "he" ? "rtl" : "ltr"} style={{ minWidth: 180 }}>
-                <strong style={{ fontSize: 14 }}>{name}</strong>
-                <div style={{ color: "#6B6B6B", fontSize: 12, marginTop: 2 }}>
+                <strong style={{ fontSize: 14, color: colors.text }}>{name}</strong>
+                <div style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
                   {t(`region.${campsite.region}`)} · {price}
                 </div>
 
@@ -118,10 +126,10 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
                     style={{
                       marginTop: 6,
                       padding: "4px 6px",
-                      background: "#FBF0E2",
+                      background: colors.accentTint,
                       border: `1px solid ${colors.accent}`,
                       borderRadius: 4,
-                      color: "#8A5A1C",
+                      color: colors.accentDeep,
                       fontSize: 11,
                     }}
                   >
@@ -148,7 +156,7 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
                     border: "none",
                     borderRadius: 6,
                     background: colors.primary,
-                    color: "#FFFFFF",
+                    color: colors.onPrimary,
                     fontSize: 12,
                     cursor: "pointer",
                   }}
@@ -164,13 +172,15 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
   );
 }
 
-const linkStyle: React.CSSProperties = {
-  flex: 1,
-  textAlign: "center",
-  padding: "5px 6px",
-  borderRadius: 6,
-  background: "#EFEDE7",
-  color: colors.text,
-  fontSize: 12,
-  textDecoration: "none",
-};
+function linkStyleFor(colors: ColorTokens): React.CSSProperties {
+  return {
+    flex: 1,
+    textAlign: "center",
+    padding: "5px 6px",
+    borderRadius: 6,
+    background: colors.surfaceAlt,
+    color: colors.text,
+    fontSize: 12,
+    textDecoration: "none",
+  };
+}

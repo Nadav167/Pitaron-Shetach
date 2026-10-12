@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Callout, Marker, UrlTile } from "react-native-maps";
 import { Text } from "react-native-paper";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { Campsite } from "@/types/campsite";
 import { localized } from "@/types/campsite";
 import { useLocale } from "@/context/LocaleContext";
-import { colors, radius, spacing } from "@/constants/theme";
+import { useThemeColors } from "@/context/ThemeContext";
+import { radius, spacing, type ColorTokens } from "@/constants/theme";
 
 type Props = {
   campsites: Campsite[];
@@ -20,6 +22,10 @@ type Props = {
  * OSM tile policy requires attribution and reasonable request volume; swap the
  * tile URL for a paid provider before shipping at scale.
  *
+ * Markers use a custom colored-circle + tent-icon view instead of the
+ * default teardrop `pinColor`, matching Map.web.tsx's pins (which also carry
+ * a small tent glyph, not a plain circle).
+ *
  * The callout carries the non-official warning but NOT the Waze/Google Maps
  * buttons: touches on individual controls inside a Callout don't propagate
  * reliably on Android (the whole callout is one tappable surface). Tapping it
@@ -27,6 +33,8 @@ type Props = {
  */
 export default function Map({ campsites, onSelectCampsite }: Props) {
   const { locale, t } = useLocale();
+  const colors = useThemeColors();
+  const styles = useMemo(() => makeStyles(colors), [colors]);
 
   // Sites with no verified coordinates can't be pinned; they remain in the list.
   const mappable = campsites.filter(
@@ -51,6 +59,9 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
           : campsite.pricing.perNight != null
           ? `₪${campsite.pricing.perNight}`
           : t("common.priceUnknown");
+        // Official sites are pinned in forest green, non-official in amber,
+        // matching the pin colours on web.
+        const pinColor = campsite.isOfficial ? colors.primary : colors.accent;
 
         return (
           <Marker
@@ -59,10 +70,11 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
               latitude: campsite.coordinates.lat,
               longitude: campsite.coordinates.lng,
             }}
-            // Official sites are pinned in forest green, non-official in amber,
-            // matching the pin colours on web.
-            pinColor={campsite.isOfficial ? colors.primary : colors.accent}
+            anchor={{ x: 0.5, y: 1 }}
           >
+            <View style={[styles.pin, { backgroundColor: pinColor }]}>
+              <MaterialCommunityIcons name="tent" size={16} color="#FFFFFF" />
+            </View>
             <Callout tooltip={false} onPress={() => onSelectCampsite?.(campsite)}>
               <View style={styles.callout}>
                 <Text variant="titleSmall" numberOfLines={2}>
@@ -92,18 +104,34 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
-  map: { flex: 1 },
-  callout: { minWidth: 180, padding: spacing.sm, gap: spacing.xs },
-  muted: { color: colors.textMuted },
-  warning: {
-    backgroundColor: "#FBF0E2",
-    borderColor: colors.accent,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: radius.sm,
-    paddingHorizontal: spacing.sm,
-    paddingVertical: spacing.xs / 2,
-  },
-  warningText: { color: "#8A5A1C" },
-  cta: { color: colors.primary, marginTop: spacing.xs },
-});
+function makeStyles(colors: ColorTokens) {
+  return StyleSheet.create({
+    map: { flex: 1 },
+    pin: {
+      width: 30,
+      height: 30,
+      borderRadius: 15,
+      borderWidth: 2,
+      borderColor: "#FFFFFF",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 4,
+    },
+    callout: { minWidth: 180, padding: spacing.sm, gap: spacing.xs },
+    muted: { color: colors.textMuted },
+    warning: {
+      backgroundColor: colors.accentTint,
+      borderColor: colors.accent,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderRadius: radius.sm,
+      paddingHorizontal: spacing.sm,
+      paddingVertical: spacing.xs / 2,
+    },
+    warningText: { color: colors.accentDeep },
+    cta: { color: colors.primary, marginTop: spacing.xs },
+  });
+}

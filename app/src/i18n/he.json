@@ -11,6 +11,7 @@
     "unknown": "לא ידוע"
   },
   "tabs": {
+    "home": "בית",
     "map": "מפה",
     "favorites": "מועדפים",
     "settings": "הגדרות"
@@ -24,8 +25,16 @@
     "unmappableNote": "{count} אתרים אינם מוצגים במפה כי אין להם מיקום מאומת",
     "filter": {
       "all": "הכל",
-      "official": "רשמיים",
-      "unofficial": "לא רשמיים"
+      "official": "חניוני לילה",
+      "unofficial": "אתרי קמפינג"
+    },
+    "searchPlaceholder": "לאן יוצאים הלילה?",
+    "sort": {
+      "label": "מיון",
+      "default": "סדר ברירת מחדל",
+      "priceAsc": "מחיר: מהנמוך לגבוה",
+      "priceDesc": "מחיר: מהגבוה לנמוך",
+      "region": "אזור: מצפון לדרום"
     }
   },
   "region": {
@@ -86,6 +95,11 @@
     "language": "שפה",
     "hebrew": "עברית",
     "english": "אנגלית",
-    "about": "אודות"
+    "appearance": "מראה",
+    "light": "בהיר",
+    "dark": "כהה",
+    "about": "אודות",
+    "restartRequiredTitle": "נדרשת הפעלה מחדש",
+    "restartRequiredMessage": "כיוון הטקסט ישתנה במלואו לאחר הפעלה מחדש של האפליקציה."
   }
 }

@@ -11,6 +11,7 @@
     "unknown": "Unknown"
   },
   "tabs": {
+    "home": "Home",
     "map": "Map",
     "favorites": "Favorites",
     "settings": "Settings"
@@ -24,8 +25,16 @@
     "unmappableNote": "{count} sites aren't on the map — no verified location",
     "filter": {
       "all": "All",
-      "official": "Official",
-      "unofficial": "Non-official"
+      "official": "Night parkings",
+      "unofficial": "Camping sites"
+    },
+    "searchPlaceholder": "Where to tonight?",
+    "sort": {
+      "label": "Sort",
+      "default": "Default order",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "region": "Region: north to south"
     }
   },
   "region": {
@@ -86,6 +95,11 @@
     "language": "Language",
     "hebrew": "Hebrew",
     "english": "English",
-    "about": "About"
+    "appearance": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "about": "About",
+    "restartRequiredTitle": "Restart required",
+    "restartRequiredMessage": "Text direction will fully update after you restart the app."
   }
 }
