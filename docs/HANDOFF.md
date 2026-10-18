@@ -37,7 +37,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 5. **Supabase:** `server/` runs (`/api/health` OK), but `/api/sites` needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`.
 6. **Push / merge** `redesign-unified-data` into `main` when happy.
 
-## Scraper: first live run (2026-10-18), not usable yet
+## Scraper: first live run (2026-10-18), not usable yet. DEFERRED by Nadav (too long for now)
 `node scripts/scrapeCampsites.js --out=<tmp>`. The committed JSON was **not** touched. Results:
 - **0/225 coordinates.** tiuli.com's search page renders its results client-side, so the static HTML only contains menu links (`/camping`, `/attractions`...) and no `ll=` coordinates. Fix: find tiuli's search API/XHR (or use puppeteer for that step). Until then, never run without `--merge`, or every pin is lost.
 - **IDs changed:** unofficial sites come out as `gc-site-42` instead of the committed slugs (`gc-ein-zivan-night-campground`). Favorites are keyed by id, so the slugging must be fixed to keep the old ids before any scraped data replaces the JSON.
@@ -46,7 +46,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 
 ## Open items
 1. Review the 8 `needsReview` sites in the committed data (esp. אכזיב, and the two Neot HaKikar khans).
-2. Scraper fixes above.
+2. Scraper fixes above (deferred; the committed 37-site JSON stays the data source).
 
 ## Rules
 - Follow `CLAUDE.md` (ask before installing new npm deps).
