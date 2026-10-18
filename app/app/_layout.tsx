@@ -9,6 +9,7 @@ import { PaperProvider } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { LocaleProvider } from "@/context/LocaleContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
+import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { getPaperTheme } from "@/constants/paperTheme";
 import { useStorageReady } from "@/lib/storage";
@@ -19,6 +20,7 @@ function ThemedApp() {
   return (
     <PaperProvider theme={getPaperTheme(scheme)}>
       <LocaleProvider>
+        <AuthProvider>
         <FavoritesProvider>
           <StatusBar style={scheme === "dark" ? "light" : "dark"} />
           <Stack
@@ -33,6 +35,7 @@ function ThemedApp() {
             <Stack.Screen name="site/[id]" />
           </Stack>
         </FavoritesProvider>
+        </AuthProvider>
       </LocaleProvider>
     </PaperProvider>
   );

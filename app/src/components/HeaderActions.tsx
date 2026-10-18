@@ -5,6 +5,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
 import { useTheme } from "@/context/ThemeContext";
 import HoverTip from "@/components/HoverTip";
+import AccountButton from "@/components/AccountButton";
 import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 import type { Locale } from "@/types/site";
 
@@ -46,6 +47,9 @@ export default function HeaderActions({ showAbout = false }: Props) {
           </Pressable>
         </HoverTip>
       )}
+      {/* Rendered before the language button, so in the right-to-left row
+          it sits immediately to that button's right. */}
+      <AccountButton />
       <HoverTip label={t("header.switchLanguage")} align="left">
         <Pressable
           style={styles.langChip}
@@ -76,7 +80,7 @@ export default function HeaderActions({ showAbout = false }: Props) {
 
 function makeStyles(colors: ColorTokens) {
   return StyleSheet.create({
-    actions: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+    actions: { flexDirection: "row", alignItems: "center", gap: spacing.sm, flexShrink: 1 },
     langChip: {
       paddingHorizontal: spacing.md,
       paddingVertical: 8,

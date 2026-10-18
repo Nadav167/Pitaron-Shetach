@@ -90,6 +90,9 @@ export default function TabsLayout() {
             other page, but `href: null` keeps it out of the bottom tab bar:
             it is reached from the nav link / the header's info button. */}
         <Tabs.Screen name="about" options={{ title: t("about.title"), href: null }} />
+        {/* Same for the account screens, reached from the header. */}
+        <Tabs.Screen name="login" options={{ title: t("auth.loginTitle"), href: null }} />
+        <Tabs.Screen name="register" options={{ title: t("auth.registerTitle"), href: null }} />
       </Tabs>
     </View>
   );

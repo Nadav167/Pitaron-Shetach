@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
-import { Text } from "react-native-paper";
+import { ActivityIndicator, Text } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { useCampsites } from "@/hooks/useSites";
 import { useDistanceNote, useSiteFilters } from "@/hooks/useSiteFilters";
@@ -16,7 +16,7 @@ import type { Campsite } from "@/types/campsite";
 
 export default function FavoritesScreen() {
   const { campsites } = useCampsites();
-  const { favoriteIds } = useFavorites();
+  const { favoriteIds, loading: favoritesLoading } = useFavorites();
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
@@ -38,6 +38,17 @@ export default function FavoritesScreen() {
       {t("favorites.title")}
     </Text>
   );
+
+  // A signed-in user's list is still loading from their account: show a
+  // spinner rather than briefly claiming nothing is saved.
+  if (favoritesLoading && favorites.length === 0) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.titleOnly}>{title}</View>
+        <ActivityIndicator color={colors.primary} style={styles.loading} />
+      </View>
+    );
+  }
 
   // Nothing saved yet: filter controls over an empty list would only be
   // noise, so this state shows the explanation by itself.
@@ -77,6 +88,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     titleOnly: { padding: spacing.md },
+    loading: { marginTop: spacing.xl },
     header: { paddingBottom: spacing.md },
     // react-native-paper's <Text> hardcodes textAlign: 'left' regardless of
     // RTL -- override explicitly (same fix as the detail screen).

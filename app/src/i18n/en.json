@@ -103,7 +103,10 @@
     "english": "English",
     "switchLanguage": "Change language",
     "lightMode": "Switch to light mode",
-    "darkMode": "Switch to dark mode"
+    "darkMode": "Switch to dark mode",
+    "welcome": "Welcome, {name}",
+    "logIn": "Log in",
+    "logOut": "Log out"
   },
   "about": {
     "title": "About",
@@ -114,5 +117,37 @@
     "independent": "Pitron Shetach is an independent project and is not affiliated with the Nature and Parks Authority or with the sites listed here.",
     "contactTitle": "Contact",
     "contactBody": "Found a mistake, or know a site we should add? We'd love to hear from you."
+  },
+  "auth": {
+    "loginTitle": "Log in",
+    "loginSubtitle": "Log in so your favorites are saved to your account and waiting for you on any device.",
+    "registerTitle": "Register",
+    "registerSubtitle": "Creating an account takes a minute, and your favorites are saved to it.",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "At least {min} characters",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "submitLogin": "Log in",
+    "submitRegister": "Register",
+    "noAccount": "Don't have an account?",
+    "toRegister": "Register",
+    "haveAccount": "Already have an account?",
+    "toLogin": "Log in",
+    "notAvailable": "Registration and login aren't available yet.",
+    "error": {
+      "notConfigured": "Registration and login aren't available yet.",
+      "missingFields": "Please fill in all the fields.",
+      "invalidEmail": "That email address isn't valid.",
+      "weakPassword": "The password is too short: at least {min} characters.",
+      "emailTaken": "An account with this email already exists. You can log in to it.",
+      "invalidCredentials": "The email or password is incorrect.",
+      "emailNotConfirmed": "Please confirm your email address before logging in.",
+      "rateLimited": "Too many attempts. Please try again in a few minutes.",
+      "network": "Can't reach the server. Check your internet connection and try again.",
+      "unknown": "Something went wrong. Please try again."
+    }
   }
 }

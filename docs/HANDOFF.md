@@ -29,6 +29,34 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
   - Persistence across reload.
   - Detail page source lines.
 
+## User accounts (branch `user-accounts`, 2026-10-18), waiting for Supabase keys
+Register (first name, last name, email, password), log in, log out, with each user's favorites saved in the database.
+- **Design:**
+  - The app talks to Supabase directly: Supabase Auth for accounts, and the `profiles` + `favorites` tables from `supabase/migrations/0003_user_accounts_favorites.sql`.
+  - Row Level Security keeps every user to their own rows. Email confirmation is off: registering logs you straight in.
+- **Code:**
+  - Business logic: `src/services/account.ts` and `src/services/favorites.ts`.
+  - State: `src/context/AuthContext.tsx`, plus `FavoritesContext` (guest favorites stay on the device and are merged into the account on login).
+  - Screens: `app/(tabs)/login.tsx` and `register.tsx`, built from `src/components/AuthForm.tsx`.
+  - Header: `src/components/AccountButton.tsx`, to the right of the language button. Logged out it shows "התחברות"; logged in, "שלום, <first name>" with a menu that holds "התנתקות".
+- **Phones:** when signed in, the phone header shows only the logo, not the brand name, so the welcome chip fits. Long names truncate under 360px.
+- **Without keys:** if `EXPO_PUBLIC_SUPABASE_URL` / `EXPO_PUBLIC_SUPABASE_ANON_KEY` are unset, all account UI is hidden and the app works as before.
+- **Tested in the browser with placeholder keys:**
+  - Form layout and field-to-field Enter.
+  - Validation and translated errors.
+  - The network-error path.
+  - Welcome chip and menu (via a planted fake session).
+  - Logout clears the session even offline.
+  - Header fits at 375px and 320px.
+- **Not tested yet:** a real sign-up or login, saving favorites to the database, and native.
+- **To go live:**
+  1. Create the Supabase project.
+  2. Run the 0003 SQL.
+  3. Turn off "Confirm email".
+  4. Put the URL + anon key in `app/.env`. Steps are in `supabase/README.md`.
+  5. Then test register → favorite → log out → log in on another browser.
+- **Deploying the website:** the keys are read at build time, so the live site's build needs the same two env vars.
+
 ## Waiting on Nadav
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
 2. ~~About page copy~~ reviewed by Nadav 2026-10-18: removed the version line and the "where the data comes from" section.

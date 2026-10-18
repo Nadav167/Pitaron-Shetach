@@ -103,7 +103,10 @@
     "english": "English",
     "switchLanguage": "החלפת שפה",
     "lightMode": "מעבר למצב בהיר",
-    "darkMode": "מעבר למצב כהה"
+    "darkMode": "מעבר למצב כהה",
+    "welcome": "שלום, {name}",
+    "logIn": "התחברות",
+    "logOut": "התנתקות"
   },
   "about": {
     "title": "אודות",
@@ -114,5 +117,37 @@
     "independent": "פתרון שטח הוא מיזם עצמאי ואינו קשור לרשות הטבע והגנים או לאתרים המופיעים בו.",
     "contactTitle": "יצירת קשר",
     "contactBody": "מצאתם טעות, או שיש לכם אתר להוסיף? נשמח לשמוע מכם."
+  },
+  "auth": {
+    "loginTitle": "התחברות",
+    "loginSubtitle": "התחברו כדי שהמועדפים שלכם יישמרו בחשבון ויחכו לכם בכל מכשיר.",
+    "registerTitle": "הרשמה",
+    "registerSubtitle": "פתיחת חשבון לוקחת דקה, והמועדפים שלכם יישמרו בו.",
+    "firstName": "שם פרטי",
+    "lastName": "שם משפחה",
+    "email": "אימייל",
+    "password": "סיסמה",
+    "passwordHint": "לפחות {min} תווים",
+    "showPassword": "הצגת הסיסמה",
+    "hidePassword": "הסתרת הסיסמה",
+    "submitLogin": "התחברות",
+    "submitRegister": "הרשמה",
+    "noAccount": "אין לכם חשבון?",
+    "toRegister": "להרשמה",
+    "haveAccount": "כבר יש לכם חשבון?",
+    "toLogin": "להתחברות",
+    "notAvailable": "ההרשמה וההתחברות עדיין לא זמינות.",
+    "error": {
+      "notConfigured": "ההרשמה וההתחברות עדיין לא זמינות.",
+      "missingFields": "נא למלא את כל השדות.",
+      "invalidEmail": "כתובת האימייל לא תקינה.",
+      "weakPassword": "הסיסמה קצרה מדי: לפחות {min} תווים.",
+      "emailTaken": "כבר קיים חשבון עם האימייל הזה. אפשר להתחבר אליו.",
+      "invalidCredentials": "האימייל או הסיסמה לא נכונים.",
+      "emailNotConfirmed": "צריך לאשר את כתובת האימייל לפני ההתחברות.",
+      "rateLimited": "יותר מדי ניסיונות. נסו שוב בעוד כמה דקות.",
+      "network": "אין חיבור לשרת. בדקו את החיבור לאינטרנט ונסו שוב.",
+      "unknown": "משהו השתבש. נסו שוב."
+    }
   }
 }

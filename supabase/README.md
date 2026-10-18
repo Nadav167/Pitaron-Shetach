@@ -19,4 +19,19 @@
 ## Notes
 
 - `postgis` is enabled and a generated `location geography(Point,4326)` column is kept in sync with `lat`/`lng` automatically, so proximity queries (`ST_DWithin`) don't require any extra write-path code. See the docstring above `findSitesNearby` in `server/src/services/sites.service.ts` for the query this unlocks.
-- Row Level Security is on with a public **read-only** policy. All writes go through the backend using the service role key, which bypasses RLS — this is what "Strictly separate the API routing layer from the business logic" in `CLAUDE.md` is protecting: the app never talks to Supabase directly, only through `server/`.
+- `sites`: Row Level Security is on with a public **read-only** policy. All writes go through the backend using the service role key, which bypasses RLS.
+- **Accounts and favorites are the exception: the app talks to Supabase directly** (Supabase Auth + the `profiles` / `favorites` tables from `0003`), using the public anon key. RLS policies restrict every user to their own rows. Business logic for this lives in `app/src/services/` (`account.ts`, `favorites.ts`), separate from the screens.
+
+## User accounts (migration 0003)
+
+1. In the SQL editor, run `migrations/0003_user_accounts_favorites.sql`. It creates `profiles` (first/last name) and `favorites`, their RLS policies, and a trigger that creates the profile row when someone registers.
+2. **Authentication → Sign In / Providers → Email**: keep Email enabled and turn **off** "Confirm email", so a new user is logged in right after registering.
+3. **Project Settings → API**: copy the **Project URL** and the **anon public** key into `app/.env`:
+
+   ```bash
+   EXPO_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+   EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+   ```
+
+   Restart Expo with `-c` after changing `.env`. The anon key is meant to be public; the **service_role** key must never go in the app.
+4. Registered users appear under **Authentication → Users**, their names in the `profiles` table, and their saved campsites in `favorites`.

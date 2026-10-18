@@ -6,6 +6,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import HeaderActions from "@/components/HeaderActions";
+import { useAuth } from "@/context/AuthContext";
 import { fonts, spacing, type ColorTokens } from "@/constants/theme";
 
 /**
@@ -20,17 +21,25 @@ export default function MobileHeader() {
   const colors = useThemeColors();
   const insets = useSafeAreaInsets();
   const router = useRouter();
+  // A phone-width row can't hold the brand name, About, the "Welcome,
+  // <name>" chip, language and theme together. While someone is signed in
+  // the brand shrinks to its logo (still a link home), so the welcome chip
+  // can sit next to the language button as asked.
+  const { status } = useAuth();
+  const compactBrand = status === "signedIn";
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <View style={[styles.bar, { paddingTop: insets.top + spacing.sm }]}>
-      <Pressable style={styles.brand} onPress={() => router.push("/")} accessibilityRole="link">
+      <Pressable style={styles.brand} onPress={() => router.push("/")} accessibilityRole="link" accessibilityLabel={t("common.appName")}>
         <View style={styles.brandMark}>
           <MaterialCommunityIcons name="pine-tree" size={18} color={colors.onPrimary} />
         </View>
-        <RNText style={styles.brandName}>{t("common.appName")}</RNText>
+        {!compactBrand && <RNText style={styles.brandName}>{t("common.appName")}</RNText>}
       </Pressable>
-      <HeaderActions showAbout />
+      <View style={styles.actions}>
+        <HeaderActions showAbout />
+      </View>
     </View>
   );
 }
@@ -47,7 +56,10 @@ function makeStyles(colors: ColorTokens) {
       // Hover labels hang below the bar, over the page content.
       zIndex: 10,
     },
-    brand: { flexDirection: "row", alignItems: "center", gap: 10 },
+    brand: { flexDirection: "row", alignItems: "center", gap: 10, flexShrink: 0 },
+    // Lets a long name in the welcome chip truncate instead of pushing the
+    // buttons off the screen.
+    actions: { flexShrink: 1, marginStart: spacing.sm },
     brandMark: {
       width: 32,
       height: 32,
