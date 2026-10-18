@@ -29,7 +29,10 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
   - Persistence across reload.
   - Detail page source lines.
 
-## User accounts (branch `user-accounts`, 2026-10-18), waiting for Supabase keys
+## User accounts (branch `user-accounts`, 2026-10-18)
+- **Supabase project:** "Pitaron Shetach", ref `wmnxnxsyanbdyfbpccwb`, region **eu-central-1 (Frankfurt)**. Migration 0003 applied; "Confirm email" off. Keys in `app/.env` (git-ignored). The first project, `bcpufpubabpfrgptlsew` in Tokyo, is unused and renamed "Pitaron Shetach (Tokyo, old)"; delete it in the dashboard when you like.
+- **Verified against the real database** (scripted, 2026-10-18): register → instant session; profile row by trigger; add/remove/dedupe favorites; favorites survive log-out/log-in; wrong password → `invalid_credentials`; duplicate email → `user_already_exists`; RLS blocks reading or writing another user's profile/favorites (42501). Test users deleted afterwards.
+- **GitHub repo** renamed to `Nadav167/Pitaron-Shetach` (local `origin` updated).
 Register (first name, last name, email, password), log in, log out, with each user's favorites saved in the database.
 - **Design:**
   - The app talks to Supabase directly: Supabase Auth for accounts, and the `profiles` + `favorites` tables from `supabase/migrations/0003_user_accounts_favorites.sql`.
@@ -48,7 +51,7 @@ Register (first name, last name, email, password), log in, log out, with each us
   - Welcome chip and menu (via a planted fake session).
   - Logout clears the session even offline.
   - Header fits at 375px and 320px.
-- **Not tested yet:** a real sign-up or login, saving favorites to the database, and native.
+- **Not tested yet:** the register/login screens against the real backend in a browser (only the scripted test above), and native.
 - **To go live:**
   1. Create the Supabase project.
   2. Run the 0003 SQL.
