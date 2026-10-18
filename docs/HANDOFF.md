@@ -1,68 +1,56 @@
-# Handoff (2026-10-12): where the project stands
+# Handoff (2026-10-18): where the project stands
 
 Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the claude.ai project docs.
 
 ## State of the repo
-- `origin/main` = commit `1a80ea2` (Sep 15). The month of work after it is committed on the local branch `redesign-unified-data` (Oct 12), **not yet pushed or merged into `main`**.
-- The `.claude/skills/` design skills are in the repo, as their own commit on that branch.
-- `cd app && npx tsc --noEmit` passes clean.
+- `origin/main` = commit `1a80ea2` (Sep 15). Everything since is committed on the local branch `redesign-unified-data`, **not yet pushed or merged into `main`**.
+- `npm run typecheck` (app + server) passes clean.
+- Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
 
-## What the uncommitted work contains
-- Unified campsite model (`app/src/types/campsite.ts`), 37-site dataset (`app/assets/data/campsites.json`), offline-first `useSites`/`useSite`, scraper (`scripts/scrapeCampsites.js`), migration `0002`.
-- Redesign: light/dark theme tokens + `ThemeContext`, Rubik/Heebo fonts, 4 tabs (Home/Map/Favorites/Settings), desktop top nav at >=900px, search bar + sort menu, custom `FilterChip`, 16:9 card photos, favorite heart.
-- RTL: Hebrew is the hard default. react-native-paper's `<Text>` hardcodes `textAlign: 'left'` and `List.Item`/`Chip` use physical padding. Override `textAlign` and use mirrored styles yourself; don't rely on Paper for RTL.
+## Done
+- **Oct 12 work:** unified campsite model + 37-site dataset, redesign (theme, fonts, desktop nav), and RTL foundations.
+- **Oct 12 tester feedback, all items:**
+  - Rebrand to פתרון שטח.
+  - Search: bar stays mounted; matching covers both languages, regions, typos and town radius.
+  - Site detail: RTL back arrow, missing-info note, RTL source lines.
+  - Map locked to Israel, with a mask over the area outside it.
+  - Layout stays RTL in every language.
+  - Settings tab replaced by header toggles; new About page.
+  - Favorites gets the same filters.
+- **Oct 18:**
+  - Theme, language and favorites persist (`src/lib/storage.ts`, web localStorage).
+  - Map tab uses the shared filters/search/sort; desktop has a results panel beside the map; the map zooms to the results while filtering.
+  - RTL fixes: native map callouts and navigation-button icons.
+  - Site page credits the coordinate source by name (`coordsSourceName`) instead of the raw internal note.
+- **Browser-tested on web (desktop + 400px):**
+  - Typing a full word, including a query with no results.
+  - Matching for "דרום" and "ניצן".
+  - Map desktop/mobile and zoom to results.
+  - Persistence across reload.
+  - Detail page source lines.
 
-## User-testing feedback, 2026-10-12 (do these after committing)
+## Waiting on Nadav
+1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
+2. **Review the About page copy** (`app/(tabs)/about.tsx` + `about.*` in `he.json` / `en.json`). It was drafted, not approved.
+3. **Native persistence** needs `@react-native-async-storage/async-storage` (a new dependency, so it needs approval). Plug it into `src/lib/storage.ts`; until then native forgets theme, language and favorites on relaunch.
+4. **Favorite control on the detail screen:** it's a labeled button ("הוספה לאתרים מועדפים"), not a heart in the app bar. The code comment says this was deliberate; confirm that's what you want.
+5. **Supabase:** `server/` runs (`/api/health` OK), but `/api/sites` needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`.
+6. **Push / merge** `redesign-unified-data` into `main` when happy.
 
-A tester used the live app and sent this feedback. Nadav wants all of it done. Hebrew strings below are final copy, so use them exactly.
+## Scraper: first live run (2026-10-18), not usable yet
+`node scripts/scrapeCampsites.js --out=<tmp>`. The committed JSON was **not** touched. Results:
+- **0/225 coordinates.** tiuli.com's search page renders its results client-side, so the static HTML only contains menu links (`/camping`, `/attractions`...) and no `ll=` coordinates. Fix: find tiuli's search API/XHR (or use puppeteer for that step). Until then, never run without `--merge`, or every pin is lost.
+- **IDs changed:** unofficial sites come out as `gc-site-42` instead of the committed slugs (`gc-ein-zivan-night-campground`). Favorites are keyed by id, so the slugging must be fixed to keep the old ids before any scraped data replaces the JSON.
+- **Scope jump:** gocamping now yields 213 listings (committed: 19); parks.org.il yields 12 (committed: 18). Many gocamping entries are closed or changed ("החניון אינו פעיל", "נסגר", "בקרוב"). Decide whether to expand the dataset, and filter closed sites if so.
+- All 225 were flagged `needsReview` (they lack coordinates).
 
-### A. Rebrand: the site is now called "פתרון שטח"
-- Name: **פתרון שטח**. Slogan directly under it: **כל חניוני הלילה והקמפינג בישראל**.
-- English: name "Pitron Shetach", slogan "All of Israel's night parking and campsites".
-- This replaces the current Home hero ("מצאו חניון לילה" plus "כל אתרי הקמפינג והחניה הלילית בישראל, במקום אחד"). The tester said that title and subtitle don't match, and the heading should cover the whole offering.
-- Update everywhere the brand appears: Home hero (mobile + desktop), mobile brand row, `DesktopNav` brand mark, `app.json` name / web page title, and `he.json` / `en.json`. The repo/folder name stays CampingIL.
-
-### B. Search (highest-priority bugs)
-1. **You can't type a word.** After the first letter, focus jumps away from the input (onto the filter chips). Likely cause: `SearchBar` is rendered inside `SiteList`'s `header` / `ListHeaderComponent` (`index.tsx` line ~72, `SiteList.tsx` line ~46/61), so it remounts when the list re-renders or switches between FlatList and the empty state. Fix: render the search bar *outside* the list, or otherwise keep it mounted, and verify you can type a full word on both mobile and desktop widths.
-2. **Matching is too narrow.** Typing "דרום" returns "לא נמצאו אתרים". Search must help someone who doesn't know exactly what they want. Match against name (he + en), region (including Hebrew/English region names and the north/central/south buckets in `src/lib/sort.ts`, so "דרום" / "צפון" / "מרכז" / "south" work), address and description. Normalize (trim, lowercase, ignore niqqud/punctuation), and consider simple fuzzy matching.
-3. **Irrelevant results.** Searching "ניצן" showed sites that don't contain it. This is probably a side effect of bug 1 (only the first letter got typed). Re-test after fixing 1, and make sure results actually match the query.
-
-### C. Site detail screen
-4. **Back arrow points the wrong way.** In RTL, the top-right back arrow must point right (→). Appbar.BackAction at `app/site/[id].tsx` ~line 98 doesn't mirror; flip the icon when `isRTL`.
-5. **Two favorite buttons:** the heart in the appbar plus the "הוסף למועדפים" button (~line 152). Keep only the heart.
-6. **Hover tooltip on the heart** (cards + detail): "הוספה לאתרים מועדפים" (remove: "הסרה מהמועדפים"). English: "Add to favorites" / "Remove from favorites".
-7. **Missing-info message.** When fields show "לא ידוע" (price / hours / etc.), show a friendly note: "אוי! לא הצלחנו למצוא כמה פרטים על המקום. אם יש שאלות, תמיד אפשר לנסות להתקשר למספר!" (English: "Oops! We couldn't find some details about this place. If you have questions, you can always try calling the number!"). If the site has no phone, drop the second sentence.
-8. **Footer line "מקור נקודת הציון: amudanan.co.il" still renders LTR.** It must be RTL. The mixed Latin domain flips the paragraph direction, so set `writingDirection: 'rtl'` / `textAlign: 'right'` explicitly, or wrap the domain in an LTR isolate. Check the "data from" line too.
-
-### D. Map
-9. **Restrict the map to Israel.** Users can currently pan to the rest of the world, which feels like no real product work went into it. Set `maxBounds` (Israel bbox plus a small margin, with `maxBoundsViscosity: 1`) and a sensible `minZoom` in `Map.web.tsx`, and the equivalent region limits in `Map.native.tsx`.
-
-### E. Switching language must not move anything (layout stays fixed)
-10. Clarified by Nadav: when switching Hebrew ↔ English, **the whole layout stays exactly where it is**. Nothing mirrors or moves to the other side: not the language button, the tabs, the back arrow, the heart, card layouts or icons. Only the text changes language.
-    - The layout is always the Hebrew (RTL) layout. Decouple layout direction from locale: stop calling `I18nManager.forceRTL/allowRTL` on language change (see `LocaleContext.tsx`), and keep layout RTL permanently.
-    - Today many components use `isRTL` (from the locale) to flip positions, alignment or icons. Those should read a constant layout direction instead, so they don't flip when the language changes. Search for every `isRTL` usage and decide per case.
-    - Text inside its own box can still read naturally in English (`writingDirection: 'ltr'` for English strings), but the boxes themselves don't move. If a specific spot looks odd with English text, ask Nadav rather than mirroring it.
-
-### F. Settings and About
-11. **The Settings tab has nothing useful.** Its only controls are theme and language, and those are already on screen. Remove the Settings tab (tabs become Home / Map / Favorites). Keep the existing on-screen theme + language toggles, and make sure they're reachable on mobile too, not just in the desktop nav.
-12. **Add an "About" (אודות) page** with real content: what פתרון שטח is, where the data comes from (רשות הטבע והגנים / parks.org.il, gocamping.co.il, coordinates via tiuli.com / amudanan.co.il), that unofficial sites may be inaccurate, and a contact/feedback line. Draft the copy in Hebrew + English and flag it for Nadav to review. Link to it from the nav/footer.
-
-### G. Favorites
-13. Add the same filter chips (All / Camping sites / Night parkings), search and sort to the Favorites screen. Reuse the components from Home, and ideally extract the filter/search/sort logic into a shared hook.
-
-After finishing, run `npx tsc --noEmit` and ask Nadav for a fresh live test. Several past rounds were only caught by real testing.
-
-## Open items (older)
-1. Persist theme + language choice (currently resets on relaunch).
-2. Map screen desktop layout.
-3. Apply sort to Favorites and Map, not just Home.
-4. Check map popups + Button labels for the Paper left-align bug.
-5. Run the scraper live (`npm run scrape`); it has never made a real request. Compare against the committed JSON and treat a coordinate that moves as a red flag.
-6. Review the 8 `needsReview` sites (esp. אכזיב, and the two Neot HaKikar khans).
-7. `server/` has never had `npm install` run.
+## Open items
+1. Review the 8 `needsReview` sites in the committed data (esp. אכזיב, and the two Neot HaKikar khans).
+2. Scraper fixes above.
 
 ## Rules
 - Follow `CLAUDE.md` (ask before installing new npm deps).
 - Never move the project back into OneDrive (it breaks Metro's file scanning).
 - Never ship guessed coordinates; null is correct when unverified.
+- RTL: react-native-paper's `<Text>` hardcodes `textAlign: 'left'`, `List.Item`/`Button` use physical LTR margins. Override them yourself; don't rely on Paper for RTL. A `direction` style is rejected by react-native-web; use the `dir` prop.
 - Run the app with: `cd app && npx expo start --web -c`
