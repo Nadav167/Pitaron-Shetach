@@ -3,7 +3,8 @@
 Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the claude.ai project docs.
 
 ## State of the repo
-- `redesign-unified-data` was merged (fast-forward) into `main` and pushed to origin on 2026-10-18. Work on `main` (or a new branch) from here.
+- `main` is pushed and live (2026-10-18), including `user-accounts`. Repo: `github.com/Nadav167/Pitaron-Shetach`.
+- **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path to `index.html` (fixes 404 on refresh/deep links). The project also still has unused `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars from Sep 15 (Express server leftovers); consider deleting them.
 - `npm run typecheck` (app + server) passes clean.
 - Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
 
@@ -29,7 +30,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
   - Persistence across reload.
   - Detail page source lines.
 
-## User accounts (branch `user-accounts`, 2026-10-18)
+## User accounts (live since 2026-10-18)
 - **Supabase project:** "Pitaron Shetach", ref `wmnxnxsyanbdyfbpccwb`, region **eu-central-1 (Frankfurt)**. Migration 0003 applied; "Confirm email" off. Keys in `app/.env` (git-ignored). The first project, `bcpufpubabpfrgptlsew` in Tokyo, is unused and renamed "Pitaron Shetach (Tokyo, old)"; delete it in the dashboard when you like.
 - **Verified against the real database** (scripted, 2026-10-18): register → instant session; profile row by trigger; add/remove/dedupe favorites; favorites survive log-out/log-in; wrong password → `invalid_credentials`; duplicate email → `user_already_exists`; RLS blocks reading or writing another user's profile/favorites (42501). Test users deleted afterwards.
 - **GitHub repo** renamed to `Nadav167/Pitaron-Shetach` (local `origin` updated).
