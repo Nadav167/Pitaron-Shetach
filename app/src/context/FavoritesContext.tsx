@@ -1,9 +1,12 @@
 import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
+import { loadJSON, saveJSON } from "@/lib/storage";
+
+const STORAGE_KEY = "favorites";
 
 /**
- * In-memory favorites store for the skeleton. Swap the setter for
- * AsyncStorage (or a synced backend endpoint once auth exists) to persist
- * across app restarts.
+ * Favorites store. Saved locally per device (web: localStorage; native: not
+ * yet, see lib/storage). A synced backend endpoint can replace this once
+ * accounts exist.
  */
 type FavoritesContextValue = {
   favoriteIds: Set<string>;
@@ -14,7 +17,10 @@ type FavoritesContextValue = {
 const FavoritesContext = createContext<FavoritesContextValue | undefined>(undefined);
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
-  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(() => {
+    const saved = loadJSON<unknown>(STORAGE_KEY);
+    return new Set(Array.isArray(saved) ? saved.filter((id): id is string => typeof id === "string") : []);
+  });
 
   const toggleFavorite = useCallback((siteId: string) => {
     setFavoriteIds((prev) => {
@@ -24,6 +30,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
       } else {
         next.add(siteId);
       }
+      saveJSON(STORAGE_KEY, [...next]);
       return next;
     });
   }, []);

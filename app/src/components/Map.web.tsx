@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { MapContainer, TileLayer, Marker, Polygon, Popup } from "react-leaflet";
+import React, { useEffect, useMemo } from "react";
+import { MapContainer, TileLayer, Marker, Polygon, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Campsite } from "@/types/campsite";
@@ -78,7 +78,40 @@ const MASK_FRAME = [MASK_OUTER_RING, MASK_WINDOW_RING];
 type Props = {
   campsites: Campsite[];
   onSelectCampsite?: (campsite: Campsite) => void;
+  fitToCampsites?: boolean;
 };
+
+/**
+ * Re-frames the map whenever the set of pins changes: onto the pins when
+ * `active` (a search or filter is narrowing them down), else back onto the
+ * whole country. Keyed on the pins' ids, not the array, so an unrelated
+ * re-render (theme, favorites) never moves the map under the user's hand.
+ * A single pin is shown at a fixed street-level zoom rather than "fit" to,
+ * which would zoom all the way in.
+ */
+function FitToPins({ points, active }: { points: [number, number][]; active: boolean }) {
+  const map = useMap();
+  const signature = active ? points.map((p) => p.join(",")).join(";") : "";
+  useEffect(() => {
+    // Debounced: typing a query changes the pins on every keystroke, and a
+    // new fit started while the previous zoom animation is still running is
+    // dropped by Leaflet, which left the map stuck on the country view.
+    const timer = setTimeout(() => {
+      map.stop();
+      if (!active || points.length === 0) {
+        map.fitBounds(INITIAL_BOUNDS);
+      } else if (points.length === 1) {
+        map.setView(points[0], 12);
+      } else {
+        map.fitBounds(points, { padding: [40, 40], maxZoom: 12 });
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+    // `points` is represented by `signature`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, active, signature]);
+  return null;
+}
 
 /**
  * Web map, rendered only on react-native-web (Metro resolves `Map.web.tsx` for
@@ -89,7 +122,7 @@ type Props = {
  * detached DOM node, where RN-web's layout primitives are more trouble than
  * they're worth.
  */
-export default function Map({ campsites, onSelectCampsite }: Props) {
+export default function Map({ campsites, onSelectCampsite, fitToCampsites = false }: Props) {
   const { locale, t } = useLocale();
   const colors = useThemeColors();
   const { isFavorite, toggleFavorite } = useFavorites();
@@ -118,6 +151,7 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
     (campsite): campsite is Campsite & { coordinates: { lat: number; lng: number } } =>
       campsite.coordinates !== null
   );
+  const points = mappable.map((c): [number, number] => [c.coordinates.lat, c.coordinates.lng]);
 
   // Opens framed on the whole country and stays there: `maxBounds` with a
   // viscosity of 1 makes the edge a hard stop (the default lets the map be
@@ -129,12 +163,17 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
       maxBounds={MAX_BOUNDS}
       maxBoundsViscosity={1}
       minZoom={MIN_ZOOM}
+      // Fractional zoom lets "fit to Israel / to the results" actually fill
+      // the frame instead of snapping down to the next whole zoom level.
+      // The +/- buttons still step by one whole level (zoomDelta).
+      zoomSnap={0.25}
       style={{ height: "100%", width: "100%" }}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <FitToPins points={points} active={fitToCampsites} />
       <Polygon positions={MASK_FRAME} pathOptions={maskStyle} />
       {MASK_RINGS.map((ring, index) => (
         <Polygon key={index} positions={ring} pathOptions={maskStyle} />

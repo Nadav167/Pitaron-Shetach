@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button, Snackbar } from "react-native-paper";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { Campsite } from "@/types/campsite";
 import { openNavigation } from "@/lib/navigation";
 import { useLocale } from "@/context/LocaleContext";
@@ -36,7 +37,7 @@ export default function NavigationButtons({ campsite, size = "compact" }: Props)
       <View style={styles.row}>
         <Button
           mode="contained-tonal"
-          icon="waze"
+          icon={rtlIcon("waze")}
           compact={compact}
           style={styles.button}
           contentStyle={compact ? styles.compactContent : undefined}
@@ -48,7 +49,7 @@ export default function NavigationButtons({ campsite, size = "compact" }: Props)
         </Button>
         <Button
           mode="contained-tonal"
-          icon="google-maps"
+          icon={rtlIcon("google-maps")}
           compact={compact}
           style={styles.button}
           contentStyle={compact ? styles.compactContent : undefined}
@@ -73,3 +74,16 @@ const styles = StyleSheet.create({
   compactContent: { height: 34 },
   compactLabel: { fontSize: 12, marginHorizontal: spacing.sm },
 });
+
+/**
+ * Paper's Button places its icon with physical, left-to-right margins (a
+ * negative right margin meant to tuck it toward the label in LTR). In this
+ * app's right-to-left layout the icon sits on the right instead, so that
+ * negative margin pushed it past the button's edge. The extra right margin
+ * here cancels it out.
+ */
+function rtlIcon(name: keyof typeof MaterialCommunityIcons.glyphMap) {
+  return function ButtonIcon({ size, color }: { size: number; color: string }) {
+    return <MaterialCommunityIcons name={name} size={size} color={color} style={{ marginRight: spacing.md }} />;
+  };
+}

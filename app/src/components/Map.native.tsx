@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Callout, Marker, Polygon, UrlTile, type Region } from "react-native-maps";
 import { Text } from "react-native-paper";
@@ -29,6 +29,7 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 type Props = {
   campsites: Campsite[];
   onSelectCampsite?: (campsite: Campsite) => void;
+  fitToCampsites?: boolean;
 };
 
 /**
@@ -59,11 +60,11 @@ type Props = {
  * `onRegionChangeComplete` also pulls the camera back whenever its center
  * ends up outside the limit — that is what restrains Apple Maps on iOS.
  */
-export default function Map({ campsites, onSelectCampsite }: Props) {
-  const { locale, t } = useLocale();
+export default function Map({ campsites, onSelectCampsite, fitToCampsites = false }: Props) {
+  const { locale, t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isFavorite } = useFavorites();
-  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   // Sites with no verified coordinates can't be pinned; they remain in the list.
   const mappable = campsites.filter(
@@ -72,6 +73,33 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
   );
 
   const mapRef = useRef<MapView>(null);
+
+  // Same re-framing as FitToPins in Map.web.tsx: onto the pins while a
+  // search/filter is active, else back to the whole country. Keyed on the
+  // pins' ids so unrelated re-renders never move the map.
+  const signature = fitToCampsites ? mappable.map((c) => c.id).join(",") : "";
+  // Debounced like the web version, so typing a query doesn't start a new
+  // camera animation on every keystroke.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const map = mapRef.current;
+      if (!map) return;
+      if (!fitToCampsites || mappable.length === 0) {
+        map.animateToRegion(INITIAL_REGION, 300);
+      } else if (mappable.length === 1) {
+        const { lat, lng } = mappable[0].coordinates;
+        map.animateToRegion({ latitude: lat, longitude: lng, latitudeDelta: 0.1, longitudeDelta: 0.1 }, 300);
+      } else {
+        map.fitToCoordinates(
+          mappable.map((c) => ({ latitude: c.coordinates.lat, longitude: c.coordinates.lng })),
+          { edgePadding: { top: 60, right: 40, bottom: 120, left: 40 }, animated: true }
+        );
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+    // `mappable` is represented by `signature`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fitToCampsites, signature]);
 
   const applyBoundaries = useCallback(() => {
     mapRef.current?.setMapBoundaries(
@@ -148,38 +176,38 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
             </View>
             <Callout tooltip={false} onPress={() => onSelectCampsite?.(campsite)}>
               <View style={styles.callout}>
-                <Text variant="titleSmall" numberOfLines={2}>
+                <Text variant="titleSmall" numberOfLines={2} style={styles.text}>
                   {name}
                 </Text>
-                <Text variant="bodySmall" style={styles.muted}>
+                <Text variant="bodySmall" style={[styles.text, styles.muted]}>
                   {`${t(`region.${campsite.region}`)} · ${price}`}
                 </Text>
                 {hours ? (
-                  <Text variant="bodySmall" numberOfLines={3}>
+                  <Text variant="bodySmall" numberOfLines={3} style={styles.text}>
                     {`${t("site.openingHours")}: ${hours}`}
                   </Text>
                 ) : null}
                 {checkIn || checkOut ? (
-                  <Text variant="bodySmall">
+                  <Text variant="bodySmall" style={styles.text}>
                     {[checkIn && `${t("site.checkIn")} ${checkIn}`, checkOut && `${t("site.checkOut")} ${checkOut}`]
                       .filter(Boolean)
                       .join(" · ")}
                   </Text>
                 ) : null}
                 {amenities.length > 0 ? (
-                  <Text variant="bodySmall">{`${t("site.amenities")}: ${amenities.join(", ")}`}</Text>
+                  <Text variant="bodySmall" style={styles.text}>{`${t("site.amenities")}: ${amenities.join(", ")}`}</Text>
                 ) : null}
-                {phone ? <Text variant="bodySmall">{`${t("site.phone")}: ${phone}`}</Text> : null}
+                {phone ? <Text variant="bodySmall" style={styles.text}>{`${t("site.phone")}: ${phone}`}</Text> : null}
 
                 {!campsite.isOfficial && (
                   <View style={styles.warning}>
-                    <Text variant="labelSmall" style={styles.warningText}>
+                    <Text variant="labelSmall" style={[styles.text, styles.warningText]}>
                       {`⚠️ ${t("site.unofficialWarning")}`}
                     </Text>
                   </View>
                 )}
 
-                <Text variant="labelSmall" style={styles.cta}>
+                <Text variant="labelSmall" style={[styles.text, styles.cta]}>
                   {t("site.viewDetails")}
                 </Text>
               </View>
@@ -191,7 +219,7 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
   );
 }
 
-function makeStyles(colors: ColorTokens) {
+function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     map: { flex: 1 },
     pin: {
@@ -209,6 +237,8 @@ function makeStyles(colors: ColorTokens) {
       elevation: 4,
     },
     callout: { width: 230, padding: spacing.sm, gap: spacing.xs },
+    // Paper's <Text> hardcodes textAlign: "left"; the layout is always RTL.
+    text: { textAlign: "right", writingDirection },
     muted: { color: colors.textMuted },
     warning: {
       backgroundColor: colors.accentTint,

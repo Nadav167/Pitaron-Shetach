@@ -188,3 +188,31 @@ export function localized(text: LocalizedText | Partial<LocalizedText> | undefin
 export function hasCoordinates(campsite: Campsite): campsite is Campsite & { coordinates: Coordinates } {
   return campsite.coordinates !== null;
 }
+
+/**
+ * `source.coordsSource` is an internal provenance note written for whoever
+ * reviews the data ("tiuli.com Waze deep-link; tiuli disagrees by ~800m"),
+ * in English, so it isn't fit to show visitors as-is. This reduces it to the
+ * name of the site the coordinates came from, or null when the note doesn't
+ * name one (including the "No coordinate found" notes, where there is
+ * nothing to credit).
+ */
+const COORDS_SOURCE_NAMES: [pattern: RegExp, name: string][] = [
+  [/tiuli\.com/i, "tiuli.com"],
+  [/amudanan\.co\.il/i, "amudanan.co.il"],
+  [/openstreetmap|\bOSM\b/i, "OpenStreetMap"],
+  [/google maps/i, "Google Maps"],
+];
+
+export function coordsSourceName(campsite: Campsite): string | null {
+  const note = campsite.source.coordsSource;
+  if (!note || !campsite.coordinates) return null;
+  // Matched in order: the note names its actual source first, and only
+  // mentions other sites afterwards as a cross-check.
+  let best: { index: number; name: string } | null = null;
+  for (const [pattern, name] of COORDS_SOURCE_NAMES) {
+    const match = pattern.exec(note);
+    if (match && (!best || match.index < best.index)) best = { index: match.index, name };
+  }
+  return best?.name ?? null;
+}

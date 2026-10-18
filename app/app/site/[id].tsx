@@ -12,7 +12,7 @@ import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 import EmptyState from "@/components/EmptyState";
 import UnofficialNotice from "@/components/UnofficialNotice";
 import NavigationButtons from "@/components/NavigationButtons";
-import { localized, type Amenities } from "@/types/campsite";
+import { coordsSourceName, localized, type Amenities } from "@/types/campsite";
 
 // The layout is always right-to-left, in every language (see LocaleContext),
 // so everything below is written for RTL outright rather than switched on
@@ -89,6 +89,7 @@ export default function CampsiteDetailScreen() {
   const missingInfoMessage = campsite?.contact.phone
     ? `${t("site.missingInfo")} ${t("site.missingInfoCall")}`
     : t("site.missingInfo");
+  const coordsSource = campsite ? coordsSourceName(campsite) : null;
   const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
 
   return (
@@ -289,9 +290,9 @@ export default function CampsiteDetailScreen() {
           <Text variant="labelSmall" style={styles.provenance}>
             {`${t("site.dataFrom")}: ${campsite.source.name}`}
           </Text>
-          {campsite.source.coordsSource && (
+          {coordsSource && (
             <Text variant="labelSmall" style={styles.provenance}>
-              {`${t("site.coordsFrom")}: ${campsite.source.coordsSource}`}
+              {`${t("site.coordsFrom")}: ${coordsSource}`}
             </Text>
           )}
         </ScrollView>

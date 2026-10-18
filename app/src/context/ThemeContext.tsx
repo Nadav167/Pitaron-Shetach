@@ -1,6 +1,9 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { Platform, useColorScheme } from "react-native";
 import { lightColors, darkColors, type ColorTokens } from "@/constants/theme";
+import { loadString, saveString } from "@/lib/storage";
+
+const STORAGE_KEY = "theme";
 
 export type ColorScheme = "light" | "dark";
 
@@ -52,15 +55,24 @@ function injectScrollbarStyle() {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme();
 
-  // Starts from the device's own light/dark setting; the Appearance toggle
-  // in Settings overrides it for the rest of the session. No persistence
-  // yet — matches how the language choice already works in this app
-  // (LocaleContext), so it resets to the system default on next launch.
-  const [scheme, setScheme] = useState<ColorScheme>(systemScheme === "dark" ? "dark" : "light");
+  // Starts from the last theme the user picked (saved on web, see
+  // lib/storage), else the device's own light/dark setting. Only an explicit
+  // choice is saved, so someone who never touches the toggle keeps following
+  // their system setting.
+  const [scheme, setSchemeState] = useState<ColorScheme>(() => {
+    const saved = loadString(STORAGE_KEY);
+    if (saved === "light" || saved === "dark") return saved;
+    return systemScheme === "dark" ? "dark" : "light";
+  });
+
+  const setScheme = useCallback((next: ColorScheme) => {
+    setSchemeState(next);
+    saveString(STORAGE_KEY, next);
+  }, []);
 
   const toggleScheme = useCallback(() => {
-    setScheme((prev) => (prev === "dark" ? "light" : "dark"));
-  }, []);
+    setScheme(scheme === "dark" ? "light" : "dark");
+  }, [scheme, setScheme]);
 
   const colors = scheme === "dark" ? darkColors : lightColors;
 
@@ -80,7 +92,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setScheme,
       toggleScheme,
     }),
-    [scheme, colors, toggleScheme]
+    [scheme, colors, setScheme, toggleScheme]
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

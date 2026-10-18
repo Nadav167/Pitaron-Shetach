@@ -41,12 +41,15 @@ export default function HoverTip({ label, align = "center", children }: Props) {
     onMouseEnter: () => setVisible(true),
     onMouseLeave: () => setVisible(false),
   };
+  // react-native-web forwards `dir` to the DOM (a `direction` style is
+  // rejected), so the bubble layer is laid out left-to-right.
+  const ltrProps: object = { dir: "ltr" };
 
   return (
     <View {...hoverProps}>
       {children}
       {visible && (
-        <View style={[styles.layer, styles[align]]} pointerEvents="none">
+        <View {...ltrProps} style={[styles.layer, styles[align]]} pointerEvents="none">
           <View style={styles.bubble}>
             <Text style={styles.label}>{label}</Text>
           </View>
@@ -58,14 +61,13 @@ export default function HoverTip({ label, align = "center", children }: Props) {
 
 function makeStyles(colors: ColorTokens) {
   return StyleSheet.create({
-    // `direction: "ltr"` makes flex-start / flex-end below mean physical
+    // The layer is rendered dir="ltr" (see ltrProps), so flex-start / flex-end mean physical
     // left / right, whatever direction the page is in.
     layer: {
       position: "absolute",
       top: "100%",
       marginTop: 6,
       width: LAYER_WIDTH,
-      direction: "ltr",
       zIndex: 1000,
     },
     left: { left: 0, alignItems: "flex-start" },

@@ -1,7 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { I18nManager, Platform } from "react-native";
 import { Locale } from "@/types/site";
 import { t as translate } from "@/i18n";
+import { loadString, saveString } from "@/lib/storage";
+
+const STORAGE_KEY = "locale";
 
 type LocaleContextValue = {
   locale: Locale;
@@ -49,7 +52,17 @@ if (Platform.OS !== "web") {
 const LocaleContext = createContext<LocaleContextValue | undefined>(undefined);
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocale] = useState<Locale>(defaultLocale);
+  // The last language the user picked (saved on web, see lib/storage),
+  // else Hebrew.
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    const saved = loadString(STORAGE_KEY);
+    return saved === "he" || saved === "en" ? saved : defaultLocale;
+  });
+
+  const setLocale = useCallback((next: Locale) => {
+    setLocaleState(next);
+    saveString(STORAGE_KEY, next);
+  }, []);
 
   // Web: react-native-web maps `flexDirection: "row"` onto real CSS flexbox,
   // which mirrors under `direction: rtl` for whatever DOM subtree is marked
@@ -73,7 +86,7 @@ export function LocaleProvider({ children }: { children: React.ReactNode }) {
       t: (path: string) => translate(locale, path),
       writingDirection: locale === "he" ? "rtl" : "ltr",
     }),
-    [locale]
+    [locale, setLocale]
   );
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;

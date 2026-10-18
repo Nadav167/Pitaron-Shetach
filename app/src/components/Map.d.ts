@@ -16,6 +16,9 @@ import type { Campsite } from "@/types/campsite";
 declare const Map: ComponentType<{
   campsites: Campsite[];
   onSelectCampsite?: (campsite: Campsite) => void;
+  /** Zoom to the pinned campsites whenever they change (e.g. a search);
+   *  false/omitted keeps the whole-country view. */
+  fitToCampsites?: boolean;
 }>;
 
 export default Map;
