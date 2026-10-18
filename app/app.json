@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "CampingIL",
+    "name": "פתרון שטח",
     "slug": "campingil",
     "scheme": "campingil",
     "version": "0.1.0",
@@ -13,7 +13,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#1F4D3A"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "il.campingil.app"
@@ -30,7 +32,9 @@
       "bundler": "metro",
       "output": "single"
     },
-    "plugins": ["expo-router"],
+    "plugins": [
+      "expo-router"
+    ],
     "experiments": {
       "typedRoutes": true
     },

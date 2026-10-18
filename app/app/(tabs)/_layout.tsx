@@ -6,6 +6,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
 import DesktopNav from "@/components/DesktopNav";
+import MobileHeader from "@/components/MobileHeader";
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -17,8 +18,7 @@ export default function TabsLayout() {
   // A floating pill bar, built entirely from documented React Navigation
   // bottom-tabs props (tabBarStyle + a custom tabBarIcon per screen) rather
   // than a fully custom tabBar renderer — so the built-in RTL mirroring
-  // (Home/Map/Favorites/Settings reverses under Hebrew automatically, same
-  // as it always has), safe-area handling and platform back-behavior all
+  // (Home/Map/Favorites runs right-to-left, like the rest of the layout), safe-area handling and platform back-behavior all
   // keep working untouched. The active tab's icon sits in a plain centered
   // accent circle — no vertical pop — per the design pass.
   const renderIcon = (name: IconName) =>
@@ -42,11 +42,11 @@ export default function TabsLayout() {
   return (
     <View style={{ flex: 1 }}>
       {/* Desktop-width screens get a top nav bar instead of the floating
-          bottom tab bar — the layout the mockup's Home-Desktop artboard
-          specified. The bottom bar is hidden (not unmounted) via
-          tabBarStyle below, so switching window width doesn't remount the
-          navigator. */}
-      {isDesktop && <DesktopNav />}
+          bottom tab bar; phone-width screens get a slim header carrying
+          the brand and the language / light-dark / About controls. The
+          bottom bar is hidden (not unmounted) via tabBarStyle below, so
+          switching window width doesn't remount the navigator. */}
+      {isDesktop ? <DesktopNav /> : <MobileHeader />}
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -86,10 +86,10 @@ export default function TabsLayout() {
           name="favorites"
           options={{ title: t("tabs.favorites"), tabBarIcon: renderIcon("heart") }}
         />
-        <Tabs.Screen
-          name="settings"
-          options={{ title: t("tabs.settings"), tabBarIcon: renderIcon("cog") }}
-        />
+        {/* About lives in this group so it keeps the same top bar as every
+            other page, but `href: null` keeps it out of the bottom tab bar:
+            it is reached from the nav link / the header's info button. */}
+        <Tabs.Screen name="about" options={{ title: t("about.title"), href: null }} />
       </Tabs>
     </View>
   );

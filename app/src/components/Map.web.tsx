@@ -1,13 +1,16 @@
 import React, { useMemo } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Polygon, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Campsite } from "@/types/campsite";
-import { localized } from "@/types/campsite";
+import { localized, type Amenities } from "@/types/campsite";
 import { navigationUrlsFor } from "@/lib/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
+import { useFavorites } from "@/context/FavoritesContext";
 import type { ColorTokens } from "@/constants/theme";
+import { MASK_OUTER_RING, MASK_RINGS, MASK_WINDOW_RING } from "@/data/mapMask";
+import { FAVORITE_PIN_COLOR, ISRAEL_PAN_LIMIT, ISRAEL_VIEW, MIN_ZOOM } from "@/constants/map";
 
 /**
  * Leaflet's CSS ships its default marker icons as relative `url(images/...)`
@@ -34,7 +37,8 @@ L.Icon.Default.mergeOptions({
  * Official and non-official sites get visually distinct pins, because that
  * distinction is the whole point of the unified dataset: a green pin is a
  * Parks Authority campground with published prices and a booking system, an
- * amber pin is a third-party listing that may be out of date. Each pin
+ * amber pin is a third-party listing that may be out of date. A site saved
+ * as a favorite gets a light-red pin instead, whichever kind it is. Each pin
  * carries a small tent glyph (matching the mockup's map pins, which weren't
  * plain teardrops either) rather than an empty circle.
  *
@@ -59,6 +63,18 @@ function pinIcon(fill: string) {
   });
 }
 
+const INITIAL_BOUNDS: L.LatLngBoundsExpression = [
+  [ISRAEL_VIEW.south, ISRAEL_VIEW.west],
+  [ISRAEL_VIEW.north, ISRAEL_VIEW.east],
+];
+const MAX_BOUNDS: L.LatLngBoundsExpression = [
+  [ISRAEL_PAN_LIMIT.south, ISRAEL_PAN_LIMIT.west],
+  [ISRAEL_PAN_LIMIT.north, ISRAEL_PAN_LIMIT.east],
+];
+
+// Everything outside the window around Israel: one polygon with a hole.
+const MASK_FRAME = [MASK_OUTER_RING, MASK_WINDOW_RING];
+
 type Props = {
   campsites: Campsite[];
   onSelectCampsite?: (campsite: Campsite) => void;
@@ -76,10 +92,25 @@ type Props = {
 export default function Map({ campsites, onSelectCampsite }: Props) {
   const { locale, t } = useLocale();
   const colors = useThemeColors();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
+  const favoriteIcon = useMemo(() => pinIcon(FAVORITE_PIN_COLOR), []);
   const officialIcon = useMemo(() => pinIcon(colors.primary), [colors.primary]);
   const unofficialIcon = useMemo(() => pinIcon(colors.accent), [colors.accent]);
   const linkStyle = useMemo(() => linkStyleFor(colors), [colors]);
+  // Land that isn't Israel is painted over in the page's own background
+  // colour, so the country reads as a cut-out (see data/mapMask.ts). The
+  // thin stroke in the same colour closes hairline seams between pieces.
+  const maskStyle = useMemo(
+    () => ({
+      color: colors.background,
+      weight: 2,
+      fillColor: colors.background,
+      fillOpacity: 1,
+      interactive: false,
+    }),
+    [colors.background]
+  );
 
   // Sites with no verified coordinates can't be pinned — they stay in the list
   // view instead. Never invent a position to make the map look fuller.
@@ -88,16 +119,26 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
       campsite.coordinates !== null
   );
 
-  const center: [number, number] = mappable[0]
-    ? [mappable[0].coordinates.lat, mappable[0].coordinates.lng]
-    : [31.5, 34.8];
-
+  // Opens framed on the whole country and stays there: `maxBounds` with a
+  // viscosity of 1 makes the edge a hard stop (the default lets the map be
+  // dragged past it and then springs back), and `minZoom` stops zooming out
+  // to a view where the limit would no longer mean anything.
   return (
-    <MapContainer center={center} zoom={7} style={{ height: "100%", width: "100%" }}>
+    <MapContainer
+      bounds={INITIAL_BOUNDS}
+      maxBounds={MAX_BOUNDS}
+      maxBoundsViscosity={1}
+      minZoom={MIN_ZOOM}
+      style={{ height: "100%", width: "100%" }}
+    >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <Polygon positions={MASK_FRAME} pathOptions={maskStyle} />
+      {MASK_RINGS.map((ring, index) => (
+        <Polygon key={index} positions={ring} pathOptions={maskStyle} />
+      ))}
       {mappable.map((campsite) => {
         const nav = navigationUrlsFor(campsite);
         const name = localized(campsite.name, locale);
@@ -106,23 +147,70 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
           : campsite.pricing.perNight != null
           ? `₪${campsite.pricing.perNight}`
           : t("common.priceUnknown");
+        const favorite = isFavorite(campsite.id);
+        const cover = campsite.photos.find((photo) => !photo.isPlaceholder);
+        const { note: hours, checkIn, checkOut } = campsite.openingHours;
+        // Only amenities the source positively confirmed (see the detail screen).
+        const amenities = (Object.entries(campsite.amenities) as [keyof Amenities, boolean | undefined][])
+          .filter(([, enabled]) => enabled === true)
+          .map(([key]) => t(`site.amenity.${key}`));
+        const phone = campsite.contact.phone;
 
         return (
           <Marker
             key={campsite.id}
             position={[campsite.coordinates.lat, campsite.coordinates.lng]}
-            icon={campsite.isOfficial ? officialIcon : unofficialIcon}
+            icon={favorite ? favoriteIcon : campsite.isOfficial ? officialIcon : unofficialIcon}
           >
             <Popup>
-              <div dir={locale === "he" ? "rtl" : "ltr"} style={{ minWidth: 180 }}>
-                <strong style={{ fontSize: 14, color: colors.text }}>{name}</strong>
-                <div style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
+              {/* The popup keeps the right-to-left layout in every language,
+                  like the rest of the app; `dir="auto"` on the text lines
+                  lets an English name or price still read left-to-right. */}
+              <div dir="rtl" style={{ width: 230, textAlign: "right" }}>
+                {cover && (
+                  <img
+                    src={cover.url}
+                    alt=""
+                    style={{ display: "block", width: "100%", height: 96, objectFit: "cover", borderRadius: 6, marginBottom: 8 }}
+                  />
+                )}
+                <strong dir="auto" style={{ display: "block", fontSize: 14, color: colors.text }}>
+                  {name}
+                </strong>
+                <div dir="auto" style={{ color: colors.textMuted, fontSize: 12, marginTop: 2 }}>
                   {t(`region.${campsite.region}`)} · {price}
                 </div>
+
+                {hours && (
+                  <div dir="auto" style={factStyle}>
+                    <b>{t("site.openingHours")}:</b> {hours}
+                  </div>
+                )}
+                {(checkIn || checkOut) && (
+                  <div dir="auto" style={factStyle}>
+                    {[checkIn && `${t("site.checkIn")} ${checkIn}`, checkOut && `${t("site.checkOut")} ${checkOut}`]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </div>
+                )}
+                {amenities.length > 0 && (
+                  <div dir="auto" style={factStyle}>
+                    <b>{t("site.amenities")}:</b> {amenities.join(", ")}
+                  </div>
+                )}
+                {phone && (
+                  <div dir="auto" style={factStyle}>
+                    <b>{t("site.phone")}:</b>{" "}
+                    <a href={`tel:${phone}`} dir="ltr" style={{ color: colors.primary }}>
+                      {phone}
+                    </a>
+                  </div>
+                )}
 
                 {!campsite.isOfficial && (
                   <div
                     role="alert"
+                    dir="auto"
                     style={{
                       marginTop: 6,
                       padding: "4px 6px",
@@ -148,18 +236,22 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
 
                 <button
                   type="button"
-                  onClick={() => onSelectCampsite?.(campsite)}
+                  onClick={() => toggleFavorite(campsite.id)}
+                  aria-pressed={favorite}
                   style={{
-                    marginTop: 8,
-                    width: "100%",
-                    padding: "6px 8px",
-                    border: "none",
-                    borderRadius: 6,
-                    background: colors.primary,
-                    color: colors.onPrimary,
-                    fontSize: 12,
-                    cursor: "pointer",
+                    ...buttonStyle,
+                    border: `1px solid ${FAVORITE_PIN_COLOR}`,
+                    background: favorite ? FAVORITE_PIN_COLOR : "transparent",
+                    color: favorite ? "#FFFFFF" : colors.danger,
                   }}
+                >
+                  {favorite ? "♥" : "♡"} {t(favorite ? "site.removeFromFavorites" : "site.addToFavorites")}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onSelectCampsite?.(campsite)}
+                  style={{ ...buttonStyle, border: "none", background: colors.primary, color: colors.onPrimary }}
                 >
                   {t("site.viewDetails")}
                 </button>
@@ -171,6 +263,18 @@ export default function Map({ campsites, onSelectCampsite }: Props) {
     </MapContainer>
   );
 }
+
+/** One line of extra detail in the popup (hours, amenities, phone). */
+const factStyle: React.CSSProperties = { fontSize: 12, marginTop: 4, lineHeight: 1.35 };
+
+const buttonStyle: React.CSSProperties = {
+  marginTop: 8,
+  width: "100%",
+  padding: "6px 8px",
+  borderRadius: 6,
+  fontSize: 12,
+  cursor: "pointer",
+};
 
 function linkStyleFor(colors: ColorTokens): React.CSSProperties {
   return {

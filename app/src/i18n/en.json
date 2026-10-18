@@ -1,6 +1,7 @@
 {
   "common": {
-    "appName": "CampingIL",
+    "appName": "Pitron Shetach",
+    "slogan": "All of Israel's night parking and campsites",
     "loading": "Loading...",
     "error": "Something went wrong",
     "retry": "Retry",
@@ -8,17 +9,15 @@
     "perNight": "per night",
     "night": "night",
     "priceUnknown": "Price unknown",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "back": "Back"
   },
   "tabs": {
     "home": "Home",
     "map": "Map",
-    "favorites": "Favorites",
-    "settings": "Settings"
+    "favorites": "Favorites"
   },
   "home": {
-    "title": "Find a night camp",
-    "subtitle": "Every overnight parking and camping site in Israel, in one place",
     "listView": "List",
     "mapView": "Map",
     "emptySites": "No sites found",
@@ -35,6 +34,10 @@
       "priceAsc": "Price: low to high",
       "priceDesc": "Price: high to low",
       "region": "Region: north to south"
+    },
+    "radius": {
+      "label": "Sites within a radius of {city}:",
+      "km": "{km} km"
     }
   },
   "region": {
@@ -84,22 +87,36 @@
       "wasteDisposal": "Waste disposal",
       "fourByFourRequired": "4x4 required",
       "cellReception": "Cell reception"
-    }
+    },
+    "missingInfo": "Oops! We couldn't find some details about this place.",
+    "missingInfoCall": "If you have questions, you can always try calling the number!",
+    "distanceFrom": "About {km} km from {city}",
+    "phone": "Phone"
   },
   "favorites": {
     "title": "My favorites",
-    "empty": "You haven't saved any sites yet"
+    "empty": "You haven't saved any sites yet",
+    "noMatches": "No favorites match your search"
   },
-  "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "hebrew": "Hebrew",
+  "header": {
+    "hebrew": "עברית",
     "english": "English",
-    "appearance": "Appearance",
-    "light": "Light",
-    "dark": "Dark",
-    "about": "About",
-    "restartRequiredTitle": "Restart required",
-    "restartRequiredMessage": "Text direction will fully update after you restart the app."
+    "switchLanguage": "Change language",
+    "lightMode": "Switch to light mode",
+    "darkMode": "Switch to dark mode"
+  },
+  "about": {
+    "title": "About",
+    "whatTitle": "What is Pitron Shetach?",
+    "whatBody": "Pitron Shetach brings Israel's night parking grounds and campsites together in one place, so you can find somewhere to sleep tonight without hopping between websites. Search by name or region, see every site on the map, save favorites, and navigate straight there with Waze or Google Maps.",
+    "sourcesTitle": "Where does the information come from?",
+    "sourcesOfficial": "The official night parking grounds come from the Israel Nature and Parks Authority website (parks.org.il).",
+    "sourcesUnofficial": "The campsites come from the gocamping.co.il camping directory.",
+    "sourcesCoordinates": "Navigation coordinates were taken mainly from tiuli.com and amudanan.co.il. A site whose location we couldn't verify is listed but not shown on the map, and its navigation buttons search by name instead.",
+    "accuracyTitle": "Good to know",
+    "accuracyBody": "Information about non-official sites comes from a third party and may be inaccurate or out of date: prices, opening hours and even whether a place is still operating can change. We recommend calling to confirm before you set out.",
+    "independent": "Pitron Shetach is an independent project and is not affiliated with the Nature and Parks Authority or with the sites listed here.",
+    "contactTitle": "Contact",
+    "contactBody": "Found a mistake, or know a site we should add? We'd love to hear from you."
   }
 }

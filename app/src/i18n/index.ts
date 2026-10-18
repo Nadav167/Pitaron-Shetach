@@ -23,6 +23,4 @@ export function t(locale: Locale, path: string): string {
   return typeof value === "string" ? value : path;
 }
 
-export const isRTL = (locale: Locale) => locale === "he";
-
 export { dictionaries };

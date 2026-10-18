@@ -10,7 +10,7 @@ export type SortMode = "default" | "priceAsc" | "priceDesc" | "region";
  * Jerusalem is grouped with Center rather than south; the Negev/Dead
  * Sea/Arava/Eilat corridor is "south".
  */
-const REGION_BUCKET: Record<Region, number> = {
+export const REGION_BUCKET: Record<Region, number> = {
   North: 0,
   Golan: 0,
   Galilee: 0,

@@ -29,6 +29,10 @@ type Props = {
    *  content fixes both: content still centers, scrollbar sits where a
    *  native scrollbar belongs. */
   contentMaxWidth?: number;
+  /** Shown in place of the rows when `campsites` is empty. */
+  emptyMessage?: string;
+  /** Extra line for a card, e.g. its distance from a searched town. */
+  noteFor?: (campsite: Campsite) => string | undefined;
 };
 
 export default function SiteList({
@@ -37,18 +41,15 @@ export default function SiteList({
   numColumns = 1,
   header,
   contentMaxWidth,
+  emptyMessage,
+  noteFor,
 }: Props) {
   const { t } = useLocale();
 
-  if (campsites.length === 0) {
-    return (
-      <View style={styles.emptyWrap}>
-        {header}
-        <EmptyState message={t("home.emptySites")} />
-      </View>
-    );
-  }
-
+  // The empty state is the FlatList's own ListEmptyComponent rather than a
+  // separate early return: swapping the whole FlatList out for another view
+  // unmounted the header with it, so a search box living in `header` lost
+  // focus (and the keyboard) the moment a query stopped matching anything.
   return (
     <FlatList
       // FlatList doesn't support changing numColumns on a mounted instance
@@ -59,6 +60,10 @@ export default function SiteList({
       keyExtractor={(campsite) => campsite.id}
       numColumns={numColumns}
       ListHeaderComponent={header ? <>{header}</> : undefined}
+      ListEmptyComponent={<EmptyState message={emptyMessage ?? t("home.emptySites")} />}
+      // Typing in a header search box must not be interrupted by a tap on a
+      // result: without this the first tap only dismisses the keyboard.
+      keyboardShouldPersistTaps="handled"
       contentContainerStyle={[
         styles.content,
         numColumns > 1 && styles.gridContent,
@@ -67,7 +72,7 @@ export default function SiteList({
       columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
       renderItem={({ item }) => (
         <View style={numColumns > 1 ? gridItemStyle(numColumns) : undefined}>
-          <SiteCard campsite={item} onPress={() => onSelectCampsite(item)} />
+          <SiteCard campsite={item} note={noteFor?.(item)} onPress={() => onSelectCampsite(item)} />
         </View>
       )}
     />
@@ -82,11 +87,10 @@ function gridItemStyle(numColumns: number) {
 }
 
 const styles = StyleSheet.create({
-  content: { padding: spacing.md },
+  content: { padding: spacing.md, flexGrow: 1 },
   // Grid mode (numColumns > 1): SiteCard's own marginBottom already spaces
   // rows vertically, so only the horizontal gap between columns is added
   // here — adding a vertical gap too would double up with that margin.
   gridContent: { gap: 0 },
   row: { gap: spacing.md },
-  emptyWrap: { flex: 1 },
 });

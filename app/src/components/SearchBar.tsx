@@ -24,7 +24,7 @@ const SORT_OPTIONS: SortMode[] = ["default", "priceAsc", "priceDesc", "region"];
  * tapping it did nothing.
  */
 export default function SearchBar({ value, onChangeText, sortMode, onSortModeChange }: Props) {
-  const { t, isRTL } = useLocale();
+  const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [menuVisible, setMenuVisible] = useState(false);
@@ -37,11 +37,13 @@ export default function SearchBar({ value, onChangeText, sortMode, onSortModeCha
         onChangeText={onChangeText}
         placeholder={t("home.searchPlaceholder")}
         placeholderTextColor={colors.textFaint}
-        // Row mirroring under RTL comes from the inherited CSS `direction`
-        // (see LocaleContext), but a text input's own text-align doesn't
-        // follow that automatically on every platform/browser — has to be
-        // set explicitly or Hebrew placeholder/typed text starts flush left.
-        style={[styles.input, { textAlign: isRTL ? "right" : "left", writingDirection: isRTL ? "rtl" : "ltr" }]}
+        // Row mirroring comes from the inherited CSS `direction` (see
+        // LocaleContext), but a text input's own text-align doesn't follow
+        // that on every platform/browser, so it is set outright. Always
+        // right-aligned, like the rest of the layout; the reading direction
+        // follows the language so the placeholder's punctuation lands on
+        // the correct side.
+        style={[styles.input, { textAlign: "right", writingDirection }]}
       />
       <Menu
         visible={menuVisible}

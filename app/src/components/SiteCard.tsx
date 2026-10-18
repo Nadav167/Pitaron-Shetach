@@ -7,10 +7,13 @@ import { localized } from "@/types/campsite";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useFavorites } from "@/context/FavoritesContext";
+import HoverTip from "@/components/HoverTip";
 import { spacing, radius, fonts, type ColorTokens } from "@/constants/theme";
 
 type Props = {
   campsite: Campsite;
+  /** Extra line under the region, e.g. the distance from a searched town. */
+  note?: string;
   onPress?: () => void;
 };
 
@@ -22,11 +25,11 @@ type Props = {
  * the same here on purpose; the distinction lives in the filter chips and
  * the detail screen, not as a badge on every listing.
  */
-export default function SiteCard({ campsite, onPress }: Props) {
-  const { locale, t, isRTL } = useLocale();
+export default function SiteCard({ campsite, note, onPress }: Props) {
+  const { locale, t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const styles = useMemo(() => makeStyles(colors, isRTL), [colors, isRTL]);
+  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   const name = localized(campsite.name, locale);
   const priceLabel = campsite.pricing.isFree
@@ -39,21 +42,30 @@ export default function SiteCard({ campsite, onPress }: Props) {
   // if they documented the place — the card falls back to no cover instead.
   const cover = campsite.photos.find((photo) => !photo.isPlaceholder);
   const favorite = isFavorite(campsite.id);
-  const chevron = isRTL ? "chevron-left" : "chevron-right";
+  const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
 
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
       {cover && (
         <View style={styles.coverWrap}>
           <Card.Cover source={{ uri: cover.url }} style={styles.cover} />
-          <Pressable
-            style={styles.heartButton}
-            hitSlop={8}
-            onPress={() => toggleFavorite(campsite.id)}
-            accessibilityLabel={favorite ? t("site.removeFromFavorites") : t("site.addToFavorites")}
-          >
-            <MaterialCommunityIcons name={favorite ? "heart" : "heart-outline"} size={18} color="#FFFFFF" />
-          </Pressable>
+          {/* HoverTip wraps its child in a view of its own, so the absolute
+              positioning lives on this outer wrapper, not on the button.
+              The bubble is left-aligned so it opens into the card rather
+              than past its (clipping) left edge. */}
+          <View style={styles.heartPosition}>
+            <HoverTip label={favoriteLabel} align="left">
+              <Pressable
+                style={styles.heartButton}
+                hitSlop={8}
+                onPress={() => toggleFavorite(campsite.id)}
+                accessibilityRole="button"
+                accessibilityLabel={favoriteLabel}
+              >
+                <MaterialCommunityIcons name={favorite ? "heart" : "heart-outline"} size={18} color="#FFFFFF" />
+              </Pressable>
+            </HoverTip>
+          </View>
         </View>
       )}
       <Card.Content style={styles.content}>
@@ -73,6 +85,15 @@ export default function SiteCard({ campsite, onPress }: Props) {
           </Text>
         </View>
 
+        {note ? (
+          <View style={styles.metaItem}>
+            <MaterialCommunityIcons name="map-marker-distance" size={14} color={colors.primary} />
+            <Text variant="bodySmall" style={styles.note}>
+              {note}
+            </Text>
+          </View>
+        ) : null}
+
         {campsite.openingHours.note ? (
           <View style={styles.metaItem}>
             <MaterialCommunityIcons name="clock-outline" size={14} color={colors.textMuted} />
@@ -90,14 +111,16 @@ export default function SiteCard({ campsite, onPress }: Props) {
 
         <Pressable style={styles.detailsButton} onPress={onPress}>
           <Text style={styles.detailsLabel}>{t("site.viewDetails")}</Text>
-          <MaterialCommunityIcons name={chevron} size={16} color={colors.onPrimary} />
+          {/* Points left — "forward" in the right-to-left layout, which is
+              the layout in every language. */}
+          <MaterialCommunityIcons name="chevron-left" size={16} color={colors.onPrimary} />
         </Pressable>
       </Card.Content>
     </Card>
   );
 }
 
-function makeStyles(colors: ColorTokens, isRTL: boolean) {
+function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     card: { marginBottom: spacing.md, borderRadius: radius.lg, overflow: "hidden" },
     coverWrap: { position: "relative" },
@@ -105,12 +128,15 @@ function makeStyles(colors: ColorTokens, isRTL: boolean) {
     // regardless of card width (the previous 150px) made the photo look
     // like a thin stretched banner on wide cards instead of a proper photo.
     cover: { width: "100%", aspectRatio: 16 / 9, borderRadius: 0 },
-    heartButton: {
+    heartPosition: {
       position: "absolute",
       top: 10,
-      // Absolute left/right positioning doesn't mirror automatically under
-      // RTL (unlike flow-relative flex layout) — has to be flipped by hand.
-      ...(isRTL ? { left: 10 } : { right: 10 }),
+      // Top-left corner: the trailing corner of the right-to-left layout.
+      // Absolute left/right doesn't mirror by itself the way flex rows do,
+      // and it must not move when the language changes, so it is physical.
+      left: 10,
+    },
+    heartButton: {
       width: 32,
       height: 32,
       borderRadius: 16,
@@ -123,7 +149,7 @@ function makeStyles(colors: ColorTokens, isRTL: boolean) {
     // `textAlign: 'left'` unconditionally (see Typography/Text.tsx) --
     // it never mirrors under RTL on its own, so every Paper Text here
     // needs an explicit override or Hebrew titles stay flush left.
-    name: { fontFamily: fonts.displayBold, color: colors.text, textAlign: isRTL ? "right" : "left" },
+    name: { fontFamily: fonts.displayBold, color: colors.text, textAlign: "right", writingDirection },
     metaRow: {
       flexDirection: "row",
       alignItems: "center",
@@ -132,8 +158,9 @@ function makeStyles(colors: ColorTokens, isRTL: boolean) {
     },
     metaItem: { flexDirection: "row", alignItems: "center", gap: 5 },
     muted: { color: colors.textMuted },
+    note: { color: colors.primary, fontFamily: fonts.bodyMedium, writingDirection },
     price: { color: colors.accentDeep, fontFamily: fonts.bodyBold },
-    noCoords: { color: colors.textMuted, fontStyle: "italic", textAlign: isRTL ? "right" : "left" },
+    noCoords: { color: colors.textMuted, fontStyle: "italic", textAlign: "right", writingDirection },
     detailsButton: {
       marginTop: spacing.sm,
       flexDirection: "row",

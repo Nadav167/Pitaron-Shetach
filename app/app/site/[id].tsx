@@ -14,21 +14,20 @@ import UnofficialNotice from "@/components/UnofficialNotice";
 import NavigationButtons from "@/components/NavigationButtons";
 import { localized, type Amenities } from "@/types/campsite";
 
+// The layout is always right-to-left, in every language (see LocaleContext),
+// so everything below is written for RTL outright rather than switched on
+// the locale.
+//
 // react-native-paper's List.Item (MD3) hardcodes *physical* padding/margin
 // for its icon slot — a fixed paddingRight on the row, a fixed paddingLeft
 // on the content, a fixed marginRight on the icon itself. None of those
-// mirror under RTL the way flexDirection: row does (same category of bug as
-// the absolute-positioned favorite heart, fixed earlier): the icon does
-// move to the correct (right) side under Hebrew, but the icon-to-text gap
-// and the row's own edge padding stay glued to their LTR position. These
-// two small helpers re-mirror them manually.
-function listItemStyle(isRTL: boolean) {
-  return isRTL ? { paddingRight: 0, paddingLeft: 24 } : undefined;
-}
-function listContentStyle(isRTL: boolean) {
-  return isRTL ? { paddingLeft: 0, paddingRight: 16 } : undefined;
-}
-function mirroredIcon(icon: string, isRTL: boolean) {
+// mirror under RTL the way flexDirection: row does: the icon does move to
+// the correct (right) side, but the icon-to-text gap and the row's own edge
+// padding stay glued to their LTR position. These re-mirror them by hand.
+const LIST_ITEM_STYLE = { paddingRight: 0, paddingLeft: 24 };
+const LIST_CONTENT_STYLE = { paddingLeft: 0, paddingRight: 16 };
+
+function mirroredIcon(icon: string) {
   // Loosely typed on purpose: the style prop List.Item hands to its
   // left render prop comes from react-native-paper's own (unexported)
   // Style type, and the monorepo has two copies of the react-native
@@ -37,37 +36,26 @@ function mirroredIcon(icon: string, isRTL: boolean) {
   // precisely trips that duplicate-package mismatch instead of catching a
   // real bug.
   return (props: { color: string; style?: object }) => (
-    <List.Icon
-      {...props}
-      icon={icon}
-      style={isRTL ? [props.style, { marginRight: 0, marginLeft: 16 }] : props.style}
-    />
+    <List.Icon {...props} icon={icon} style={[props.style, { marginRight: 0, marginLeft: 16 }]} />
   );
-}
-
-// react-native-paper's own <Text> component hardcodes `textAlign: 'left'`
-// unconditionally (see node_modules/react-native-paper/src/components/
-// Typography/Text.tsx) — it never mirrors under RTL on its own. This is
-// the actual root cause behind the detail screen still reading as LTR even
-// after the I18nManager and List.Item padding fixes: those fixed *layout*
-// (row order, icon gap), but every Paper Text and List.Item title/
-// description still rendered flush left regardless of language. List.Item
-// exposes titleStyle/descriptionStyle for exactly this override.
-function textAlignStyle(isRTL: boolean) {
-  return { textAlign: isRTL ? ("right" as const) : ("left" as const) };
 }
 
 export default function CampsiteDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { campsite, loading, error } = useCampsite(id);
-  const { locale, t, isRTL } = useLocale();
+  const { locale, t, writingDirection } = useLocale();
   const { isFavorite, toggleFavorite } = useFavorites();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
   const router = useRouter();
 
-  const styles = useMemo(() => makeStyles(colors, isRTL), [colors, isRTL]);
-  const rtlText = useMemo(() => textAlignStyle(isRTL), [isRTL]);
+  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
+  // react-native-paper's own <Text> hardcodes `textAlign: 'left'` and, on
+  // web, `writingDirection: 'ltr'` — it never follows RTL by itself, so
+  // every List.Item title/description gets this through titleStyle /
+  // descriptionStyle. Alignment is always right; only the reading direction
+  // follows the language.
+  const rtlText = useMemo(() => ({ textAlign: "right" as const, writingDirection }), [writingDirection]);
 
   const name = campsite ? localized(campsite.name, locale) : "";
   const description = campsite?.description ? localized(campsite.description, locale) : "";
@@ -92,18 +80,30 @@ export default function CampsiteDetailScreen() {
     ? `₪${campsite.pricing.perNight} ${t("common.perNight")}`
     : t("common.priceUnknown");
 
+  // Price or hours came back empty from the source. Say so in plain words
+  // (and point at the phone number, when there is one) rather than leaving
+  // a bare "unknown" for the visitor to puzzle over.
+  const hasMissingInfo = campsite
+    ? (!campsite.pricing.isFree && campsite.pricing.perNight == null) || !campsite.openingHours.note
+    : false;
+  const missingInfoMessage = campsite?.contact.phone
+    ? `${t("site.missingInfo")} ${t("site.missingInfoCall")}`
+    : t("site.missingInfo");
+  const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
+
   return (
     <View style={styles.container}>
       <Appbar.Header style={styles.appbar} elevated>
-        <Appbar.BackAction onPress={() => router.back()} />
+        {/* A plain arrow rather than Appbar.BackAction: Paper's back icon
+            only mirrors when I18nManager says RTL, which never happens on
+            web, so it kept pointing left in a right-to-left layout. It
+            points right in every language, because the layout never flips. */}
+        <Appbar.Action
+          icon="arrow-right"
+          onPress={() => router.back()}
+          accessibilityLabel={t("common.back")}
+        />
         <Appbar.Content title={name} titleStyle={styles.appbarTitle} />
-        {campsite && (
-          <Appbar.Action
-            icon={favorite ? "heart" : "heart-outline"}
-            iconColor={favorite ? colors.danger : colors.text}
-            onPress={() => toggleFavorite(campsite.id)}
-          />
-        )}
       </Appbar.Header>
 
       {loading ? (
@@ -138,6 +138,20 @@ export default function CampsiteDetailScreen() {
             </Text>
           ) : null}
 
+          {/* The one favorite control on this screen: a labeled button in
+              the page itself, rather than a bare heart in the corner of the
+              app bar. */}
+          <Button
+            mode={favorite ? "contained" : "outlined"}
+            icon={favorite ? "heart" : "heart-outline"}
+            buttonColor={favorite ? colors.danger : undefined}
+            textColor={favorite ? colors.background : colors.danger}
+            style={[styles.favoriteButton, !favorite && { borderColor: colors.danger }]}
+            onPress={() => toggleFavorite(campsite.id)}
+          >
+            {favoriteLabel}
+          </Button>
+
           <Text variant="titleMedium" style={styles.sectionTitle}>
             {t("site.navigate")}
           </Text>
@@ -148,16 +162,7 @@ export default function CampsiteDetailScreen() {
             </Text>
           )}
 
-          <Button
-            mode={favorite ? "outlined" : "contained"}
-            icon={favorite ? "heart-off-outline" : "heart-outline"}
-            style={styles.favoriteButton}
-            onPress={() => toggleFavorite(campsite.id)}
-          >
-            {favorite ? t("site.removeFromFavorites") : t("site.addToFavorites")}
-          </Button>
-
-          <Divider />
+          <Divider style={styles.divider} />
 
           <List.Section>
             <List.Item
@@ -166,18 +171,18 @@ export default function CampsiteDetailScreen() {
                 campsite.pricing.note ? `${priceLabel} — ${campsite.pricing.note}` : priceLabel
               }
               descriptionNumberOfLines={3}
-              left={mirroredIcon("cash-multiple", isRTL)}
-              style={listItemStyle(isRTL)}
-              contentStyle={listContentStyle(isRTL)}
+              left={mirroredIcon("cash-multiple")}
+              style={LIST_ITEM_STYLE}
+              contentStyle={LIST_CONTENT_STYLE}
               titleStyle={rtlText}
               descriptionStyle={rtlText}
             />
             <List.Item
               title={t("site.region")}
               description={t(`region.${campsite.region}`)}
-              left={mirroredIcon("map-marker-outline", isRTL)}
-              style={listItemStyle(isRTL)}
-              contentStyle={listContentStyle(isRTL)}
+              left={mirroredIcon("map-marker-outline")}
+              style={LIST_ITEM_STYLE}
+              contentStyle={LIST_CONTENT_STYLE}
               titleStyle={rtlText}
               descriptionStyle={rtlText}
             />
@@ -185,9 +190,9 @@ export default function CampsiteDetailScreen() {
               title={t("site.openingHours")}
               description={campsite.openingHours.note ?? t("common.unknown")}
               descriptionNumberOfLines={4}
-              left={mirroredIcon("clock-outline", isRTL)}
-              style={listItemStyle(isRTL)}
-              contentStyle={listContentStyle(isRTL)}
+              left={mirroredIcon("clock-outline")}
+              style={LIST_ITEM_STYLE}
+              contentStyle={LIST_CONTENT_STYLE}
               titleStyle={rtlText}
               descriptionStyle={rtlText}
             />
@@ -200,14 +205,22 @@ export default function CampsiteDetailScreen() {
                 ]
                   .filter(Boolean)
                   .join(" · ")}
-                left={mirroredIcon("login-variant", isRTL)}
-                style={listItemStyle(isRTL)}
-                contentStyle={listContentStyle(isRTL)}
+                left={mirroredIcon("login-variant")}
+                style={LIST_ITEM_STYLE}
+                contentStyle={LIST_CONTENT_STYLE}
                 titleStyle={rtlText}
                 descriptionStyle={rtlText}
               />
             )}
           </List.Section>
+
+          {hasMissingInfo && (
+            <View style={styles.missingInfo}>
+              <Text variant="bodySmall" style={styles.missingInfoText}>
+                {missingInfoMessage}
+              </Text>
+            </View>
+          )}
 
           {knownAmenities.length > 0 && (
             <>
@@ -236,9 +249,9 @@ export default function CampsiteDetailScreen() {
                 {campsite.contact.phone && (
                   <List.Item
                     title={campsite.contact.phone}
-                    left={mirroredIcon("phone-outline", isRTL)}
-                    style={listItemStyle(isRTL)}
-                    contentStyle={listContentStyle(isRTL)}
+                    left={mirroredIcon("phone-outline")}
+                    style={LIST_ITEM_STYLE}
+                    contentStyle={LIST_CONTENT_STYLE}
                     titleStyle={rtlText}
                     onPress={() => Linking.openURL(`tel:${campsite.contact.phone}`)}
                   />
@@ -247,9 +260,9 @@ export default function CampsiteDetailScreen() {
                   <List.Item
                     title={t("site.sourcePage")}
                     description={campsite.source.name}
-                    left={mirroredIcon("web", isRTL)}
-                    style={listItemStyle(isRTL)}
-                    contentStyle={listContentStyle(isRTL)}
+                    left={mirroredIcon("web")}
+                    style={LIST_ITEM_STYLE}
+                    contentStyle={LIST_CONTENT_STYLE}
                     titleStyle={rtlText}
                     descriptionStyle={rtlText}
                     onPress={() => Linking.openURL(campsite.contact.website!)}
@@ -258,9 +271,9 @@ export default function CampsiteDetailScreen() {
                 {campsite.contact.email && (
                   <List.Item
                     title={campsite.contact.email}
-                    left={mirroredIcon("email-outline", isRTL)}
-                    style={listItemStyle(isRTL)}
-                    contentStyle={listContentStyle(isRTL)}
+                    left={mirroredIcon("email-outline")}
+                    style={LIST_ITEM_STYLE}
+                    contentStyle={LIST_CONTENT_STYLE}
                     titleStyle={rtlText}
                     onPress={() => Linking.openURL(`mailto:${campsite.contact.email}`)}
                   />
@@ -273,11 +286,11 @@ export default function CampsiteDetailScreen() {
               the wrong place; showing where a record came from lets someone
               check the source rather than trust us blindly. */}
           <Divider style={styles.divider} />
-          <Text variant="labelSmall" style={styles.muted}>
+          <Text variant="labelSmall" style={styles.provenance}>
             {`${t("site.dataFrom")}: ${campsite.source.name}`}
           </Text>
           {campsite.source.coordsSource && (
-            <Text variant="labelSmall" style={styles.muted}>
+            <Text variant="labelSmall" style={styles.provenance}>
               {`${t("site.coordsFrom")}: ${campsite.source.coordsSource}`}
             </Text>
           )}
@@ -287,8 +300,8 @@ export default function CampsiteDetailScreen() {
   );
 }
 
-function makeStyles(colors: ColorTokens, isRTL: boolean) {
-  const align = isRTL ? ("right" as const) : ("left" as const);
+function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
+  const align = "right" as const;
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     appbar: { backgroundColor: colors.background },
@@ -312,9 +325,18 @@ function makeStyles(colors: ColorTokens, isRTL: boolean) {
       paddingVertical: spacing.xs,
     },
     officialBadgeText: { color: colors.primary, textAlign: align },
-    description: { color: colors.textMuted, marginTop: spacing.xs, textAlign: align },
+    description: { color: colors.textMuted, marginTop: spacing.xs, textAlign: align, writingDirection },
+    favoriteButton: { marginTop: spacing.sm, borderRadius: radius.md },
     sectionTitle: { marginTop: spacing.md, fontFamily: fonts.displayBold, color: colors.text, textAlign: align },
-    favoriteButton: { marginVertical: spacing.md },
+    missingInfo: {
+      backgroundColor: colors.surfaceAlt,
+      borderRadius: radius.sm,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.border,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.sm,
+    },
+    missingInfoText: { color: colors.textMuted, textAlign: align, writingDirection },
     chipRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
     chip: {
       flexDirection: "row",
@@ -329,8 +351,13 @@ function makeStyles(colors: ColorTokens, isRTL: boolean) {
       marginBottom: spacing.xs,
     },
     chipText: { color: colors.textMuted, textAlign: align },
-    muted: { color: colors.textMuted, textAlign: align },
-    noCoords: { color: colors.textMuted, fontStyle: "italic", marginTop: spacing.xs, textAlign: align },
+    muted: { color: colors.textMuted, textAlign: align, writingDirection },
+    // Paper's <Text> also pins `writingDirection` to "ltr" on web, so a
+    // Hebrew line that contains a Latin domain ("מקור נקודת הציון:
+    // amudanan.co.il") was laid out left-to-right and came out scrambled.
+    // The direction has to be stated outright; textAlign alone isn't enough.
+    provenance: { color: colors.textMuted, textAlign: align, writingDirection },
+    noCoords: { color: colors.textMuted, fontStyle: "italic", marginTop: spacing.xs, textAlign: align, writingDirection },
     divider: { marginTop: spacing.lg, marginBottom: spacing.sm },
   });
 }

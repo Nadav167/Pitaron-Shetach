@@ -1,36 +1,32 @@
 import React, { useMemo } from "react";
 import { Pressable, StyleSheet, Text as RNText, View } from "react-native";
-import { useRouter, usePathname } from "expo-router";
+import { useRouter, usePathname, type Href } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
-import { useTheme } from "@/context/ThemeContext";
-import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
-import type { Locale } from "@/types/site";
+import { useThemeColors } from "@/context/ThemeContext";
+import HeaderActions from "@/components/HeaderActions";
+import { fonts, spacing, type ColorTokens } from "@/constants/theme";
 
-type NavItem = { href: "/" | "/map" | "/favorites" | "/settings"; labelKey: string };
+type NavItem = { href: Href; path: string; labelKey: string };
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/", labelKey: "tabs.home" },
-  { href: "/map", labelKey: "tabs.map" },
-  { href: "/favorites", labelKey: "tabs.favorites" },
-  { href: "/settings", labelKey: "tabs.settings" },
+  { href: "/", path: "/", labelKey: "tabs.home" },
+  { href: "/map", path: "/map", labelKey: "tabs.map" },
+  { href: "/favorites", path: "/favorites", labelKey: "tabs.favorites" },
+  { href: "/about", path: "/about", labelKey: "about.title" },
 ];
 
 /**
  * Top navigation bar shown instead of the floating bottom tab bar on wide
- * (desktop-width) screens — the layout the mockup's Home-Desktop artboard
- * specified but the first implementation pass left as mobile-only. Brand
- * mark, text nav links (active one highlighted), a language toggle and a
- * light/dark toggle, all in one row.
+ * (desktop-width) screens. Brand mark, text nav links (active one
+ * highlighted), and the language and light/dark toggles, all in one row.
  */
 export default function DesktopNav() {
-  const { t, locale, setLocale } = useLocale();
-  const { scheme, colors, toggleScheme } = useTheme();
+  const { t } = useLocale();
+  const colors = useThemeColors();
   const router = useRouter();
   const pathname = usePathname();
   const styles = useMemo(() => makeStyles(colors), [colors]);
-
-  const otherLocale: Locale = locale === "he" ? "en" : "he";
 
   return (
     <View style={styles.bar}>
@@ -43,33 +39,16 @@ export default function DesktopNav() {
 
       <View style={styles.links}>
         {NAV_ITEMS.map((item) => {
-          const active = pathname === item.href;
+          const active = pathname === item.path;
           return (
-            <Pressable key={item.href} onPress={() => router.push(item.href)}>
+            <Pressable key={item.path} onPress={() => router.push(item.href)} accessibilityRole="link">
               <RNText style={[styles.link, active && styles.linkActive]}>{t(item.labelKey)}</RNText>
             </Pressable>
           );
         })}
       </View>
 
-      <View style={styles.actions}>
-        <Pressable style={styles.langChip} onPress={() => setLocale(otherLocale)}>
-          <RNText style={styles.langChipText}>
-            {t(locale === "he" ? "settings.hebrew" : "settings.english")}
-          </RNText>
-        </Pressable>
-        <Pressable
-          style={styles.themeButton}
-          onPress={toggleScheme}
-          accessibilityLabel={t(scheme === "dark" ? "settings.light" : "settings.dark")}
-        >
-          <MaterialCommunityIcons
-            name={scheme === "dark" ? "white-balance-sunny" : "moon-waning-crescent"}
-            size={16}
-            color={colors.textMuted}
-          />
-        </Pressable>
-      </View>
+      <HeaderActions />
     </View>
   );
 }
@@ -85,6 +64,8 @@ function makeStyles(colors: ColorTokens) {
       borderBottomWidth: StyleSheet.hairlineWidth,
       borderBottomColor: colors.border,
       backgroundColor: colors.background,
+      // Hover labels hang below the bar, over the page content.
+      zIndex: 10,
     },
     brand: { flexDirection: "row", alignItems: "center", gap: 10 },
     brandMark: {
@@ -99,23 +80,5 @@ function makeStyles(colors: ColorTokens) {
     links: { flexDirection: "row", alignItems: "center", gap: spacing.xl },
     link: { fontFamily: fonts.bodyMedium, fontSize: 14, color: colors.textMuted },
     linkActive: { color: colors.text },
-    actions: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
-    langChip: {
-      paddingHorizontal: spacing.md,
-      paddingVertical: 8,
-      borderRadius: radius.pill,
-      backgroundColor: colors.accentTint,
-    },
-    langChipText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.accentDeep },
-    themeButton: {
-      width: 34,
-      height: 34,
-      borderRadius: 17,
-      backgroundColor: colors.surfaceAlt,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: colors.border,
-      alignItems: "center",
-      justifyContent: "center",
-    },
   });
 }

@@ -1,91 +1,79 @@
-import React, { createContext, useContext, useEffect, useMemo, useState, useCallback } from "react";
-import { Alert, DevSettings, I18nManager, Platform } from "react-native";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { I18nManager, Platform } from "react-native";
 import { Locale } from "@/types/site";
-import { t as translate, isRTL } from "@/i18n";
+import { t as translate } from "@/i18n";
 
 type LocaleContextValue = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
   t: (path: string) => string;
-  isRTL: boolean;
+  /**
+   * Reading direction of the current language's TEXT — for `writingDirection`
+   * on a text style, so an English sentence reads left-to-right inside its
+   * box. It says nothing about where the box sits: the layout itself never
+   * changes with the language (see below).
+   */
+  writingDirection: "rtl" | "ltr";
 };
 
 // Hebrew is the app's primary audience and the language most people should
 // land on, regardless of the device/browser's own locale setting — English
-// is a switch someone makes deliberately from Settings, not something the
-// app should guess into from OS language.
+// is a switch someone makes deliberately, not something the app should guess
+// into from OS language.
 const defaultLocale: Locale = "he";
+
+/**
+ * LAYOUT DIRECTION IS FIXED, AND IT IS RIGHT-TO-LEFT.
+ *
+ * Switching language changes the words and nothing else: the language
+ * button, the tabs, the back arrow, the favorite heart and every card stay
+ * exactly where they are. The layout is always the Hebrew one. So direction
+ * is set once, here, and is deliberately NOT derived from the locale — any
+ * component that needs to position something writes the RTL position
+ * directly instead of branching on the language.
+ *
+ * Native (iOS/Android): `forceRTL` only takes effect from the next app
+ * launch, so on a device whose system language is left-to-right the very
+ * first run after install is still LTR; every run after that is RTL.
+ * `swapLeftAndRightInRTL(false)` keeps `left`/`right`/`paddingLeft`/... in
+ * styles physical, the way they already are on web — without it React Native
+ * silently swaps them under RTL, and the hand-mirrored styles in this app
+ * (written and checked on web) would be flipped a second time.
+ */
+if (Platform.OS !== "web") {
+  I18nManager.allowRTL(true);
+  I18nManager.forceRTL(true);
+  I18nManager.swapLeftAndRightInRTL(false);
+}
 
 const LocaleContext = createContext<LocaleContextValue | undefined>(undefined);
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(defaultLocale);
-  const rtl = isRTL(locale);
+  const [locale, setLocale] = useState<Locale>(defaultLocale);
 
-  // I18nManager needs to reflect the CURRENT locale from the very first
-  // render, not just after someone visits Settings and flips the toggle —
-  // otherwise every RTL-aware library internal (Paper's own mirroring,
-  // React Navigation, etc.) starts up assuming LTR even though the app is
-  // showing Hebrew by default, and only catches up once the user manually
-  // changes the language once. This runs once on mount to close that gap;
-  // `setLocale` below still owns the sync (and native reload) for later
-  // in-session language changes.
-  useEffect(() => {
-    if (I18nManager.isRTL !== rtl) {
-      I18nManager.allowRTL(rtl);
-      I18nManager.forceRTL(rtl);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next);
-
-    if (I18nManager.isRTL === isRTL(next)) return;
-
-    I18nManager.allowRTL(isRTL(next));
-    I18nManager.forceRTL(isRTL(next));
-
-    if (Platform.OS === "web") return; // handled by the effect below via the DOM `dir` attribute
-
-    // Native (iOS/Android): Yoga only mirrors the whole layout tree — every
-    // plain `flexDirection: "row"`, not just components written with
-    // logical start/end props — once the JS bundle reloads and views remount
-    // with the new I18nManager.isRTL value. There's no way around a reload;
-    // in dev we can trigger it ourselves, in a production build without
-    // expo-updates installed we can only tell the person to restart.
-    if (__DEV__) {
-      DevSettings.reload();
-    } else {
-      Alert.alert(
-        translate(next, "settings.restartRequiredTitle"),
-        translate(next, "settings.restartRequiredMessage")
-      );
-    }
-  }, []);
-
-  // Web: react-native-web maps RN's `flexDirection: "row"` etc. onto real CSS
-  // flexbox, which the CSS spec itself mirrors under `direction: rtl` — but
-  // only for the DOM subtree that's actually marked rtl. Nothing was setting
-  // that anywhere (the previous comment here claimed this file did it, but
-  // it didn't), so toggling the language never changed layout direction on
-  // web, only text content. Setting `dir` on <html> is also what makes
-  // browser-native behavior (bidi punctuation, scrollbar side, form control
-  // alignment) and non-RN DOM (the Leaflet popups in Map.web.tsx) follow suit.
+  // Web: react-native-web maps `flexDirection: "row"` onto real CSS flexbox,
+  // which mirrors under `direction: rtl` for whatever DOM subtree is marked
+  // rtl. `dir` on <html> is that mark, and it also brings along the browser's
+  // own behavior (scrollbar side, form controls) and non-RN DOM such as the
+  // Leaflet popups. It is always "rtl"; only `lang` follows the locale.
   useEffect(() => {
     if (Platform.OS !== "web" || typeof document === "undefined") return;
-    document.documentElement.dir = rtl ? "rtl" : "ltr";
+    document.documentElement.dir = "rtl";
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS !== "web" || typeof document === "undefined") return;
     document.documentElement.lang = locale;
-  }, [locale, rtl]);
+  }, [locale]);
 
   const value = useMemo<LocaleContextValue>(
     () => ({
       locale,
       setLocale,
       t: (path: string) => translate(locale, path),
-      isRTL: rtl,
+      writingDirection: locale === "he" ? "rtl" : "ltr",
     }),
-    [locale, setLocale, rtl]
+    [locale]
   );
 
   return <LocaleContext.Provider value={value}>{children}</LocaleContext.Provider>;

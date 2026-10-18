@@ -23,9 +23,9 @@ type Props = {
  * making the listing look like a scam, since most of these are real places.
  */
 export default function UnofficialNotice({ variant = "compact" }: Props) {
-  const { t, isRTL } = useLocale();
+  const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors, isRTL), [colors, isRTL]);
+  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   return (
     <View style={[styles.container, variant === "full" && styles.full]}>
@@ -40,7 +40,7 @@ export default function UnofficialNotice({ variant = "compact" }: Props) {
   );
 }
 
-function makeStyles(colors: ColorTokens, isRTL: boolean) {
+function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     container: {
       alignSelf: "flex-start",
@@ -58,6 +58,6 @@ function makeStyles(colors: ColorTokens, isRTL: boolean) {
     },
     // react-native-paper's <Text> hardcodes textAlign: 'left' regardless
     // of RTL (see Typography/Text.tsx) -- override explicitly.
-    text: { color: colors.accentDeep, textAlign: isRTL ? "right" : "left" },
+    text: { color: colors.accentDeep, textAlign: "right", writingDirection },
   });
 }
