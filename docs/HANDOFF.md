@@ -3,7 +3,7 @@
 Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the claude.ai project docs.
 
 ## State of the repo
-- `redesign-unified-data` was merged (fast-forward) into local `main` on 2026-10-18. `origin/main` is still `1a80ea2` (Sep 15) until `main` is pushed.
+- `redesign-unified-data` was merged (fast-forward) into `main` and pushed to origin on 2026-10-18. Work on `main` (or a new branch) from here.
 - `npm run typecheck` (app + server) passes clean.
 - Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
 
@@ -35,7 +35,6 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 3. ~~Native persistence~~ done: AsyncStorage added, hydrated at startup in `src/lib/storage.ts` (not yet tested on a device).
 4. **Favorite control on the detail screen:** it's a labeled button ("הוספה לאתרים מועדפים"), not a heart in the app bar. The code comment says this was deliberate; confirm that's what you want.
 5. **Supabase:** `server/` runs (`/api/health` OK), but `/api/sites` needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`.
-6. **Push** `main` to origin (merged locally, not pushed).
 
 ## Scraper: first live run (2026-10-18), not usable yet. DEFERRED by Nadav (too long for now)
 `node scripts/scrapeCampsites.js --out=<tmp>`. The committed JSON was **not** touched. Results:
