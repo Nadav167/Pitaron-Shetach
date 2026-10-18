@@ -1,6 +1,5 @@
 import React, { useMemo } from "react";
 import { Linking, ScrollView, StyleSheet, View } from "react-native";
-import Constants from "expo-constants";
 import { Text } from "react-native-paper";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
@@ -10,13 +9,12 @@ import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 
 const SECTIONS = [
   { title: "about.whatTitle", paragraphs: ["about.whatBody"] },
-  { title: "about.sourcesTitle", paragraphs: ["about.sourcesOfficial", "about.sourcesUnofficial", "about.sourcesCoordinates"] },
   { title: "about.accuracyTitle", paragraphs: ["about.accuracyBody", "about.independent"] },
 ];
 
 /**
- * About page: what the site is, where its data comes from, and how far to
- * trust it. Reached from the "About" link in the desktop nav and the info
+ * About page: what the site is, how far to trust its data, and how to get
+ * in touch. Reached from the "About" link in the desktop nav and the info
  * button in the mobile header. It sits in the (tabs) group, so it gets the
  * same top bar as the other pages. All copy lives in the i18n dictionaries
  * under `about`.
@@ -26,7 +24,6 @@ export default function AboutScreen() {
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
-  const version = Constants.expoConfig?.version ?? "0.1.0";
 
   return (
     <View style={styles.container}>
@@ -70,10 +67,6 @@ export default function AboutScreen() {
             </Text>
           ) : null}
         </View>
-
-        <Text variant="labelSmall" style={styles.version}>
-          {`${t("common.appName")} v${version}`}
-        </Text>
       </ScrollView>
     </View>
   );
@@ -104,6 +97,5 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     sectionTitle: { fontFamily: fonts.displayBold, color: colors.text, ...text },
     paragraph: { color: colors.textMuted, lineHeight: 22, ...text },
     link: { color: colors.primary, fontFamily: fonts.bodyBold, textAlign: "right" },
-    version: { color: colors.textFaint, marginTop: spacing.lg, textAlign: "center" },
   });
 }
