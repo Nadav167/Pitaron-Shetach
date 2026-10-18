@@ -31,7 +31,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
   - Detail page source lines.
 
 ## User accounts (live since 2026-10-18)
-- **Supabase project:** "Pitaron Shetach", ref `wmnxnxsyanbdyfbpccwb`, region **eu-central-1 (Frankfurt)**. Migration 0003 applied; "Confirm email" off. Keys in `app/.env` (git-ignored). The first project, `bcpufpubabpfrgptlsew` in Tokyo, is unused and renamed "Pitaron Shetach (Tokyo, old)"; delete it in the dashboard when you like.
+- **Supabase project:** "Pitaron Shetach", ref `wmnxnxsyanbdyfbpccwb`, region **eu-central-1 (Frankfurt)**. Migration 0003 applied; "Confirm email" off. Keys in `app/.env` (git-ignored). The first project (`bcpufpubabpfrgptlsew`, Tokyo) has been deleted.
 - **Verified against the real database** (scripted, 2026-10-18): register → instant session; profile row by trigger; add/remove/dedupe favorites; favorites survive log-out/log-in; wrong password → `invalid_credentials`; duplicate email → `user_already_exists`; RLS blocks reading or writing another user's profile/favorites (42501). Test users deleted afterwards.
 - **GitHub repo** renamed to `Nadav167/Pitaron-Shetach` (local `origin` updated).
 Register (first name, last name, email, password), log in, log out, with each user's favorites saved in the database.
