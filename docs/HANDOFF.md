@@ -4,7 +4,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 
 ## State of the repo
 - `main` is pushed and live (2026-10-18), including `user-accounts`. Repo: `github.com/Nadav167/Pitaron-Shetach`.
-- **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path to `index.html` (fixes 404 on refresh/deep links). The project also still has unused `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars from Sep 15 (Express server leftovers); consider deleting them.
+- **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path to `index.html` (fixes 404 on refresh/deep links). The old `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars were deleted 2026-10-18; `PORT` / `CORS_ORIGIN` remain (unused, harmless).
 - `npm run typecheck` (app + server) passes clean.
 - Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
 
