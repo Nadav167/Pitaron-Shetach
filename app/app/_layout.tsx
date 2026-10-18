@@ -11,6 +11,7 @@ import { LocaleProvider } from "@/context/LocaleContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { getPaperTheme } from "@/constants/paperTheme";
+import { useStorageReady } from "@/lib/storage";
 
 function ThemedApp() {
   const { scheme, colors } = useTheme();
@@ -58,7 +59,11 @@ export default function RootLayout() {
     Heebo_700Bold,
   });
 
-  if (!fontsLoaded) {
+  // Saved theme / language / favorites must be readable before the
+  // providers mount (native loads them asynchronously; see lib/storage).
+  const storageReady = useStorageReady();
+
+  if (!fontsLoaded || !storageReady) {
     return null;
   }
 

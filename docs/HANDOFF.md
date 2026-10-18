@@ -32,7 +32,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 ## Waiting on Nadav
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
 2. **Review the About page copy** (`app/(tabs)/about.tsx` + `about.*` in `he.json` / `en.json`). It was drafted, not approved.
-3. **Native persistence** needs `@react-native-async-storage/async-storage` (a new dependency, so it needs approval). Plug it into `src/lib/storage.ts`; until then native forgets theme, language and favorites on relaunch.
+3. ~~Native persistence~~ done: AsyncStorage added, hydrated at startup in `src/lib/storage.ts` (not yet tested on a device).
 4. **Favorite control on the detail screen:** it's a labeled button ("הוספה לאתרים מועדפים"), not a heart in the app bar. The code comment says this was deliberate; confirm that's what you want.
 5. **Supabase:** `server/` runs (`/api/health` OK), but `/api/sites` needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`.
 6. **Push / merge** `redesign-unified-data` into `main` when happy.

@@ -55,7 +55,7 @@ function injectScrollbarStyle() {
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const systemScheme = useColorScheme();
 
-  // Starts from the last theme the user picked (saved on web, see
+  // Starts from the last theme the user picked (saved on the device, see
   // lib/storage), else the device's own light/dark setting. Only an explicit
   // choice is saved, so someone who never touches the toggle keeps following
   // their system setting.

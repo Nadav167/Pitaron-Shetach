@@ -4,9 +4,8 @@ import { loadJSON, saveJSON } from "@/lib/storage";
 const STORAGE_KEY = "favorites";
 
 /**
- * Favorites store. Saved locally per device (web: localStorage; native: not
- * yet, see lib/storage). A synced backend endpoint can replace this once
- * accounts exist.
+ * Favorites store. Saved locally on the device (see lib/storage). A synced
+ * backend endpoint can replace this once accounts exist.
  */
 type FavoritesContextValue = {
   favoriteIds: Set<string>;

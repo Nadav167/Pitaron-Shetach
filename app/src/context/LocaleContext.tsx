@@ -52,7 +52,7 @@ if (Platform.OS !== "web") {
 const LocaleContext = createContext<LocaleContextValue | undefined>(undefined);
 
 export function LocaleProvider({ children }: { children: React.ReactNode }) {
-  // The last language the user picked (saved on web, see lib/storage),
+  // The last language the user picked (saved on the device, see lib/storage),
   // else Hebrew.
   const [locale, setLocaleState] = useState<Locale>(() => {
     const saved = loadString(STORAGE_KEY);
