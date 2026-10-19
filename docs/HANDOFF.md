@@ -1,10 +1,11 @@
-# Handoff (2026-10-18): where the project stands
+# Handoff (2026-10-19): where the project stands
 
 Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the claude.ai project docs.
 
 ## State of the repo
-- `main` is pushed and live (2026-10-18), including `user-accounts`. Repo: `github.com/Nadav167/Pitaron-Shetach`.
-- **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path to `index.html` (fixes 404 on refresh/deep links). The old `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars were deleted 2026-10-18; `PORT` / `CORS_ORIGIN` remain (unused, harmless).
+- `main` is pushed and live (2026-10-18), including `user-accounts`. Repo: `github.com/Nadav167/Pitaron-Shetach`. Local folder is now `Documents\Pitaron-Shetach`.
+- **Branch `travel-agent`** (2026-10-19, committed locally, NOT pushed): the travel agent, see below.
+- **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path except `/api/*` to `index.html` (fixes 404 on refresh/deep links) and gives `api/**` functions 120 s. The old `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars were deleted 2026-10-18; `PORT` / `CORS_ORIGIN` remain (unused, harmless).
 - `npm run typecheck` (app + server) passes clean.
 - Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
 
@@ -61,7 +62,71 @@ Register (first name, last name, email, password), log in, log out, with each us
   5. Then test register → favorite → log out → log in on another browser.
 - **Deploying the website:** the keys are read at build time, so the live site's build needs the same two env vars.
 
+## Travel agent (2026-10-19, branch `travel-agent`)
+A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users only, plus a "המסלולים שלי" tab (only while signed in) and an itinerary page with PDF.
+- **Decisions (Nadav):**
+  - Model **Claude Haiku 5.5** (cost: ~$0.0005 per Q&A message, ~$0.01 per planned trip, measured).
+  - Places from **OpenStreetMap** (free).
+  - Chat for **logged-in users only**.
+  - **Both PDF options.**
+  - `@anthropic-ai/sdk` approved and installed in `app`.
+- **What it does:**
+  - Answers camping questions (general, in Israel, by region) and politely declines anything else.
+  - Plans trips around the app's own campsites, using real places near them.
+  - Saves each trip to the user's account through its `save_itinerary` tool.
+- **Where things are:**
+  - Route: `app/api/agent/chat.ts` (Vercel function).
+  - HTTP layer: `app/backend/controllers/agentChat.ts`.
+  - Agent loop: `app/backend/agent/runAgent.ts`.
+  - Tools: `tools.ts`.
+  - System prompt with the campsite index: `prompt.ts`.
+  - Places lookup: `places.ts`.
+  - DB access: `app/backend/supabase.ts`. It uses the anon key plus the caller's token, so RLS applies.
+  - Shared types: `app/src/types/itinerary.ts`.
+- **Screens:**
+  - `app/(tabs)/agent.tsx`: the chat is kept per user on the device.
+  - `app/(tabs)/itineraries.tsx`.
+  - `app/itinerary/[id].tsx`.
+- **PDF (web only):**
+  - "שמירה כ-PDF" (`src/lib/itineraryPrint.ts`) opens a print page; the text stays selectable.
+  - "הורדת PDF" (`src/lib/itineraryPdf.ts`) draws the pages on a canvas and packs them into a small hand-written PDF writer. No library: canvas handles Hebrew bidi correctly, PDF libraries don't.
+  - Native would need `expo-print` + `expo-sharing` (not installed), so the buttons are hidden there.
+- **Places data:**
+  - Source: `app/backend/data/nearbyPlaces.json` (486 KB): named places within 20 km of each campsite that has coordinates (34 sites).
+  - Built by `scripts/buildNearbyPlaces.js` from Geofabrik's Israel shapefile extract. The download is ~210 MB, so keep it outside the repo; usage is in the script header.
+  - Why not live Overpass: it failed nearly every request on 2026-10-19 (406/500/timeouts) and throttles cloud IPs.
+  - Refresh it when campsites change.
+- **Limits:**
+  - In SQL (`agent_consume()`): 30 messages and 3 itineraries per user per day, 1000 messages a day site-wide.
+  - The hard cap is the monthly spend limit Nadav sets in the Anthropic Console.
+- **Database:** migration `0004_travel_agent.sql` was **applied to the live project** on 2026-10-19.
+- **Local dev:**
+  - `npm run agent:dev` (repo root) serves the API on :8787 and loads `app/.env` (needs `ANTHROPIC_API_KEY`).
+  - Start Expo with `EXPO_PUBLIC_AGENT_API_URL=http://localhost:8787`.
+- **Tested on localhost against the real DB and API (desktop width):**
+  - Hebrew packing question (21 s).
+  - Off-topic coding request, declined.
+  - Full 2-night Galilee family trip: 4 rounds, 61 s. It used real gate hours, phone numbers and nearby places from the data.
+  - Saved, listed and opened the trip.
+  - Download PDF: 3 A4 pages, Hebrew correct, page numbers "1 / 3".
+  - Print view.
+  - Prompt caching works.
+- **Not tested yet:**
+  - Phone width (the test browser wouldn't resize).
+  - The real print dialog.
+  - The Vercel deployment of the function: first time this project ships an `api/` function. Check a Preview deploy before merging.
+  - Native.
+  - Delete itinerary.
+- **Known limits:**
+  - A page reload while the agent is working loses that reply from the chat (a saved itinerary is still in the tab).
+  - Q&A answers take 10-20 s. Streaming or `effort: "low"` would speed that up.
+
 ## Waiting on Nadav
+0. **Travel agent go-live:**
+   - Add `ANTHROPIC_API_KEY` in Vercel (Sensitive, Production + Preview).
+   - Set a monthly spend limit in the Anthropic Console.
+   - Approve pushing `travel-agent` to GitHub and check the Vercel Preview.
+   - Approve merging into `main`.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
 2. ~~About page copy~~ reviewed by Nadav 2026-10-18: removed the version line and the "where the data comes from" section.
 3. ~~Native persistence~~ done: AsyncStorage added, hydrated at startup in `src/lib/storage.ts` (not yet tested on a device).

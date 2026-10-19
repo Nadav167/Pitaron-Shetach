@@ -1,0 +1,11 @@
+{
+  // Only for running the backend locally with ts-node (npm run agent:dev):
+  // Node needs CommonJS output. Type checking uses app/tsconfig.json, which
+  // covers these files too; Vercel compiles app/api/ itself.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmit": false
+  }
+}

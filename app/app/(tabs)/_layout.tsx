@@ -6,6 +6,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
 import DesktopNav from "@/components/DesktopNav";
+import { useAuth } from "@/context/AuthContext";
 import MobileHeader from "@/components/MobileHeader";
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
@@ -14,6 +15,9 @@ export default function TabsLayout() {
   const { t } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
+  // The trip planner shows whenever accounts exist (signed-out visitors get
+  // a log-in prompt there); a user's itineraries only while signed in.
+  const { enabled: accountsEnabled, status } = useAuth();
 
   // A floating pill bar, built entirely from documented React Navigation
   // bottom-tabs props (tabBarStyle + a custom tabBarIcon per screen) rather
@@ -85,6 +89,22 @@ export default function TabsLayout() {
         <Tabs.Screen
           name="favorites"
           options={{ title: t("tabs.favorites"), tabBarIcon: renderIcon("heart") }}
+        />
+        <Tabs.Screen
+          name="agent"
+          options={{
+            title: t("tabs.agent"),
+            tabBarIcon: renderIcon("compass-outline"),
+            href: accountsEnabled ? undefined : null,
+          }}
+        />
+        <Tabs.Screen
+          name="itineraries"
+          options={{
+            title: t("tabs.itineraries"),
+            tabBarIcon: renderIcon("map-marker-path"),
+            href: status === "signedIn" ? undefined : null,
+          }}
         />
         {/* About lives in this group so it keeps the same top bar as every
             other page, but `href: null` keeps it out of the bottom tab bar:

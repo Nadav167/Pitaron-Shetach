@@ -35,3 +35,9 @@
 
    Restart Expo with `-c` after changing `.env`. The anon key is meant to be public; the **service_role** key must never go in the app.
 4. Registered users appear under **Authentication → Users**, their names in the `profiles` table, and their saved campsites in `favorites`.
+
+## Travel agent (migration 0004)
+
+1. In the SQL editor, run `migrations/0004_travel_agent.sql`. It creates `itineraries` (trips the agent saved for a user) and `agent_usage` (per-user daily counters), their RLS policies, and `agent_consume()`, the function that enforces the daily caps (30 messages and 3 itineraries per user, 1000 messages site-wide). Applied to the live project on 2026-10-19.
+2. The agent itself is a Vercel function (`app/api/agent/chat.ts`, logic in `app/backend/`). It needs `ANTHROPIC_API_KEY` in Vercel's environment (mark it Sensitive) and in `app/.env` for local runs. It uses the same anon key as the app, with the caller's session token, so RLS applies to it too.
+3. Saved trips appear in the `itineraries` table; today's usage per user in `agent_usage`.

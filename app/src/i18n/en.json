@@ -15,7 +15,9 @@
   "tabs": {
     "home": "Home",
     "map": "Map",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "agent": "Trip planner",
+    "itineraries": "My itineraries"
   },
   "home": {
     "listView": "List",
@@ -148,6 +150,74 @@
       "rateLimited": "Too many attempts. Please try again in a few minutes.",
       "network": "Can't reach the server. Check your internet connection and try again.",
       "unknown": "Something went wrong. Please try again."
+    }
+  },
+  "agent": {
+    "title": "Trip planner",
+    "subtitle": "Camping questions, and trips planned around the campsites",
+    "welcome": "Hi! I'm the Pitaron Shetach trip planner. Ask me anything about camping in Israel, or ask me to plan a trip: tell me where, when, who's coming and what you enjoy, and I'll find a campsite, restaurants and things to do nearby.",
+    "suggestion1": "Plan a family weekend in the Galilee",
+    "suggestion2": "What should I pack for desert camping in winter?",
+    "suggestion3": "How do I book an INPA night campground?",
+    "suggestion4": "A quiet campsite up north with water and toilets",
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "newChat": "New chat",
+    "thinking": "Thinking...",
+    "thinkingLong": "Working on it... planning a trip can take up to a minute",
+    "messagesLeft": "{n} messages left today",
+    "disclaimer": "The planner can make mistakes. Check opening hours and prices before you go.",
+    "itinerarySaved": "Itinerary saved",
+    "openItinerary": "Open itinerary",
+    "retry": "Send again",
+    "loginTitle": "The trip planner is for signed-in users",
+    "loginBody": "Log in to ask camping questions and get a personal trip itinerary, saved to your account and downloadable as a PDF.",
+    "login": "Log in",
+    "register": "Register",
+    "notAvailable": "The trip planner isn't available yet.",
+    "error": {
+      "unauthenticated": "Please log in again to continue the chat.",
+      "dailyLimit": "You've reached today's message limit. See you tomorrow!",
+      "siteLimit": "The planner is very busy today. Please try again tomorrow.",
+      "notConfigured": "The trip planner hasn't been set up on this site yet.",
+      "agentFailed": "Something went wrong with the planner. Try again in a moment.",
+      "network": "Can't reach the server. Check your internet connection.",
+      "badRequest": "The message wasn't sent. Try rephrasing it."
+    }
+  },
+  "itineraries": {
+    "title": "My itineraries",
+    "empty": "No itineraries yet. Ask the trip planner to plan a trip and it will be saved here.",
+    "emptyCta": "Plan a trip",
+    "days": "{n} days",
+    "oneDay": "1 day",
+    "day": "Day {n}",
+    "createdOn": "Created {date}",
+    "travelers": "Who's going",
+    "startDate": "Start date",
+    "preferences": "What matters to you",
+    "packingList": "Packing list",
+    "tips": "Tips",
+    "campsite": "Night",
+    "fromCampsite": "{km} km from the campsite",
+    "savePdf": "Save as PDF",
+    "downloadPdf": "Download PDF",
+    "preparingPdf": "Preparing PDF...",
+    "pdfFailed": "Couldn't create the file. Try \"Save as PDF\".",
+    "delete": "Delete",
+    "confirmDelete": "Tap again to delete",
+    "notFound": "Itinerary not found.",
+    "loginRequired": "Log in to see your itineraries.",
+    "osmCredit": "Places data: © OpenStreetMap contributors",
+    "disclaimer": "Planned by the Pitaron Shetach trip planner. Opening hours, prices and conditions change: check before you go.",
+    "kind": {
+      "drive": "Drive",
+      "hike": "Hike",
+      "activity": "Activity",
+      "meal": "Food",
+      "camp": "Campsite",
+      "shopping": "Shopping",
+      "other": "Stop"
     }
   }
 }

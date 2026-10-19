@@ -5,14 +5,18 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import HeaderActions from "@/components/HeaderActions";
+import { useAuth } from "@/context/AuthContext";
 import { fonts, spacing, type ColorTokens } from "@/constants/theme";
 
-type NavItem = { href: Href; path: string; labelKey: string };
+/** `show`: only when accounts are configured / only while signed in. */
+type NavItem = { href: Href; path: string; labelKey: string; show?: "accounts" | "signedIn" };
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/", path: "/", labelKey: "tabs.home" },
   { href: "/map", path: "/map", labelKey: "tabs.map" },
   { href: "/favorites", path: "/favorites", labelKey: "tabs.favorites" },
+  { href: "/agent", path: "/agent", labelKey: "tabs.agent", show: "accounts" },
+  { href: "/itineraries", path: "/itineraries", labelKey: "tabs.itineraries", show: "signedIn" },
   { href: "/about", path: "/about", labelKey: "about.title" },
 ];
 
@@ -27,6 +31,11 @@ export default function DesktopNav() {
   const router = useRouter();
   const pathname = usePathname();
   const styles = useMemo(() => makeStyles(colors), [colors]);
+  // Same visibility rules as the tab bar (see (tabs)/_layout).
+  const { enabled: accountsEnabled, status } = useAuth();
+  const items = NAV_ITEMS.filter(
+    (item) => !item.show || (item.show === "accounts" ? accountsEnabled : status === "signedIn")
+  );
 
   return (
     <View style={styles.bar}>
@@ -38,7 +47,7 @@ export default function DesktopNav() {
       </Pressable>
 
       <View style={styles.links}>
-        {NAV_ITEMS.map((item) => {
+        {items.map((item) => {
           const active = pathname === item.path;
           return (
             <Pressable key={item.path} onPress={() => router.push(item.href)} accessibilityRole="link">

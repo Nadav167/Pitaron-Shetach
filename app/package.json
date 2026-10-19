@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "@expo-google-fonts/heebo": "^0.2.3",
     "@expo-google-fonts/rubik": "^0.2.3",
     "@expo/vector-icons": "~14.0.4",

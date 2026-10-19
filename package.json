@@ -11,7 +11,8 @@
     "typecheck": "npm run typecheck --workspace app && npm run typecheck --workspace server",
     "scrape": "node scripts/scrapeCampsites.js",
     "scrape:fast": "node scripts/scrapeCampsites.js --no-coords",
-    "scrape:merge": "node scripts/scrapeCampsites.js --merge"
+    "scrape:merge": "node scripts/scrapeCampsites.js --merge",
+    "agent:dev": "ts-node-dev --respawn --transpile-only --project app/backend/tsconfig.json app/backend/devServer.ts"
   },
   "devDependencies": {
     "cheerio": "^1.0.0",

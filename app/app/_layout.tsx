@@ -33,6 +33,7 @@ function ThemedApp() {
             {/* site/[id] renders its own Paper Appbar.Header, so the
                 native stack header stays off for that route too. */}
             <Stack.Screen name="site/[id]" />
+            <Stack.Screen name="itinerary/[id]" />
           </Stack>
         </FavoritesProvider>
         </AuthProvider>
