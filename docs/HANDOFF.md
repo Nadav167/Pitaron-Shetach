@@ -4,7 +4,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 
 ## State of the repo
 - `main` is pushed and live (2026-10-18), including `user-accounts`. Repo: `github.com/Nadav167/Pitaron-Shetach`. Local folder is now `Documents\Pitaron-Shetach`.
-- **Branch `travel-agent`** (2026-10-19, committed locally, NOT pushed): the travel agent, see below.
+- **Branch `travel-agent`** (2026-10-19, pushed, not merged into `main`): the travel agent, see below. Vercel Preview: https://pitaron-shetach-git-travel-agent-nadav18.vercel.app
 - **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path except `/api/*` to `index.html` (fixes 404 on refresh/deep links) and gives `api/**` functions 120 s. The old `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars were deleted 2026-10-18; `PORT` / `CORS_ORIGIN` remain (unused, harmless).
 - `npm run typecheck` (app + server) passes clean.
 - Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
@@ -114,7 +114,7 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
 - **Not tested yet:**
   - Phone width (the test browser wouldn't resize).
   - The real print dialog.
-  - The Vercel deployment of the function: first time this project ships an `api/` function. Check a Preview deploy before merging.
+  - A signed-in chat on Vercel. The Preview deploy is verified as far as an unauthenticated call: `/api/agent/chat` answers 401 `unauthenticated` (function deployed, env vars present).
   - Native.
   - Delete itinerary.
 - **Known limits:**
@@ -122,11 +122,7 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - Q&A answers take 10-20 s. Streaming or `effort: "low"` would speed that up.
 
 ## Waiting on Nadav
-0. **Travel agent go-live:**
-   - Add `ANTHROPIC_API_KEY` in Vercel (Sensitive, Production + Preview).
-   - Set a monthly spend limit in the Anthropic Console.
-   - Approve pushing `travel-agent` to GitHub and check the Vercel Preview.
-   - Approve merging into `main`.
+0. **Travel agent go-live:** `ANTHROPIC_API_KEY` is in Vercel (done 2026-10-19) and the branch is pushed. Still open: confirm the Anthropic monthly spend limit is set, try a signed-in chat on the Preview, and approve merging into `main`.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
 2. ~~About page copy~~ reviewed by Nadav 2026-10-18: removed the version line and the "where the data comes from" section.
 3. ~~Native persistence~~ done: AsyncStorage added, hydrated at startup in `src/lib/storage.ts` (not yet tested on a device).
