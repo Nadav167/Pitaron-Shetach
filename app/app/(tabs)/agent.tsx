@@ -360,15 +360,22 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     messages: { flex: 1 },
     messagesContent: { padding: spacing.md, gap: spacing.sm + 2 },
     bubble: { maxWidth: "88%", borderRadius: radius.md, paddingVertical: 10, paddingHorizontal: 14 },
-    // The layout is right-to-left: flex-start is the right edge.
+    // The layout is right-to-left in every language: flex-start is the right
+    // edge. In Hebrew the user's own messages sit on the right and the
+    // agent's on the left (Nadav, 2026-10-20); English keeps the reverse.
+    // The squared top corner is on the side the bubble hugs.
     assistantBubble: {
-      alignSelf: "flex-start",
+      alignSelf: writingDirection === "rtl" ? "flex-end" : "flex-start",
       backgroundColor: colors.surface,
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: colors.border,
-      borderTopRightRadius: 4,
+      ...(writingDirection === "rtl" ? { borderTopLeftRadius: 4 } : { borderTopRightRadius: 4 }),
     },
-    userBubble: { alignSelf: "flex-end", backgroundColor: colors.primary, borderTopLeftRadius: 4 },
+    userBubble: {
+      alignSelf: writingDirection === "rtl" ? "flex-start" : "flex-end",
+      backgroundColor: colors.primary,
+      ...(writingDirection === "rtl" ? { borderTopRightRadius: 4 } : { borderTopLeftRadius: 4 }),
+    },
     assistantText: { fontFamily: fonts.body, fontSize: 15, lineHeight: 23, color: colors.text },
     userText: { fontFamily: fonts.body, fontSize: 15, lineHeight: 23, color: colors.onPrimary },
     pendingBubble: { flexDirection: "row", alignItems: "center", gap: spacing.sm },

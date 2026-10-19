@@ -104,8 +104,8 @@
     "hebrew": "עברית",
     "english": "English",
     "switchLanguage": "החלפת שפה",
-    "lightMode": "מעבר למצב בהיר",
-    "darkMode": "מעבר למצב כהה",
+    "lightMode": "מעבר למצב יום",
+    "darkMode": "מעבר למצב לילה",
     "welcome": "שלום, {name}",
     "logIn": "התחברות",
     "logOut": "התנתקות"
