@@ -124,6 +124,25 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - Anthropic spend: credits are prepaid with auto-reload off, so the agent stops when the balance runs out. The monthly spend limit is under Console → Organization settings → Billing → Spend limits (was at the 00,000 default on 2026-10-19).
   - Q&A answers take 10-20 s. Streaming or `effort: "low"` would speed that up.
 
+## OpenStreetMap import (2026-10-19): 37 → 279 sites
+- **Script:** `scripts/importOsmCampsites.js` (header has the full rules). It adds every `tourism=camp_site|caravan_site` in the area the map shows (Israel, Golan, West Bank; same mask as the map) and doesn't touch the 37 existing records or their ids. New ids are `osm-<type>-<id>`, which stay stable across re-runs.
+- **Cleaning:**
+  - 88 mistagged points were dropped (homes and shops in the West Bank saved as "campsites"; see `looksLikeCampsite`).
+  - Sites within 500 m of an existing record (or within 2 km with a shared name word) were skipped.
+  - Unnamed sites are named "חניון לילה ליד <town>".
+  - English for Hebrew-only names: `scripts/data/osmNameTranslations.json`.
+- **New field `kind`** ("nightCamp" | "campground"), read through `isNightCamp()`. It drives the "חניוני לילה" filter and the moon/tent pins, so KKL and desert night camps count as night camps without being INPA. `isOfficial` (INPA operator) still drives the unofficial notice.
+- **Photos:**
+  - 93 of the 242 new sites have photos: the site's own OSM image / Commons tags, or a Commons photo within 300 m whose title names the site or says "camp".
+  - The other 149 show the generic cover.
+  - The site page now prints the photo credit (author + licence, required by CC BY-SA).
+- **Nearby places** rebuilt for all 276 sites with coordinates (`nearbyPlaces.json`, 3.4 MB).
+- **Agent:** the index is now ~280 lines in the cached system prompt. Move it behind a search tool if the list grows a lot more.
+- **Not done:**
+  - gocamping's ~213 listings (no coordinates; many closed).
+  - Map pin clustering. The south is crowded at country zoom; `leaflet.markercluster` would need a new dependency.
+  - Prices and hours for most OSM sites are unknown; only `fee=no` → free.
+
 ## Waiting on Nadav
 0. **Travel agent:** try it signed in on the live site (and on a phone). Confirm the Anthropic monthly spend limit is set.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.

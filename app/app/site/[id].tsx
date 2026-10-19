@@ -89,6 +89,7 @@ export default function CampsiteDetailScreen() {
     ? `${t("site.missingInfo")} ${t("site.missingInfoCall")}`
     : t("site.missingInfo");
   const coordsSource = campsite ? coordsSourceName(campsite) : null;
+  const coverCredit = campsite?.photos.find((photo) => !photo.isPlaceholder)?.credit ?? null;
   const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
 
   return (
@@ -289,6 +290,12 @@ export default function CampsiteDetailScreen() {
           {coordsSource && (
             <Text variant="labelSmall" style={styles.provenance}>
               {`${t("site.coordsFrom")}: ${coordsSource}`}
+            </Text>
+          )}
+          {/* Commons photos are CC-licensed and must credit author + licence. */}
+          {coverCredit && (
+            <Text variant="labelSmall" style={styles.provenance}>
+              {`${t("site.photoFrom")}: ${coverCredit}`}
             </Text>
           )}
         </ScrollView>

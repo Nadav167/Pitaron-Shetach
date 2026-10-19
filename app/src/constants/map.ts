@@ -28,8 +28,8 @@ export const FAVORITE_PIN_COLOR = "#A61E1E";
 
 /**
  * All pins share one colour; the glyph inside tells the two kinds apart:
- * a moon for official night campgrounds (חניוני לילה of the Parks
- * Authority), a tent for other campsites. MaterialCommunityIcons names,
+ * a moon for night camps (חניוני לילה: the Parks Authority's, KKL's and
+ * the desert ones; see `isNightCamp`), a tent for campgrounds. MaterialCommunityIcons names,
  * used as-is on native; the web pins draw matching SVG shapes.
  */
 export const PIN_GLYPH = { official: "weather-night", unofficial: "tent" } as const;

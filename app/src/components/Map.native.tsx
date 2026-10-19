@@ -4,7 +4,7 @@ import MapView, { Callout, Marker, Polygon, UrlTile, type Region } from "react-n
 import { Text } from "react-native-paper";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { Campsite } from "@/types/campsite";
-import { localized, type Amenities } from "@/types/campsite";
+import { isNightCamp, localized, type Amenities } from "@/types/campsite";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useFavorites } from "@/context/FavoritesContext";
@@ -42,7 +42,7 @@ type Props = {
  *
  * Markers use a custom colored-circle + glyph view instead of the default
  * teardrop `pinColor`, matching Map.web.tsx's pins: one colour for all, a
- * moon (official) or tent (other) inside, deep red for favorites.
+ * moon (night camp) or tent (campground) inside, deep red for favorites.
  *
  * The callout carries the non-official warning but NOT the Waze/Google Maps
  * buttons or an add-to-favorites button (the web popup has both): touches on
@@ -150,9 +150,9 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
           ? `₪${campsite.pricing.perNight}`
           : t("common.priceUnknown");
         // One green for every pin (deep red for favorites); the glyph tells
-        // the kinds apart, as on web: moon = official, tent = other.
+        // the kinds apart, as on web: moon = night camp, tent = campground.
         const pinColor = isFavorite(campsite.id) ? FAVORITE_PIN_COLOR : colors.primary;
-        const pinGlyph = campsite.isOfficial ? PIN_GLYPH.official : PIN_GLYPH.unofficial;
+        const pinGlyph = isNightCamp(campsite) ? PIN_GLYPH.official : PIN_GLYPH.unofficial;
         const { note: hours, checkIn, checkOut } = campsite.openingHours;
         const amenities = (Object.entries(campsite.amenities) as [keyof Amenities, boolean | undefined][])
           .filter(([, enabled]) => enabled === true)

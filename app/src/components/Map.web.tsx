@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Polygon, Popup, useMap } from "react-l
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Campsite } from "@/types/campsite";
-import { localized, type Amenities } from "@/types/campsite";
+import { isNightCamp, localized, type Amenities } from "@/types/campsite";
 import { navigationUrlsFor } from "@/lib/navigation";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
@@ -211,10 +211,10 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
             position={[campsite.coordinates.lat, campsite.coordinates.lng]}
             icon={
               favorite
-                ? campsite.isOfficial
+                ? isNightCamp(campsite)
                   ? icons.favoriteOfficial
                   : icons.favoriteUnofficial
-                : campsite.isOfficial
+                : isNightCamp(campsite)
                 ? icons.official
                 : icons.unofficial
             }

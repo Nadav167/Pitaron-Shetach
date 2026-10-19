@@ -146,6 +146,13 @@ export type Campsite = {
   coordinates: MaybeCoordinates;
   /** Official = Nature and Parks Authority night camping ground. */
   isOfficial: boolean;
+  /**
+   * What sort of place it is, separate from who runs it: KKL's free forest
+   * camps and the desert night camps are night camps without being INPA
+   * sites. Absent on the scraped records, where it follows `isOfficial`;
+   * read it through `isNightCamp`.
+   */
+  kind?: "nightCamp" | "campground";
   region: Region;
   address?: string;
   pricing: Pricing;
@@ -183,6 +190,11 @@ export const REGIONS: Region[] = [
 export function localized(text: LocalizedText | Partial<LocalizedText> | undefined, locale: Locale): string {
   if (!text) return "";
   return text[locale] ?? text.he ?? text.en ?? "";
+}
+
+/** Night camp (חניון לילה: moon pin, "חניוני לילה" filter) or campground (tent pin). */
+export function isNightCamp(campsite: Campsite): boolean {
+  return campsite.kind ? campsite.kind === "nightCamp" : campsite.isOfficial;
 }
 
 export function hasCoordinates(campsite: Campsite): campsite is Campsite & { coordinates: Coordinates } {

@@ -13,7 +13,8 @@ type Props = {
 /**
  * Shown on every non-official campsite.
  *
- * Non-official records come from a third-party directory (gocamping.co.il),
+ * Non-official records come from a third-party directory (gocamping.co.il)
+ * or from OpenStreetMap,
  * which republishes prices, hours and phone numbers that the campsite owners
  * don't control. Several listings there are stale by years — one is marked
  * "closed until further notice" — so the warning is not boilerplate caution,

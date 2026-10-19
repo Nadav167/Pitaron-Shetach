@@ -78,6 +78,7 @@
     "sourcePage": "Source page",
     "dataFrom": "Data from",
     "coordsFrom": "Coordinates from",
+    "photoFrom": "Photo",
     "amenity": {
       "water": "Water",
       "electricity": "Electricity",

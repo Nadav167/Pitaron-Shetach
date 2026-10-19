@@ -1,15 +1,17 @@
 import dataset from "../../assets/data/campsites.json";
-import type { Campsite, CampsiteDataset } from "../../src/types/campsite";
+import { isNightCamp, type Campsite, type CampsiteDataset } from "../../src/types/campsite";
 
 /**
  * The agent's view of the app's campsite list: the same JSON the app ships
  * (assets/data/campsites.json), so the agent can only plan nights at sites
  * the app actually shows.
  *
- * The list is small (tens of sites), so a compact one-line-per-site index
- * goes straight into the system prompt rather than behind a search tool:
- * the model sees every option at once, and the index is part of the cached
- * prompt prefix. Full details for one site come from get_campsite_details.
+ * A compact one-line-per-site index goes straight into the system prompt
+ * rather than behind a search tool: the model sees every option at once,
+ * and the index is part of the cached prompt prefix. Since the OpenStreetMap
+ * import (Oct 2026) that is ~360 sites, ~25k tokens: still cheap as a cache
+ * read, but if the list grows much further, move it behind a search tool.
+ * Full details for one site come from get_campsite_details.
  */
 
 const campsites = (dataset as CampsiteDataset).campsites;
@@ -45,7 +47,7 @@ export function campsiteIndex(): string {
         site.region,
         coords,
         priceLabel(site),
-        site.isOfficial ? "official (INPA)" : "unofficial listing",
+        [site.isOfficial ? "official (INPA)" : "unofficial listing", isNightCamp(site) ? "night camp" : "campground"].join(", "),
         amenities.length ? amenities.join(",") : "amenities unknown",
       ].join(" | ");
     })

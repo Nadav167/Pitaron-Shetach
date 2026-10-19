@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { localized, type Campsite } from "@/types/campsite";
+import { isNightCamp, localized, type Campsite } from "@/types/campsite";
 import type { City } from "@/data/cities";
 import { findCityInQuery, searchCampsites } from "@/lib/search";
 import { sortCampsites, type SortMode } from "@/lib/sort";
@@ -62,8 +62,8 @@ export function useSiteFilters(campsites: Campsite[]): SiteFilters {
 
   const visible = useMemo(() => {
     let list = campsites;
-    if (sourceFilter === "official") list = list.filter((c) => c.isOfficial);
-    else if (sourceFilter === "unofficial") list = list.filter((c) => !c.isOfficial);
+    if (sourceFilter === "official") list = list.filter(isNightCamp);
+    else if (sourceFilter === "unofficial") list = list.filter((c) => !isNightCamp(c));
 
     if (!city) return sortCampsites(searchCampsites(list, query), sortMode);
 
