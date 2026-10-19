@@ -120,6 +120,8 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - Delete itinerary.
 - **Known limits:**
   - A page reload while the agent is working loses that reply from the chat (a saved itinerary is still in the tab).
+  - The waiting bubble goes "חושב..." → after 8 s "עדיין עובד על זה..." → after 25 s a note that trip planning can take a minute (refusals finish in ~2-3 s).
+  - Anthropic spend: credits are prepaid with auto-reload off, so the agent stops when the balance runs out. The monthly spend limit is under Console → Organization settings → Billing → Spend limits (was at the 00,000 default on 2026-10-19).
   - Q&A answers take 10-20 s. Streaming or `effort: "low"` would speed that up.
 
 ## Waiting on Nadav

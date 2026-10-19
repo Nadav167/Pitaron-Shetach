@@ -37,8 +37,17 @@ import type { AgentChatMessage } from "@/types/itinerary";
  */
 
 const MAX_KEPT_MESSAGES = 40;
-/** After this long, "Thinking..." becomes "Planning your trip... up to a minute". */
-const LONG_WAIT_MS = 6000;
+/**
+ * What the waiting bubble says as time passes. The app can't know in
+ * advance whether a request is a quick answer or a full trip plan, so trip
+ * planning is only mentioned once the wait is longer than any plain answer
+ * (or refusal) takes; those finish well inside 25 s.
+ */
+const WAIT_STAGES = [
+  { afterMs: 0, key: "agent.thinking" },
+  { afterMs: 8000, key: "agent.stillWorking" },
+  { afterMs: 25000, key: "agent.thinkingLong" },
+];
 /** Clearance for the floating tab bar on phone widths (see (tabs)/_layout). */
 const TAB_BAR_CLEARANCE = 64 + 18 + spacing.sm;
 
@@ -98,7 +107,7 @@ function AgentChat({ userId }: { userId: string }) {
   const [messages, setMessages] = useState<AgentChatMessage[]>(() => loadJSON<AgentChatMessage[]>(storageKey) ?? []);
   const [draft, setDraft] = useState("");
   const [pending, setPending] = useState(false);
-  const [longWait, setLongWait] = useState(false);
+  const [waitStage, setWaitStage] = useState(0);
   const [errorCode, setErrorCode] = useState<AgentError["code"] | null>(null);
   const [messagesLeft, setMessagesLeft] = useState<number | null>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -108,12 +117,12 @@ function AgentChat({ userId }: { userId: string }) {
   }, [storageKey, messages]);
 
   useEffect(() => {
-    if (!pending) {
-      setLongWait(false);
-      return;
-    }
-    const timer = setTimeout(() => setLongWait(true), LONG_WAIT_MS);
-    return () => clearTimeout(timer);
+    setWaitStage(0);
+    if (!pending) return;
+    const timers = WAIT_STAGES.slice(1).map((stage, index) =>
+      setTimeout(() => setWaitStage(index + 1), stage.afterMs)
+    );
+    return () => timers.forEach(clearTimeout);
   }, [pending]);
 
   /** Sends the conversation (ending with the user's message) and appends the reply. */
@@ -235,7 +244,7 @@ function AgentChat({ userId }: { userId: string }) {
           {pending && (
             <View style={[styles.bubble, styles.assistantBubble, styles.pendingBubble]}>
               <ActivityIndicator size="small" color={colors.primary} />
-              <Text style={styles.pendingText}>{t(longWait ? "agent.thinkingLong" : "agent.thinking")}</Text>
+              <Text style={styles.pendingText}>{t(WAIT_STAGES[waitStage].key)}</Text>
             </View>
           )}
 
