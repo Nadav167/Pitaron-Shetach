@@ -4,7 +4,7 @@ Read this before starting. Older detail is in `docs/ARCHITECTURE.md` and the cla
 
 ## State of the repo
 - `main` is pushed and live (2026-10-18), including `user-accounts`. Repo: `github.com/Nadav167/Pitaron-Shetach`. Local folder is now `Documents\Pitaron-Shetach`.
-- **Branch `travel-agent`** (2026-10-19, pushed, not merged into `main`): the travel agent, see below. Vercel Preview: https://pitaron-shetach-git-travel-agent-nadav18.vercel.app
+- **Travel agent merged into `main` and live** (2026-10-19). Production `/api/agent/chat` verified (401 for a signed-out call; the page shows the log-in prompt).
 - **Hosting:** Vercel project `pitaron-shetach` (root dir `app`, `npx expo export -p web`, output `dist`), auto-deploys `main`. Live at https://pitaron-shetach.vercel.app (old https://camping-il-server.vercel.app still works). `EXPO_PUBLIC_SUPABASE_URL` / `_ANON_KEY` are set for Production + Preview. `app/vercel.json` rewrites every path except `/api/*` to `index.html` (fixes 404 on refresh/deep links) and gives `api/**` functions 120 s. The old `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` vars were deleted 2026-10-18; `PORT` / `CORS_ORIGIN` remain (unused, harmless).
 - `npm run typecheck` (app + server) passes clean.
 - Root `npm install` has been run, so server and scraper deps (express, supabase-js, cheerio, puppeteer) are installed.
@@ -62,7 +62,7 @@ Register (first name, last name, email, password), log in, log out, with each us
   5. Then test register → favorite → log out → log in on another browser.
 - **Deploying the website:** the keys are read at build time, so the live site's build needs the same two env vars.
 
-## Travel agent (2026-10-19, branch `travel-agent`)
+## Travel agent (live since 2026-10-19)
 A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users only, plus a "המסלולים שלי" tab (only while signed in) and an itinerary page with PDF.
 - **Decisions (Nadav):**
   - Model **Claude Haiku 5.5** (cost: ~$0.0005 per Q&A message, ~$0.01 per planned trip, measured).
@@ -123,7 +123,7 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - Q&A answers take 10-20 s. Streaming or `effort: "low"` would speed that up.
 
 ## Waiting on Nadav
-0. **Travel agent go-live:** `ANTHROPIC_API_KEY` is in Vercel (done 2026-10-19) and the branch is pushed. Still open: confirm the Anthropic monthly spend limit is set, try a signed-in chat on the Preview, and approve merging into `main`.
+0. **Travel agent:** try it signed in on the live site (and on a phone). Confirm the Anthropic monthly spend limit is set.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
 2. ~~About page copy~~ reviewed by Nadav 2026-10-18: removed the version line and the "where the data comes from" section.
 3. ~~Native persistence~~ done: AsyncStorage added, hydrated at startup in `src/lib/storage.ts` (not yet tested on a device).
