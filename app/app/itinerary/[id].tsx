@@ -20,9 +20,9 @@ import type { Itinerary } from "@/types/itinerary";
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
 /**
- * One saved itinerary: the plan day by day, with "Save as PDF" (print
- * dialog, selectable text) and "Download PDF" (one-click file) on web, and
- * delete.
+ * One saved itinerary: the plan day by day, with "Print" (the browser's
+ * print dialog, which can also save a PDF with selectable text) and
+ * "Download PDF" (one-click file) on web, and delete.
  *
  * The plan's own text and labels follow the plan's language (planLabels);
  * the page chrome (app bar, buttons) follows the interface language. Like
@@ -79,7 +79,7 @@ export default function ItineraryScreen() {
 
   // Synchronous on purpose: opening the print tab must happen inside the
   // click, or popup blockers stop it.
-  const onSavePdf = () => {
+  const onPrint = () => {
     if (itinerary) printItinerary(itinerary);
   };
 
@@ -119,9 +119,9 @@ export default function ItineraryScreen() {
         pdfActions={
           Platform.OS === "web" ? (
             <View style={styles.pdfActions}>
-              <Pressable style={({ pressed }) => [styles.pdfButton, pressed && styles.pressed]} onPress={onSavePdf} accessibilityRole="button">
+              <Pressable style={({ pressed }) => [styles.pdfButton, pressed && styles.pressed]} onPress={onPrint} accessibilityRole="button">
                 <MaterialCommunityIcons name="printer-outline" size={18} color={colors.onPrimary} />
-                <Text style={styles.pdfButtonText}>{t("itineraries.savePdf")}</Text>
+                <Text style={styles.pdfButtonText}>{t("itineraries.print")}</Text>
               </Pressable>
               <Pressable
                 style={({ pressed }) => [styles.pdfButtonAlt, (pressed || pdfState === "working") && styles.pressed]}

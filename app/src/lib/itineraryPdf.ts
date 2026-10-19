@@ -18,7 +18,7 @@ import type { Itinerary } from "@/types/itinerary";
  *   3. a minimal PDF is written by hand: one page per JPEG, the JPEG bytes
  *      embedded as-is (/DCTDecode). That format is ~40 lines below.
  * The trade-off: text in this PDF is an image (not selectable/searchable).
- * "Save as PDF" (itineraryPrint.ts) is the selectable-text alternative.
+ * "Print" (itineraryPrint.ts) is the selectable-text alternative.
  */
 
 // A4 is 595.28 x 841.89 pt; pages are drawn at 2x for print sharpness.
@@ -188,8 +188,9 @@ function drawItinerary(itinerary: Itinerary): HTMLCanvasElement[] {
   page.rule(palette.primary, 5);
   page.y += 26;
 
-  // Days
-  for (const day of plan.days) {
+  // Days: the first follows the header; each later day starts a new page.
+  for (const [index, day] of plan.days.entries()) {
+    if (index > 0) page.newPage();
     const label = t("day").replace("{n}", String(day.dayNumber));
     const date = day.date ? ` · ${formatDate(day.date, language)}` : "";
     const heading = page.wrap(`${label}${date} — ${day.title}`, F.dayTitle, CONTENT_W - 40);

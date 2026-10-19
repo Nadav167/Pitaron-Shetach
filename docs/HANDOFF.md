@@ -88,7 +88,8 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - `app/(tabs)/itineraries.tsx`.
   - `app/itinerary/[id].tsx`.
 - **PDF (web only):**
-  - "שמירה כ-PDF" (`src/lib/itineraryPrint.ts`) opens a print page; the text stays selectable.
+  - "הדפסה" (`src/lib/itineraryPrint.ts`) opens a print page; saving as PDF from the print dialog keeps the text selectable.
+  - In both, each day after the first starts on a new page (requested 2026-10-19).
   - "הורדת PDF" (`src/lib/itineraryPdf.ts`) draws the pages on a canvas and packs them into a small hand-written PDF writer. No library: canvas handles Hebrew bidi correctly, PDF libraries don't.
   - Native would need `expo-print` + `expo-sharing` (not installed), so the buttons are hidden there.
 - **Places data:**

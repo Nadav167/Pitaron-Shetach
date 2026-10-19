@@ -2,9 +2,9 @@ import { daysLabel, formatDate, planLabels } from "@/lib/itinerary";
 import type { Itinerary } from "@/types/itinerary";
 
 /**
- * "Save as PDF" (web): opens the itinerary as a standalone, print-styled
- * page in a new tab and calls the browser's print dialog, where the user
- * picks "Save as PDF". The browser lays the text out itself, so Hebrew,
+ * "Print" (web): opens the itinerary as a standalone, print-styled page in
+ * a new tab and calls the browser's print dialog, where the user prints it
+ * or picks "Save as PDF". The browser lays the text out itself, so Hebrew,
  * mixed Hebrew/English and numbers come out exactly right, and the text in
  * the PDF stays selectable. (Download PDF, in itineraryPdf.ts, makes a file
  * in one click but as page images.)
@@ -82,6 +82,8 @@ export function buildItineraryHtml(itinerary: Itinerary): string {
   .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 9.5pt; color: #1F4D3A; font-weight: 500; }
   .prefs { margin-top: 6px; font-size: 9.5pt; color: #5B6B60; }
   .day { break-inside: auto; margin: 18px 0 8px; }
+  /* Each day after the first starts on a new printed page. */
+  @media print { .day + .day { break-before: page; margin-top: 0; } }
   h2 { font-family: Rubik, Heebo, sans-serif; font-weight: 700; font-size: 14pt; margin: 0 0 4px; padding: 6px 10px; background: #E3EEE7; border-radius: 6px; break-after: avoid; }
   .day-num { color: #1F4D3A; margin-inline-end: 10px; }
   .camp { font-size: 10pt; color: #B06B1E; font-weight: 500; margin: 4px 10px 6px; }
