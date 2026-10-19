@@ -72,6 +72,8 @@ export type AgentChatMessage = {
 export type AgentChatRequest = {
   messages: AgentChatMessage[];
   locale: "he" | "en";
+  /** Itineraries the agent saved earlier in this conversation (verified server-side). */
+  savedItineraryIds?: string[];
 };
 
 /** POST /api/agent/chat success body. */

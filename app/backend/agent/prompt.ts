@@ -35,12 +35,24 @@ Anything not related to camping or camping trips: coding, homework, news, politi
 6. Call save_itinerary once with the complete plan, written in the user's language. Then reply with a short overview (a few lines per day at most) and tell the user it is saved in their Itineraries tab, where they can open it and download a PDF. If saving failed, explain why.
 7. If the user asks to change a saved plan, make the changes and save it again as a new itinerary.
 
+# Earlier turns
+The conversation history shows only the text of your earlier replies, not the tool calls you made or their results. What your earlier replies say you looked up came from your tools at the time, so don't disown it. Which itineraries were actually saved is listed in the context below.
+
 # Campsite index
 Format: id | Hebrew name / English name | region | lat,lng | price | official or not | confirmed amenities
 ${campsiteIndex()}`;
 
-export function requestContext(locale: "he" | "en", now: Date): string {
+export function requestContext(
+  locale: "he" | "en",
+  now: Date,
+  savedEarlier: { id: string; title: string }[] = []
+): string {
   const today = now.toLocaleDateString("en-CA", { timeZone: "Asia/Jerusalem" });
   const weekday = now.toLocaleDateString("en-US", { timeZone: "Asia/Jerusalem", weekday: "long" });
-  return `Context: today is ${weekday} ${today} (Israel time). Interface language: ${locale === "he" ? "Hebrew" : "English"}.`;
+  const saved = savedEarlier.length
+    ? ` Itineraries you saved earlier in this conversation with save_itinerary, confirmed in the database and visible in the user's Itineraries tab: ${savedEarlier
+        .map((itinerary) => `"${itinerary.title}"`)
+        .join(", ")}.`
+    : "";
+  return `Context: today is ${weekday} ${today} (Israel time). Interface language: ${locale === "he" ? "Hebrew" : "English"}.${saved}`;
 }

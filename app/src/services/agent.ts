@@ -40,8 +40,11 @@ export async function sendAgentMessage(
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({
-        // Only what the agent reads; the itinerary links stay in the app.
         messages: messages.map(({ role, content }) => ({ role, content })),
+        // Earlier turns go back as plain text, without the agent's tool
+        // calls, so it would otherwise doubt in later replies that it saved
+        // anything. The server checks these ids and tells the agent.
+        savedItineraryIds: messages.flatMap((message) => (message.itinerary ? [message.itinerary.id] : [])),
         locale,
       }),
     });

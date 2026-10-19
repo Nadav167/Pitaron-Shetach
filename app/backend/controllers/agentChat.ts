@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { AgentChatMessage, AgentChatResponse, AgentErrorCode } from "../../src/types/itinerary";
-import { authenticate, consumeUsage, isSupabaseConfigured } from "../supabase";
+import { authenticate, consumeUsage, fetchItineraryTitles, isSupabaseConfigured } from "../supabase";
 import { runAgent } from "../agent/runAgent";
 
 /**
@@ -59,6 +59,11 @@ export async function handleAgentChat(request: Request): Promise<Response> {
   const history = parseHistory(body);
   if (!history) return json(400, { error: "badRequest" });
   const locale = (body as { locale?: unknown }).locale === "en" ? "en" : "he";
+  const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  const rawIds = (body as { savedItineraryIds?: unknown }).savedItineraryIds;
+  const savedIds = Array.isArray(rawIds)
+    ? rawIds.filter((id): id is string => typeof id === "string" && UUID.test(id)).slice(-10)
+    : [];
 
   let messagesLeft: number;
   try {
@@ -71,7 +76,10 @@ export async function handleAgentChat(request: Request): Promise<Response> {
   }
 
   try {
-    const result = await runAgent(history, locale, user);
+    // Only ids that really are this user's saved itineraries are reported
+    // to the agent as saved.
+    const saved = await fetchItineraryTitles(user.db, savedIds).catch(() => []);
+    const result = await runAgent(history, locale, user, saved);
     return json(200, { reply: result.reply, itinerary: result.itinerary, messagesLeft });
   } catch (error) {
     if (error instanceof Anthropic.APIError) {

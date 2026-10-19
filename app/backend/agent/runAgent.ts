@@ -44,7 +44,9 @@ const FALLBACK_REPLY = {
 export async function runAgent(
   history: AgentChatMessage[],
   locale: "he" | "en",
-  user: UserContext
+  user: UserContext,
+  /** Itineraries saved earlier in this conversation, confirmed in the database. */
+  savedEarlier: { id: string; title: string }[] = []
 ): Promise<AgentResult> {
   let itinerary: AgentResult["itinerary"] = null;
   const toolContext = { ...user, onItinerarySaved: (saved: { id: string; title: string }) => (itinerary = saved) };
@@ -63,7 +65,7 @@ export async function runAgent(
         // Breakpoint here caches the tools + the stable prompt (render order
         // is tools -> system -> messages).
         { type: "text", text: STABLE_SYSTEM_PROMPT, cache_control: { type: "ephemeral" } },
-        { type: "text", text: requestContext(locale, new Date()) },
+        { type: "text", text: requestContext(locale, new Date(), savedEarlier) },
       ],
       tools: AGENT_TOOLS,
       output_config: { effort: "medium" },

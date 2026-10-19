@@ -60,6 +60,17 @@ export async function consumeUsage(
   return left;
 }
 
+/** Titles of the given itineraries that exist in the caller's account (RLS hides anyone else's). */
+export async function fetchItineraryTitles(
+  db: SupabaseClient,
+  ids: string[]
+): Promise<{ id: string; title: string }[]> {
+  if (ids.length === 0) return [];
+  const { data, error } = await db.from("itineraries").select("id, title").in("id", ids);
+  if (error) throw error;
+  return data as { id: string; title: string }[];
+}
+
 export async function insertItinerary(db: SupabaseClient, userId: string, plan: ItineraryPlan): Promise<string> {
   const { data, error } = await db
     .from("itineraries")
