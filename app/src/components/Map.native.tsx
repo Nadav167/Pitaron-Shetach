@@ -10,7 +10,7 @@ import { useThemeColors } from "@/context/ThemeContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import { radius, spacing, type ColorTokens } from "@/constants/theme";
 import { MASK_OUTER_RING, MASK_RINGS, MASK_WINDOW_RING, type MaskPoint } from "@/data/mapMask";
-import { FAVORITE_PIN_COLOR, ISRAEL_PAN_LIMIT, ISRAEL_VIEW, MIN_ZOOM } from "@/constants/map";
+import { FAVORITE_PIN_COLOR, ISRAEL_PAN_LIMIT, ISRAEL_VIEW, MIN_ZOOM, PIN_GLYPH } from "@/constants/map";
 
 const INITIAL_REGION: Region = {
   latitude: (ISRAEL_VIEW.north + ISRAEL_VIEW.south) / 2,
@@ -40,9 +40,9 @@ type Props = {
  * OSM tile policy requires attribution and reasonable request volume; swap the
  * tile URL for a paid provider before shipping at scale.
  *
- * Markers use a custom colored-circle + tent-icon view instead of the
- * default teardrop `pinColor`, matching Map.web.tsx's pins (which also carry
- * a small tent glyph, not a plain circle).
+ * Markers use a custom colored-circle + glyph view instead of the default
+ * teardrop `pinColor`, matching Map.web.tsx's pins: one colour for all, a
+ * moon (official) or tent (other) inside, deep red for favorites.
  *
  * The callout carries the non-official warning but NOT the Waze/Google Maps
  * buttons or an add-to-favorites button (the web popup has both): touches on
@@ -149,13 +149,10 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
           : campsite.pricing.perNight != null
           ? `₪${campsite.pricing.perNight}`
           : t("common.priceUnknown");
-        // Favorites are pinned in light red; otherwise official sites in
-        // forest green and non-official in amber — the pin colours on web.
-        const pinColor = isFavorite(campsite.id)
-          ? FAVORITE_PIN_COLOR
-          : campsite.isOfficial
-          ? colors.primary
-          : colors.accent;
+        // One green for every pin (deep red for favorites); the glyph tells
+        // the kinds apart, as on web: moon = official, tent = other.
+        const pinColor = isFavorite(campsite.id) ? FAVORITE_PIN_COLOR : colors.primary;
+        const pinGlyph = campsite.isOfficial ? PIN_GLYPH.official : PIN_GLYPH.unofficial;
         const { note: hours, checkIn, checkOut } = campsite.openingHours;
         const amenities = (Object.entries(campsite.amenities) as [keyof Amenities, boolean | undefined][])
           .filter(([, enabled]) => enabled === true)
@@ -172,7 +169,7 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
             anchor={{ x: 0.5, y: 1 }}
           >
             <View style={[styles.pin, { backgroundColor: pinColor }]}>
-              <MaterialCommunityIcons name="tent" size={16} color="#FFFFFF" />
+              <MaterialCommunityIcons name={pinGlyph} size={16} color="#FFFFFF" />
             </View>
             <Callout tooltip={false} onPress={() => onSelectCampsite?.(campsite)}>
               <View style={styles.callout}>

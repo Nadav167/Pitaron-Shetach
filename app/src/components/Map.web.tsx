@@ -34,25 +34,29 @@ L.Icon.Default.mergeOptions({
 });
 
 /**
- * Official and non-official sites get visually distinct pins, because that
- * distinction is the whole point of the unified dataset: a green pin is a
- * Parks Authority campground with published prices and a booking system, an
- * amber pin is a third-party listing that may be out of date. A site saved
- * as a favorite gets a light-red pin instead, whichever kind it is. Each pin
- * carries a small tent glyph (matching the mockup's map pins, which weren't
- * plain teardrops either) rather than an empty circle.
+ * Every pin is the same green; the glyph inside tells official and
+ * non-official sites apart (see PIN_GLYPH): a crescent moon for a Parks
+ * Authority night campground (published prices, a booking system), a tent
+ * for a third-party campsite listing that may be out of date. A site saved
+ * as a favorite gets a deep-red pin instead, keeping its glyph.
  *
  * Built as inline-SVG divIcons so they carry no external image dependency.
  * Colors come from the current theme, so pins re-render correctly in dark
  * mode instead of using the light-mode palette unconditionally.
  */
-function pinIcon(fill: string) {
+function pinIcon(fill: string, official: boolean) {
+  const glyph = official
+    ? // Crescent: a disc with a white disc over its upper-right part.
+      `<circle cx="19" cy="17.5" r="7" fill="${fill}"/>
+       <circle cx="22.5" cy="14.5" r="6" fill="#FFFFFF"/>`
+    : // Tent: a triangle with a door cut out.
+      `<path d="M20 10 27 22H13Z" fill="${fill}"/>
+       <path d="M20 15 24 22H16Z" fill="#FFFFFF"/>`;
   const svg = `
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="38" viewBox="0 0 40 48">
       <path d="M20 47S3 27.8 3 17a17 17 0 1 1 34 0c0 10.8-17 30-17 30Z" fill="${fill}"/>
       <circle cx="20" cy="17" r="11" fill="#FFFFFF"/>
-      <path d="M20 10 27 22H13Z" fill="${fill}"/>
-      <path d="M20 15 24 22H16Z" fill="#FFFFFF"/>
+      ${glyph}
     </svg>`;
   return L.divIcon({
     html: svg,
@@ -127,9 +131,15 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
   const colors = useThemeColors();
   const { isFavorite, toggleFavorite } = useFavorites();
 
-  const favoriteIcon = useMemo(() => pinIcon(FAVORITE_PIN_COLOR), []);
-  const officialIcon = useMemo(() => pinIcon(colors.primary), [colors.primary]);
-  const unofficialIcon = useMemo(() => pinIcon(colors.accent), [colors.accent]);
+  const icons = useMemo(
+    () => ({
+      official: pinIcon(colors.primary, true),
+      unofficial: pinIcon(colors.primary, false),
+      favoriteOfficial: pinIcon(FAVORITE_PIN_COLOR, true),
+      favoriteUnofficial: pinIcon(FAVORITE_PIN_COLOR, false),
+    }),
+    [colors.primary]
+  );
   const linkStyle = useMemo(() => linkStyleFor(colors), [colors]);
   // Land that isn't Israel is painted over in the page's own background
   // colour, so the country reads as a cut-out (see data/mapMask.ts). The
@@ -199,19 +209,46 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
           <Marker
             key={campsite.id}
             position={[campsite.coordinates.lat, campsite.coordinates.lng]}
-            icon={favorite ? favoriteIcon : campsite.isOfficial ? officialIcon : unofficialIcon}
+            icon={
+              favorite
+                ? campsite.isOfficial
+                  ? icons.favoriteOfficial
+                  : icons.favoriteUnofficial
+                : campsite.isOfficial
+                ? icons.official
+                : icons.unofficial
+            }
           >
             <Popup>
               {/* The popup keeps the right-to-left layout in every language,
                   like the rest of the app; `dir="auto"` on the text lines
                   lets an English name or price still read left-to-right. */}
               <div dir="rtl" style={{ width: 230, textAlign: "right" }}>
-                {cover && (
+                {cover ? (
                   <img
                     src={cover.url}
                     alt=""
                     style={{ display: "block", width: "100%", height: 96, objectFit: "cover", borderRadius: 6, marginBottom: 8 }}
                   />
+                ) : (
+                  // Same box as a photo, so every popup has the same layout;
+                  // a small SVG version of CampsiteCover's generic scene.
+                  <svg
+                    viewBox="0 0 230 96"
+                    width="100%"
+                    height="96"
+                    aria-hidden="true"
+                    style={{ display: "block", borderRadius: 6, marginBottom: 8, background: colors.primaryTint }}
+                  >
+                    <ellipse cx="60" cy="118" rx="120" ry="50" fill={colors.primaryLight} opacity="0.18" />
+                    <ellipse cx="180" cy="122" rx="120" ry="50" fill={colors.primaryLight} opacity="0.28" />
+                    <path d="M80 82 92 54 104 82Z" fill={colors.primaryLight} />
+                    <path d="M126 82 140 48 154 82Z" fill={colors.primaryLight} />
+                    <path d="M115 40 135 82H95Z" fill={colors.primary} />
+                    <path d="M115 60 124 82H106Z" fill={colors.primaryTint} />
+                    <circle cx="178" cy="24" r="9" fill={colors.accent} />
+                    <circle cx="183" cy="20" r="8" fill={colors.primaryTint} />
+                  </svg>
                 )}
                 <strong dir="auto" style={{ display: "block", fontSize: 14, color: colors.text }}>
                   {name}

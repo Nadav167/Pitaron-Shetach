@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Image, Linking, ScrollView, StyleSheet, View } from "react-native";
+import { Linking, ScrollView, StyleSheet, View } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { ActivityIndicator, Appbar, Button, Divider, List, Text } from "react-native-paper";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -11,6 +11,7 @@ import { useResponsive } from "@/hooks/useResponsive";
 import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 import EmptyState from "@/components/EmptyState";
 import UnofficialNotice from "@/components/UnofficialNotice";
+import CampsiteCover from "@/components/CampsiteCover";
 import NavigationButtons from "@/components/NavigationButtons";
 import { coordsSourceName, localized, type Amenities } from "@/types/campsite";
 
@@ -69,8 +70,6 @@ export default function CampsiteDetailScreen() {
       )
     : [];
 
-  const cover = campsite?.photos.find((photo) => !photo.isPlaceholder);
-  const placeholderOnly = !cover && (campsite?.photos.length ?? 0) > 0;
 
   const priceLabel = !campsite
     ? ""
@@ -115,12 +114,9 @@ export default function CampsiteDetailScreen() {
         <EmptyState message={error ?? t("common.error")} />
       ) : (
         <ScrollView contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
-          {cover && <Image source={{ uri: cover.url }} style={styles.cover} resizeMode="cover" />}
-          {placeholderOnly && (
-            <Text variant="labelSmall" style={styles.muted}>
-              {t("site.photoPlaceholderOnly")}
-            </Text>
-          )}
+          {/* The site's photo, or the generic camping cover in the same box
+              when the source has none (or only an "illustration" stock photo). */}
+          <CampsiteCover campsite={campsite} style={styles.cover} />
 
           {!campsite.isOfficial && <UnofficialNotice variant="full" />}
 
@@ -314,7 +310,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     // rather than a card grid.
     contentDesktop: { width: "100%", maxWidth: 800, marginHorizontal: "auto" },
     center: { flex: 1, alignItems: "center", justifyContent: "center" },
-    cover: { width: "100%", height: 200, borderRadius: radius.md },
+    cover: { width: "100%", height: 200, aspectRatio: undefined, borderRadius: radius.md, overflow: "hidden" },
     officialBadge: {
       flexDirection: "row",
       alignItems: "center",

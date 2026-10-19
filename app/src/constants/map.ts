@@ -19,9 +19,17 @@ export const ISRAEL_PAN_LIMIT = { south: 28.7, west: 33.2, north: 34.1, east: 36
 export const MIN_ZOOM = 7;
 
 /**
- * Pin colour for sites the visitor has saved as favorites — a light red, set
- * apart from the green (official) and amber (non-official) pins. It replaces
- * the pin's usual colour, so a favorite is recognisable at a glance; whether
- * the site is official is still stated inside its popup.
+ * Pin colour for sites the visitor has saved as favorites — a deep red, set
+ * apart from the green every other pin uses. It replaces the pin's usual
+ * colour, so a favorite is recognisable at a glance; the glyph inside still
+ * says which kind of site it is.
  */
-export const FAVORITE_PIN_COLOR = "#E8736C";
+export const FAVORITE_PIN_COLOR = "#A61E1E";
+
+/**
+ * All pins share one colour; the glyph inside tells the two kinds apart:
+ * a moon for official night campgrounds (חניוני לילה of the Parks
+ * Authority), a tent for other campsites. MaterialCommunityIcons names,
+ * used as-is on native; the web pins draw matching SVG shapes.
+ */
+export const PIN_GLYPH = { official: "weather-night", unofficial: "tent" } as const;

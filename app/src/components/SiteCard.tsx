@@ -8,6 +8,7 @@ import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useFavorites } from "@/context/FavoritesContext";
 import HoverTip from "@/components/HoverTip";
+import CampsiteCover from "@/components/CampsiteCover";
 import { spacing, radius, fonts, type ColorTokens } from "@/constants/theme";
 
 type Props = {
@@ -38,36 +39,33 @@ export default function SiteCard({ campsite, note, onPress }: Props) {
     ? `₪${campsite.pricing.perNight} ${t("common.perNight")}`
     : t("common.priceUnknown");
 
-  // Stock images the source captioned "illustration only" are not shown as
-  // if they documented the place — the card falls back to no cover instead.
-  const cover = campsite.photos.find((photo) => !photo.isPlaceholder);
   const favorite = isFavorite(campsite.id);
   const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
 
   return (
     <Card style={styles.card} mode="elevated" onPress={onPress}>
-      {cover && (
-        <View style={styles.coverWrap}>
-          <Card.Cover source={{ uri: cover.url }} style={styles.cover} />
-          {/* HoverTip wraps its child in a view of its own, so the absolute
-              positioning lives on this outer wrapper, not on the button.
-              The bubble is left-aligned so it opens into the card rather
-              than past its (clipping) left edge. */}
-          <View style={styles.heartPosition}>
-            <HoverTip label={favoriteLabel} align="left">
-              <Pressable
-                style={styles.heartButton}
-                hitSlop={8}
-                onPress={() => toggleFavorite(campsite.id)}
-                accessibilityRole="button"
-                accessibilityLabel={favoriteLabel}
-              >
-                <MaterialCommunityIcons name={favorite ? "heart" : "heart-outline"} size={18} color="#FFFFFF" />
-              </Pressable>
-            </HoverTip>
-          </View>
+      {/* Every card has a cover: the site's photo, or a generic camping
+          one in the same 16:9 box, so all cards share one structure. */}
+      <View style={styles.coverWrap}>
+        <CampsiteCover campsite={campsite} style={styles.cover} />
+        {/* HoverTip wraps its child in a view of its own, so the absolute
+            positioning lives on this outer wrapper, not on the button.
+            The bubble is left-aligned so it opens into the card rather
+            than past its (clipping) left edge. */}
+        <View style={styles.heartPosition}>
+          <HoverTip label={favoriteLabel} align="left">
+            <Pressable
+              style={styles.heartButton}
+              hitSlop={8}
+              onPress={() => toggleFavorite(campsite.id)}
+              accessibilityRole="button"
+              accessibilityLabel={favoriteLabel}
+            >
+              <MaterialCommunityIcons name={favorite ? "heart" : "heart-outline"} size={18} color="#FFFFFF" />
+            </Pressable>
+          </HoverTip>
         </View>
-      )}
+      </View>
       <Card.Content style={styles.content}>
         <Text variant="titleMedium" style={styles.name} numberOfLines={2}>
           {name}

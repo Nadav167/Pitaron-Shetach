@@ -7,16 +7,18 @@ import FilterChip from "@/components/FilterChip";
 import { RADIUS_OPTIONS_KM, type SiteFilters, type SourceFilter } from "@/hooks/useSiteFilters";
 import { localized } from "@/types/campsite";
 import { fonts, spacing, type ColorTokens } from "@/constants/theme";
+import { PIN_GLYPH } from "@/constants/map";
 
 // Official sites are the Nature and Parks Authority's night PARKING grounds;
 // non-official sites are the community CAMPING directory — that's the
 // distinction people actually search by, so the filter chips are labeled
-// that way rather than "official/non-official". No icon for "all", a pin for
-// parking, a tent for camping.
+// that way rather than "official/non-official". No icon for "all"; the
+// others use the same glyphs as their map pins (a moon for night parking, a
+// tent for camping).
 const FILTER_ICON: Record<SourceFilter, string | undefined> = {
   all: undefined,
-  official: "map-marker",
-  unofficial: "tent",
+  official: PIN_GLYPH.official,
+  unofficial: PIN_GLYPH.unofficial,
 };
 
 const FILTER_ORDER: SourceFilter[] = ["all", "unofficial", "official"];
