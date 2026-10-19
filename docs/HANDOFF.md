@@ -124,7 +124,7 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - Anthropic spend: credits are prepaid with auto-reload off, so the agent stops when the balance runs out. The monthly spend limit is under Console → Organization settings → Billing → Spend limits (was at the 00,000 default on 2026-10-19).
   - Q&A answers take 10-20 s. Streaming or `effort: "low"` would speed that up.
 
-## OpenStreetMap import (2026-10-19): 37 → 279 sites
+## Campsite imports (2026-10-19/20): 37 → 405 sites (OpenStreetMap, then tiuli.com)
 - **Script:** `scripts/importOsmCampsites.js` (header has the full rules). It adds every `tourism=camp_site|caravan_site` in the area the map shows (Israel, Golan, West Bank; same mask as the map) and doesn't touch the 37 existing records or their ids. New ids are `osm-<type>-<id>`, which stay stable across re-runs.
 - **Cleaning:**
   - 88 mistagged points were dropped (homes and shops in the West Bank saved as "campsites"; see `looksLikeCampsite`).
@@ -136,10 +136,16 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - 93 of the 242 new sites have photos: the site's own OSM image / Commons tags, or a Commons photo within 300 m whose title names the site or says "camp".
   - The other 149 show the generic cover.
   - The site page now prints the photo credit (author + licence, required by CC BY-SA).
-- **Nearby places** rebuilt for all 276 sites with coordinates (`nearbyPlaces.json`, 3.4 MB).
-- **Agent:** the index is now ~280 lines in the cached system prompt. Move it behind a search tool if the list grows a lot more.
+- **Nearby places** rebuilt for all 402 sites with coordinates (`nearbyPlaces.json`, 5 MB).
+- **Agent:** the index is now ~405 lines in the cached system prompt. Move it behind a search tool if the list grows a lot more.
+- **tiuli.com import (2026-10-20): 279 → 405 sites.** Nadav noticed Timna Park was missing: OSM has no campsite there, and the same goes for most Kinneret beaches, many KKL forest camps and desert khans.
+  - `scripts/importTiuliCampsites.js` crawls tiuli's ~350 camping pages. Each page has coordinates (Waze link), a photo and often hours, prices and a phone number.
+  - It adds the 126 that weren't listed (ids `tiuli-<page id>`) and gives 40 photo-less records tiuli's photo.
+  - English names: `scripts/data/tiuliNameTranslations.json`.
+  - **Order matters:** run the OSM import first, then tiuli, then `buildNearbyPlaces.js`. Shared rules (Israel mask, regions, name matching) are in `scripts/lib/importHelpers.js`.
+  - Photos: 255 of 405 sites have a real one.
 - **Not done:**
-  - gocamping's ~213 listings (no coordinates; many closed).
+  - gocamping's ~213 listings (no coordinates; many closed). Most of them are probably now covered by tiuli/OSM.
   - Map pin clustering. The south is crowded at country zoom; `leaflet.markercluster` would need a new dependency.
   - Prices and hours for most OSM sites are unknown; only `fee=no` → free.
 

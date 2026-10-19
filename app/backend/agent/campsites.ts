@@ -9,7 +9,7 @@ import { isNightCamp, type Campsite, type CampsiteDataset } from "../../src/type
  * A compact one-line-per-site index goes straight into the system prompt
  * rather than behind a search tool: the model sees every option at once,
  * and the index is part of the cached prompt prefix. Since the OpenStreetMap
- * import (Oct 2026) that is ~360 sites, ~25k tokens: still cheap as a cache
+ * and tiuli imports (Oct 2026) that is ~405 sites, ~30k tokens: still cheap as a cache
  * read, but if the list grows much further, move it behind a search tool.
  * Full details for one site come from get_campsite_details.
  */

@@ -47,10 +47,18 @@
 
 const fs = require("fs");
 const path = require("path");
-
-const ROOT = path.resolve(__dirname, "..");
-const CAMPSITES = path.join(ROOT, "app/assets/data/campsites.json");
-const MASK = path.join(ROOT, "app/assets/data/mapMask.json");
+const {
+  ROOT,
+  CAMPSITES,
+  distanceKm,
+  makeIsraelTest,
+  regionFor,
+  navigationUrls,
+  HEBREW,
+  words,
+  sharesWord,
+  parseArgs,
+} = require("./lib/importHelpers");
 const TRANSLATIONS = path.join(__dirname, "data/osmNameTranslations.json");
 
 const OVERPASS_MIRRORS = [
@@ -68,66 +76,7 @@ const DUPLICATE_NAMED_KM = 2;
 const PHOTO_RADIUS_M = 300;
 const PHOTO_WIDTH = 960;
 
-const args = Object.fromEntries(
-  process.argv.slice(2).map((arg) => {
-    const [key, value] = arg.replace(/^--/, "").split("=");
-    return [key, value ?? true];
-  })
-);
-
-// --- Geometry -----------------------------------------------------------------
-
-function distanceKm(a, b) {
-  const toRad = (d) => (d * Math.PI) / 180;
-  const dLat = toRad(b.lat - a.lat);
-  const dLng = toRad(b.lng - a.lng);
-  const h = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(a.lat)) * Math.cos(toRad(b.lat)) * Math.sin(dLng / 2) ** 2;
-  return 2 * 6371 * Math.asin(Math.sqrt(h));
-}
-
-/** Ray casting; mapMask rings are [lat, lng] pairs. */
-function inRing(point, ring) {
-  let inside = false;
-  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
-    const [yi, xi] = ring[i];
-    const [yj, xj] = ring[j];
-    if (yi > point.lat !== yj > point.lat && point.lng < ((xj - xi) * (point.lat - yi)) / (yj - yi) + xi) {
-      inside = !inside;
-    }
-  }
-  return inside;
-}
-
-function makeIsraelTest() {
-  const mask = JSON.parse(fs.readFileSync(MASK, "utf8"));
-  const w = mask.window;
-  return (point) => {
-    if (point.lat < w.south || point.lat > w.north || point.lng < w.west || point.lng > w.east) return false;
-    // An area may be several rings (islands, enclaves): inside an odd number = erased.
-    return !mask.areas.some((area) => area.rings.filter((ring) => inRing(point, ring)).length % 2 === 1);
-  };
-}
-
-/**
- * Region by position. The app's regions are tourist regions, not districts,
- * so these are hand-drawn boxes checked against the existing records'
- * regions; a site near a boundary may land in the neighbouring region,
- * which only affects the "north to south" sort and region search.
- */
-function regionFor({ lat, lng }) {
-  if (lat < 29.75) return "Eilat";
-  if (lat < 30.95) return lng >= 35.05 ? "Arava" : "Negev";
-  if (lat < 31.95 && lng >= 35.3) return "DeadSea";
-  if (lat < 31.42) return "Negev";
-  if (lat < 31.95 && lng >= 34.95) return "Jerusalem";
-  if (lng >= 35.62 && lat >= 32.68) return "Golan";
-  // Kinneret shore, Jordan / Beit She'an / Jezreel valleys.
-  if (lat >= 32.68 && lat < 32.92 && lng >= 35.5) return "North";
-  if (lat >= 32.3 && lat < 32.68 && lng >= 35.15) return "North";
-  if (lat >= 32.45 && lat < 32.85 && lng < 35.15 && lng >= 34.88) return "Carmel";
-  if (lat >= 32.68) return "Galilee";
-  return "Center";
-}
+const args = parseArgs();
 
 // --- Overpass -------------------------------------------------------------------
 
@@ -156,27 +105,6 @@ async function loadJson(arg, query) {
   return (await overpass(query)).elements;
 }
 
-// --- Names ----------------------------------------------------------------------
-
-const HEBREW = /[֐-׿]/;
-const STOP_WORDS = new Set(
-  "חניון לילה קמפינג אתר מחנאות חוף יער גן לאומי שמורת טבע של the camp camping campsite campground site night park beach forest national reserve and near ליד"
-    .split(" ")
-);
-
-function words(text) {
-  return String(text || "")
-    .toLowerCase()
-    .replace(/[^\p{L}\p{N}\s]/gu, " ")
-    .split(/\s+/)
-    .filter((word) => word.length >= 3 && !STOP_WORDS.has(word));
-}
-
-function sharesWord(a, b) {
-  const set = new Set(words(a));
-  return words(b).some((word) => set.has(word));
-}
-
 function nearestPlace(point, places) {
   let best = null;
   for (const place of places) {
@@ -184,14 +112,6 @@ function nearestPlace(point, places) {
     if (!best || km < best.km) best = { ...place, km };
   }
   return best;
-}
-
-function slugify(text) {
-  return String(text)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")
-    .slice(0, 60);
 }
 
 /**
@@ -329,10 +249,7 @@ function toCampsite(element, places, translations, now) {
         : {}),
       pricing,
       openingHours: tags.opening_hours ? { note: tags.opening_hours } : {},
-      navigationUrls: {
-        waze: `https://waze.com/ul?ll=${coordinates.lat}%2C${coordinates.lng}&navigate=yes&zoom=17`,
-        googleMaps: `https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat}%2C${coordinates.lng}&travelmode=driving`,
-      },
+      navigationUrls: navigationUrls(coordinates),
       amenities: osmAmenities(tags),
       photos: [],
       contact,
@@ -490,7 +407,11 @@ async function main() {
     .filter((p) => p.he || p.en);
 
   // Existing records keep priority; the OSM ids already in the file are re-made.
+  // tiuli records are kept but not matched against: tiuli is the gap-filler,
+  // so OSM wins a tie, and importTiuliCampsites.js (run after this) drops
+  // any tiuli record an OSM site now covers.
   const existing = dataset.campsites.filter((c) => !c.id.startsWith("osm-"));
+  const scraped = existing.filter((c) => !c.id.startsWith("tiuli-"));
   const items = [];
   let outside = 0;
   let duplicates = 0;
@@ -522,7 +443,7 @@ async function main() {
       const km = distanceKm(other.coordinates, item.record.coordinates);
       return km < 0.15 || (km < 1 && sameName(other));
     };
-    if (existing.some(isExisting)) {
+    if (scraped.some(isExisting)) {
       duplicates++;
       continue;
     }
