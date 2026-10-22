@@ -44,19 +44,28 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
   // One sentence for screen readers instead of every fragment separately.
   const a11yLabel = [name, kindLabel, region, price, note].filter(Boolean).join(", ");
 
-  const extraLines = (
-    <>
-      {note ? (
-        <View style={styles.metaItem}>
-          <MaterialCommunityIcons name="map-marker-distance" size={14} color={colors.primary} />
-          <Text style={styles.note} numberOfLines={1}>
-            {note}
-          </Text>
-        </View>
-      ) : null}
-      {!campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinates")}</Text>}
-    </>
-  );
+  // EVERY card has the same fixed set of lines, so all cards are the same
+  // size and a grid row lines up: the name on one line (the full name is in
+  // the accessibility label and on the site page), then one detail line.
+  // The detail line shows, in order of priority: the distance from a
+  // searched town, the arrival time / hours note, nothing extra. "Location
+  // not verified" is a badge on the photo (or the compact row's second
+  // line) rather than a line of its own. An extra line on some cards was
+  // what made one card in a grid row taller than its neighbours.
+  const detail = note ?? hours;
+  const detailLine = (style: object) =>
+    note ? (
+      <View style={styles.metaItem}>
+        <MaterialCommunityIcons name="map-marker-distance" size={14} color={colors.primary} />
+        <Text style={styles.note} numberOfLines={1}>
+          {note}
+        </Text>
+      </View>
+    ) : detail ? (
+      <Text style={style} numberOfLines={1}>
+        {detail}
+      </Text>
+    ) : null;
 
   if (variant === "compact") {
     return (
@@ -74,18 +83,17 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
           />
         </View>
         <View style={styles.compactBody}>
-          <Text style={styles.name} numberOfLines={2}>
+          <Text style={styles.name} numberOfLines={1}>
             {name}
           </Text>
           <Text style={styles.meta} numberOfLines={1}>
             {[region, price].join(" · ")}
           </Text>
-          {hours ? (
-            <Text style={styles.meta} numberOfLines={1}>
-              {hours}
-            </Text>
-          ) : null}
-          {extraLines}
+          {/* At most three short lines: never taller than the 72px tile,
+              so every compact row is the same 92px. */}
+          {detail
+            ? detailLine(styles.meta)
+            : !campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinates")}</Text>}
         </View>
         <FavoriteButton campsiteId={campsite.id} variant="plain" />
       </Pressable>
@@ -110,18 +118,27 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
           <MaterialCommunityIcons name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial} size={13} color="#FFFFFF" />
           <Text style={styles.kindText}>{kindLabel}</Text>
         </View>
+        {!campsite.coordinates && (
+          <View style={[styles.kindBadge, styles.noCoordsBadge]}>
+            <MaterialCommunityIcons name="map-marker-question-outline" size={13} color="#FFFFFF" />
+            <Text style={styles.kindText}>{t("site.noCoordinates")}</Text>
+          </View>
+        )}
       </View>
       <View style={styles.content}>
         <View style={styles.titleRow}>
-          <Text style={[styles.name, styles.flex]} numberOfLines={2}>
+          <Text style={[styles.name, styles.flex]} numberOfLines={1}>
             {name}
           </Text>
           <Text style={styles.price}>{price}</Text>
         </View>
         <View style={styles.titleRow}>
-          <Text style={[styles.meta, styles.flex]} numberOfLines={1}>
-            {hours ? `${region} · ${hours}` : region}
-          </Text>
+          <View style={[styles.flex, styles.metaItem]}>
+            <Text style={[styles.meta, styles.metaRegion]} numberOfLines={1}>
+              {detail ? `${region} ·` : region}
+            </Text>
+            {detailLine([styles.meta, styles.flex])}
+          </View>
           {amenities.length > 0 && (
             <View style={styles.amenities} accessibilityLabel={amenities.map((a) => a.label).join(", ")}>
               {amenities.slice(0, 4).map((amenity) => (
@@ -130,7 +147,6 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
             </View>
           )}
         </View>
-        {extraLines}
       </View>
     </Pressable>
   );
@@ -178,12 +194,17 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     content: { paddingHorizontal: spacing.md, paddingTop: 12, paddingBottom: 14, gap: 6 },
     titleRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
     name: { fontFamily: fonts.displayBold, fontSize: 16.5, lineHeight: 22, color: colors.text, ...text },
-    price: { fontFamily: fonts.bodyBold, fontSize: 15, color: colors.accentDeep, writingDirection },
-    meta: { fontFamily: fonts.body, fontSize: 13.5, color: colors.textMuted, ...text },
+    price: { fontFamily: fonts.bodyBold, fontSize: 15, lineHeight: 22, color: colors.accentDeep, writingDirection },
+    // Fixed line heights: a character from a fallback font (some hours
+    // notes have them) otherwise grew its line, and its card, by a pixel.
+    meta: { fontFamily: fonts.body, fontSize: 13.5, lineHeight: 20, color: colors.textMuted, ...text },
     amenities: { flexDirection: "row", gap: 6 },
-    metaItem: { flexDirection: "row", alignItems: "center", gap: 5 },
-    note: { flexShrink: 1, fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.primary, ...text },
-    noCoords: { fontFamily: fonts.body, fontSize: 12.5, color: colors.textMuted, fontStyle: "italic", ...text },
+    metaItem: { flexDirection: "row", alignItems: "center", gap: 5, minWidth: 0 },
+    metaRegion: { flexShrink: 0 },
+    // Bottom-left, opposite the kind badge.
+    noCoordsBadge: { right: undefined, left: spacing.sm },
+    note: { flexShrink: 1, fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 20, color: colors.primary, ...text },
+    noCoords: { fontFamily: fonts.body, fontSize: 12.5, lineHeight: 20, color: colors.textMuted, fontStyle: "italic", ...text },
 
     compactCard: {
       flexDirection: "row",
