@@ -95,11 +95,23 @@ function hasPhoto(campsite: Campsite): boolean {
   return campsite.photos.some((photo) => !photo.isPlaceholder);
 }
 
-// flexBasis (not flex:1/flexGrow) keeps every card the SAME width whether
-// its row is full or not — flex:1 was making the last, short row's card(s)
-// stretch to fill the whole row width instead of matching the other cards.
+// Every column is exactly 1/numColumns of the row, full row or not. The
+// gutter between cards is each item's own horizontal padding (half a gutter
+// per side, cancelled at the row's edges by the row's negative margin),
+// not a flex `gap`. With a gap, a full row's three 33% items had to
+// shrink to make room for it, while a short last row had room to spare,
+// so its cards came out wider than the ones above (seen on Favorites).
+// flex:1 had the same problem in the other direction: a short row's cards
+// stretched to fill it.
+const GRID_GUTTER = spacing.md;
+
 function gridItemStyle(numColumns: number) {
-  return { flexBasis: `${100 / numColumns}%`, flexGrow: 0, flexShrink: 1 } as const;
+  return {
+    width: `${100 / numColumns}%`,
+    flexGrow: 0,
+    flexShrink: 0,
+    paddingHorizontal: GRID_GUTTER / 2,
+  } as const;
 }
 
 const styles = StyleSheet.create({
@@ -108,5 +120,5 @@ const styles = StyleSheet.create({
   // rows vertically, so only the horizontal gap between columns is added
   // here — adding a vertical gap too would double up with that margin.
   gridContent: { gap: 0 },
-  row: { gap: spacing.md },
+  row: { marginHorizontal: -GRID_GUTTER / 2 },
 });
