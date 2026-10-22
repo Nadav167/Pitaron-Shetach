@@ -7,6 +7,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
 import { useTheme } from "@/context/ThemeContext";
 import AccountButton from "@/components/AccountButton";
+import SideMenu from "@/components/SideMenu";
+import { useResponsive } from "@/hooks/useResponsive";
 import { fonts, spacing, TOUCH_TARGET, type ColorTokens } from "@/constants/theme";
 
 /**
@@ -19,6 +21,10 @@ import { fonts, spacing, TOUCH_TARGET, type ColorTokens } from "@/constants/them
  * to "הר" in Hebrew, and in English the day/night button was pushed off the
  * screen. They now live in the menu, which leaves two 44px buttons that
  * fit in either language, signed in or out.
+ *
+ * Phone-width web replaces both the menu and the bottom tab bar with a
+ * side menu (SideMenu) behind a ☰ button at the start of the row, next to
+ * the brand (Nadav 2026-10-22). The native app keeps the tab bar and "⋯".
  */
 export default function MobileHeader() {
   const { t, locale, setLocale, writingDirection } = useLocale();
@@ -27,6 +33,8 @@ export default function MobileHeader() {
   const router = useRouter();
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [sideMenuOpen, setSideMenuOpen] = useState(false);
+  const { sideMenu } = useResponsive();
 
   const itemTitle = { fontFamily: fonts.bodyMedium, textAlign: "right" as const, writingDirection };
   // Run the action after the menu has closed, so a re-render it causes
@@ -36,14 +44,41 @@ export default function MobileHeader() {
     action();
   };
 
+  const brand = (
+    <Pressable style={styles.brand} onPress={() => router.push("/")} accessibilityRole="link" accessibilityLabel={t("common.appName")}>
+      <View style={styles.brandMark}>
+        <MaterialCommunityIcons name="pine-tree" size={18} color={colors.onPrimary} />
+      </View>
+      <RNText style={styles.brandName}>{t("common.appName")}</RNText>
+    </Pressable>
+  );
+
+  if (sideMenu) {
+    return (
+      <View style={[styles.bar, { paddingTop: insets.top + spacing.xs }]}>
+        <View style={styles.start}>
+          <Pressable
+            style={styles.menuButton}
+            onPress={() => setSideMenuOpen(true)}
+            accessibilityRole="button"
+            accessibilityLabel={t("header.menu")}
+            accessibilityState={{ expanded: sideMenuOpen }}
+          >
+            <MaterialCommunityIcons name="menu" size={26} color={colors.text} />
+          </Pressable>
+          {brand}
+        </View>
+        <View style={styles.actions}>
+          <AccountButton compact />
+        </View>
+        <SideMenu visible={sideMenuOpen} onClose={() => setSideMenuOpen(false)} />
+      </View>
+    );
+  }
+
   return (
     <View style={[styles.bar, { paddingTop: insets.top + spacing.xs }]}>
-      <Pressable style={styles.brand} onPress={() => router.push("/")} accessibilityRole="link" accessibilityLabel={t("common.appName")}>
-        <View style={styles.brandMark}>
-          <MaterialCommunityIcons name="pine-tree" size={18} color={colors.onPrimary} />
-        </View>
-        <RNText style={styles.brandName}>{t("common.appName")}</RNText>
-      </Pressable>
+      {brand}
       <View style={styles.actions}>
         <AccountButton compact />
         <Menu
@@ -101,6 +136,17 @@ function makeStyles(colors: ColorTokens) {
     },
     brand: { flexDirection: "row", alignItems: "center", gap: 10, flexShrink: 1, minHeight: TOUCH_TARGET },
     actions: { flexDirection: "row", alignItems: "center", gap: spacing.xs, marginStart: spacing.sm },
+    start: { flexDirection: "row", alignItems: "center", gap: spacing.xs, flexShrink: 1 },
+    // Pulled toward the screen edge so the icon, not its hit area, lines up
+    // with the 16px gutter.
+    menuButton: {
+      width: TOUCH_TARGET,
+      height: TOUCH_TARGET,
+      marginEnd: -spacing.xs,
+      marginStart: -10,
+      alignItems: "center",
+      justifyContent: "center",
+    },
     brandMark: {
       width: 32,
       height: 32,

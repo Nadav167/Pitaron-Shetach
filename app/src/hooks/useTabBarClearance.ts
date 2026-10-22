@@ -6,12 +6,14 @@ import { spacing, TAB_BAR } from "@/constants/theme";
  * How much bottom padding a scrolling screen needs so its last item can
  * scroll out from under the floating tab bar: the bar's height, its gap
  * above the screen edge, the home-indicator inset on iPhones (0 on web and
- * on phones without one) and a little breathing room. Desktop-width screens
- * have no bottom bar, so they only get the breathing room.
+ * on phones without one) and a little breathing room. Where there is no
+ * bottom bar (desktop, and phone-width web, which uses the side menu) this
+ * is only the breathing room.
  */
 export function useTabBarClearance(): number {
-  const { isDesktop } = useResponsive();
+  const { isDesktop, hasBottomTabBar } = useResponsive();
   const insets = useSafeAreaInsets();
   if (isDesktop) return spacing.xl;
+  if (!hasBottomTabBar) return spacing.md + insets.bottom;
   return TAB_BAR.height + TAB_BAR.bottom + insets.bottom + spacing.md;
 }

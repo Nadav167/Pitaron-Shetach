@@ -16,7 +16,7 @@ type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 export default function TabsLayout() {
   const { t } = useLocale();
   const colors = useThemeColors();
-  const { isDesktop } = useResponsive();
+  const { isDesktop, hasBottomTabBar } = useResponsive();
   // The trip planner shows whenever accounts exist (signed-out visitors get
   // a log-in prompt there); a user's itineraries only while signed in.
   const { enabled: accountsEnabled, status } = useAuth();
@@ -67,7 +67,9 @@ export default function TabsLayout() {
           tabBarActiveTintColor: colors.navBarActiveLabel,
           tabBarInactiveTintColor: colors.onNavBar,
           tabBarHideOnKeyboard: true,
-          tabBarStyle: isDesktop
+          // Hidden (not unmounted) where the desktop nav or the phone web
+          // side menu does the navigating.
+          tabBarStyle: !hasBottomTabBar
             ? { display: "none" }
             : {
                 position: "absolute",

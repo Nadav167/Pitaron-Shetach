@@ -157,7 +157,12 @@ The review and plan are on a design canvas: https://claude.ai/artifact/Epz52qBV9
   - `accentDeep` and `textFaint` were darkened to pass 4.5:1.
   - New tokens: `navBar`, `onNavBar` and `navBarActiveLabel` for the tab bar, which stays deep green at night. `TOUCH_TARGET` = 44 and `TAB_BAR` are also in `theme.ts`.
 - **Phone header** (`MobileHeader`): the brand, an account button (`AccountButton compact`, 44px, shows the user's initial) and a "⋯" menu with language, day/night and About. The old row overflowed in both languages. Desktop still uses `HeaderActions`.
-- **Tab bar:**
+- **Phone web uses a side menu, not the tab bar** (Nadav, later the same day):
+  - `useResponsive().sideMenu` is true on web below the desktop breakpoint.
+  - There the header shows ☰ + brand + account, and `SideMenu` slides in from the right with the pages, About, language and day/night.
+  - The tab bar is hidden (`hasBottomTabBar`), and `useTabBarClearance()` drops to plain padding.
+  - The native app keeps the tab bar and the "⋯" menu.
+- **Tab bar (native app):**
   - Labels under the icons, with short forms (`tabs.agentShort`, `tabs.itinerariesShort`).
   - It sits above the iPhone home indicator (`insets.bottom`).
   - Screens pad their bottom with `useTabBarClearance()` instead of hard-coded 110s.

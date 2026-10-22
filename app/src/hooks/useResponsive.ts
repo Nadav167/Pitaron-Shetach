@@ -1,4 +1,4 @@
-import { useWindowDimensions } from "react-native";
+import { Platform, useWindowDimensions } from "react-native";
 
 /**
  * Below this width the app renders as the original mobile-first design
@@ -12,5 +12,10 @@ export const DESKTOP_BREAKPOINT = 900;
 
 export function useResponsive() {
   const { width } = useWindowDimensions();
-  return { width, isDesktop: width >= DESKTOP_BREAKPOINT };
+  const isDesktop = width >= DESKTOP_BREAKPOINT;
+  // Phone-width web navigates with a side menu (the ☰ button in
+  // MobileHeader, Nadav 2026-10-22) instead of the floating bottom tab bar,
+  // which the native app keeps.
+  const sideMenu = !isDesktop && Platform.OS === "web";
+  return { width, isDesktop, sideMenu, hasBottomTabBar: !isDesktop && !sideMenu };
 }

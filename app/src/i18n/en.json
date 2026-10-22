@@ -129,7 +129,9 @@
     "welcome": "Welcome, {name}",
     "logIn": "Log in",
     "logOut": "Log out",
-    "more": "More: language, day/night, about"
+    "more": "More: language, day/night, about",
+    "menu": "Menu",
+    "closeMenu": "Close menu"
   },
   "about": {
     "title": "About",
