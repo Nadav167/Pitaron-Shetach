@@ -1,6 +1,7 @@
 import { daysLabel, formatDate, pdfFileName, planLabels } from "@/lib/itinerary";
 import { fonts, lightColors as palette } from "@/constants/theme";
 import type { Itinerary } from "@/types/itinerary";
+import { drawRouteMap, type RouteMap } from "@/lib/routeMap";
 
 /**
  * "Download PDF" (web): builds an A4 PDF of the itinerary in the browser and
@@ -19,6 +20,10 @@ import type { Itinerary } from "@/types/itinerary";
  *      embedded as-is (/DCTDecode). That format is ~40 lines below.
  * The trade-off: text in this PDF is an image (not selectable/searchable).
  * "Print" (itineraryPrint.ts) is the selectable-text alternative.
+ *
+ * The first page carries a map of the trip with each day's route
+ * (routeMap.ts) whenever the plan has coordinates; the days then start on
+ * page 2.
  */
 
 // A4 is 595.28 x 841.89 pt; pages are drawn at 2x for print sharpness.
@@ -31,6 +36,8 @@ const MARGIN = 80;
 const FOOTER = 70;
 const CONTENT_W = W - MARGIN * 2;
 const TIME_COL = 120;
+/** Height of the trip map on page 1 (its width is the content width). */
+const MAP_H = 760;
 
 type Font = { family: string; size: number };
 const F = {
@@ -135,6 +142,33 @@ class PageWriter {
     this.ctx.fill();
   }
 
+  /** Draws a canvas (the trip map) full content width, with rounded corners. */
+  image(source: HTMLCanvasElement, height: number) {
+    const ctx = this.ctx;
+    ctx.save();
+    if (typeof ctx.roundRect === "function") {
+      ctx.beginPath();
+      ctx.roundRect(MARGIN, this.y, CONTENT_W, height, 16);
+      ctx.clip();
+    }
+    ctx.drawImage(source, MARGIN, this.y, CONTENT_W, height);
+    ctx.restore();
+    ctx.strokeStyle = palette.border;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(MARGIN, this.y, CONTENT_W, height);
+    this.y += height;
+  }
+
+  /** A coloured line swatch at the start edge, then text: a map legend row. */
+  legendRow(color: string, text: string, font: Font, lineHeight: number) {
+    const ctx = this.ctx;
+    const swatchW = 44;
+    const x = this.direction === "rtl" ? W - MARGIN - swatchW : MARGIN;
+    ctx.fillStyle = color;
+    ctx.fillRect(x, this.y + lineHeight / 2 - 4, swatchW, 8);
+    this.lines(this.wrap(text, font, CONTENT_W - swatchW - 16), font, palette.text, lineHeight, swatchW + 16);
+  }
+
   rule(color: string, width = 2) {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(MARGIN, this.y, CONTENT_W, width);
@@ -163,7 +197,7 @@ class PageWriter {
   }
 }
 
-function drawItinerary(itinerary: Itinerary): HTMLCanvasElement[] {
+function drawItinerary(itinerary: Itinerary, routeMap: RouteMap | null): HTMLCanvasElement[] {
   const { plan } = itinerary;
   const { t, language, direction } = planLabels(itinerary);
   const page = new PageWriter(direction);
@@ -188,9 +222,29 @@ function drawItinerary(itinerary: Itinerary): HTMLCanvasElement[] {
   page.rule(palette.primary, 5);
   page.y += 26;
 
-  // Days: the first follows the header; each later day starts a new page.
+  // The trip map, its legend (day colour, title, driving distance) and a
+  // note when some day's road route couldn't be fetched (dashed lines).
+  if (routeMap) {
+    page.lines([t("routeMap")], F.section, palette.primary, 42);
+    page.y += 6;
+    page.image(routeMap.canvas, MAP_H);
+    page.y += 18;
+    for (const day of routeMap.days) {
+      const label = t("day").replace("{n}", String(day.dayNumber));
+      const kmKey = day.profile === "foot" ? "walkingKm" : "drivingKm";
+      const km = day.roadKm != null ? ` · ${t(kmKey).replace("{km}", String(day.roadKm))}` : "";
+      page.legendRow(day.color, `${label} — ${day.title}${km}`, F.small, 30);
+    }
+    if (routeMap.days.some((day) => day.roadKm == null)) {
+      page.y += 4;
+      page.paragraph(t("straightLineNote"), F.small, palette.textMuted, 28);
+    }
+  }
+
+  // Days: the first follows the header (or, with a map, starts page 2);
+  // each later day starts a new page.
   for (const [index, day] of plan.days.entries()) {
-    if (index > 0) page.newPage();
+    if (index > 0 || routeMap) page.newPage();
     const label = t("day").replace("{n}", String(day.dayNumber));
     const date = day.date ? ` · ${formatDate(day.date, language)}` : "";
     const heading = page.wrap(`${label}${date} — ${day.title}`, F.dayTitle, CONTENT_W - 40);
@@ -339,7 +393,14 @@ export async function downloadItineraryPdf(itinerary: Itinerary): Promise<void> 
   if (document.fonts) {
     await Promise.all(Object.values(F).map((font) => document.fonts.load(cssFont(font), "אבג abc")));
   }
-  const pages = drawItinerary(itinerary);
+  // The map needs network (tiles, routes) but never fails the PDF: no map
+  // is drawn rather than no PDF.
+  const routeMap = await drawRouteMap(itinerary, CONTENT_W, MAP_H, {
+    labelFont: cssFont({ family: fonts.bodyBold, size: 22 }),
+    attributionFont: cssFont({ family: fonts.body, size: 17 }),
+    background: palette.background,
+  }).catch(() => null);
+  const pages = drawItinerary(itinerary, routeMap);
   const jpegs = pages.map((canvas) => base64ToBytes(canvas.toDataURL("image/jpeg", 0.9).split(",")[1]));
   const blob = buildPdf(jpegs, itinerary.title);
 

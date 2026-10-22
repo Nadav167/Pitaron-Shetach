@@ -241,7 +241,11 @@
       "camp": "Campsite",
       "shopping": "Shopping",
       "other": "Stop"
-    }
+    },
+    "routeMap": "Route map",
+    "drivingKm": "about {km} km of driving",
+    "straightLineNote": "Dashed line: no road route was found for that day, so the points are joined by straight lines.",
+    "walkingKm": "about {km} km on foot"
   },
   "filters": {
     "button": "Filter and sort",

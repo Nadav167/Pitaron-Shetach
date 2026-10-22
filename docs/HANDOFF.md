@@ -184,6 +184,20 @@ The review and plan are on a design canvas: https://claude.ai/artifact/Epz52qBV9
   - Share uses the system sheet, or copies the link on desktop (`src/lib/share.ts`).
 - **Not verified on a device:** everything native (safe-area insets, marker snapshots, the Android map-press filter, share sheet). Checked on web at 390px and 1280px, Hebrew and English, day and night.
 
+## Itinerary PDF: route map (2026-10-22)
+- **What:** Nadav asked that every itinerary PDF include a map of the trip area with the route drawn on it. Page 1 now has a "מפת המסלול" section, and the days start on page 2.
+- **Map content** (`src/lib/routeMap.ts`):
+  - OpenStreetMap tiles drawn on a canvas.
+  - One coloured line per day: from the previous night's campsite, through the day's stops (items with lat/lng), to that night's campsite.
+  - Stops are dots; campsites are numbered markers.
+  - The legend lists day colour, title and distance (walking or driving).
+- **Routing:**
+  - FOSSGIS OSRM (`routing.openstreetmap.de`): the foot profile for days with hikes and no drives, the car profile otherwise.
+  - Any failure or timeout (8 s) draws dashed straight lines, with a note under the legend.
+  - The map itself never blocks the PDF: `drawRouteMap` resolves null when the plan has no coordinates.
+- **External services:** tiles and routes are fetched from the browser, only when a PDF is downloaded (about 20 tiles plus one route request per day). Both allow cross-origin requests and want attribution, which is drawn on the map.
+- **Not done:** the "Print" view (`itineraryPrint.ts`) has no map yet. It opens its tab synchronously, and the map is async.
+
 ## Waiting on Nadav
 0. **Travel agent:** try it signed in on the live site (and on a phone). Confirm the Anthropic monthly spend limit is set.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
