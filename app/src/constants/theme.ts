@@ -28,10 +28,8 @@ export type ColorTokens = {
   success: string;
   onPrimary: string;
   onAccent: string;
-  /** The floating bottom tab bar, and the icons/labels on it. */
-  navBar: string;
-  onNavBar: string;
-  navBarActiveLabel: string;
+  /** Map cluster bubbles: a green dark enough for white numbers in both modes. */
+  clusterFill: string;
 };
 
 export const lightColors: ColorTokens = {
@@ -58,9 +56,7 @@ export const lightColors: ColorTokens = {
   success: "#3E7A5D",
   onPrimary: "#FFFFFF",
   onAccent: "#241505",
-  navBar: "#1F4D3A",
-  onNavBar: "rgba(245,241,230,0.88)",
-  navBarActiveLabel: "#FBE8CE",
+  clusterFill: "#1F4D3A",
 };
 
 export const darkColors: ColorTokens = {
@@ -83,11 +79,9 @@ export const darkColors: ColorTokens = {
   success: "#78B594",
   onPrimary: "#0F1B16",
   onAccent: "#241505",
-  // Not `primary`: night mode lightens primary to #5B9A78, and the cream
-  // icons on it measured 2.9:1. A deep green keeps the bar dark at night.
-  navBar: "#1F3A2D",
-  onNavBar: "rgba(243,238,225,0.88)",
-  navBarActiveLabel: "#F0BD82",
+  // Not `primary`: night mode lightens primary to #5B9A78, and white on it
+  // measured 3.3:1.
+  clusterFill: "#1F3A2D",
 };
 
 /** @deprecated static light-mode fallback — prefer `useThemeColors()`. */
@@ -103,13 +97,6 @@ export const radius = { sm: 8, md: 16, lg: 22, pill: 999 };
  * centered inside a hit area of this size.
  */
 export const TOUCH_TARGET = 44;
-
-/**
- * The floating bottom tab bar on phone-width screens (see
- * app/(tabs)/_layout.tsx). Scrolling screens pad their content by
- * useTabBarClearance() so the last item scrolls clear of it.
- */
-export const TAB_BAR = { height: 64, bottom: 18, side: 16 };
 
 /**
  * Rubik (display) + Heebo (body) — bold headline type with a genuine Hebrew

@@ -11,7 +11,7 @@ import { fonts, radius, spacing, TOUCH_TARGET, type ColorTokens } from "@/consta
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
 /** `show`: only when accounts are configured / only while signed in
- *  (the same rules as the desktop nav and the native tab bar). */
+ *  (the same rules as the desktop nav). */
 type NavItem = { href: Href; path: string; labelKey: string; icon: IconName; show?: "accounts" | "signedIn" };
 
 const NAV_ITEMS: NavItem[] = [
@@ -30,11 +30,11 @@ type Props = {
 };
 
 /**
- * The phone-width web navigation (Nadav 2026-10-22: a side menu behind the
- * ☰ button instead of the floating bottom tab bar). It slides in from the
+ * The phone-width navigation, web and native (Nadav 2026-10-22: a side menu
+ * behind the ☰ button instead of the floating bottom tab bar). It slides in from the
  * right, the side the right-to-left layout starts on, over a dimmed page:
  * the app's pages, the current one highlighted, then About, language and
- * day/night (the controls the header's "⋯" menu holds on native).
+ * day/night.
  *
  * Closes on a choice, a tap on the dimmed page, the close button, or Escape
  * (react-native-web's Modal reports Escape through onRequestClose).

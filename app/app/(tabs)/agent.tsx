@@ -18,7 +18,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTabBarClearance } from "@/hooks/useTabBarClearance";
+import { useBottomClearance } from "@/hooks/useBottomClearance";
 import EmptyState from "@/components/EmptyState";
 import { AgentError, sendAgentMessage } from "@/services/agent";
 import { loadJSON, saveJSON } from "@/lib/storage";
@@ -72,7 +72,7 @@ function LoginPrompt() {
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const router = useRouter();
-  const clearance = useTabBarClearance();
+  const clearance = useBottomClearance();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   return (
@@ -100,8 +100,8 @@ function AgentChat({ userId }: { userId: string }) {
   const { t, locale, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
-  // Room for the floating tab bar under the composer on phone widths.
-  const clearance = useTabBarClearance();
+  // Room for the home indicator under the composer on phones.
+  const clearance = useBottomClearance();
   const router = useRouter();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 

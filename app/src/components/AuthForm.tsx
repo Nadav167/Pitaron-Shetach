@@ -15,7 +15,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTabBarClearance } from "@/hooks/useTabBarClearance";
+import { useBottomClearance } from "@/hooks/useBottomClearance";
 import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 import { AccountError, MIN_PASSWORD_LENGTH } from "@/services/account";
 
@@ -47,7 +47,7 @@ export function AuthScreen({
 }) {
   const { styles } = useStyles();
   const { isDesktop } = useResponsive();
-  const clearance = useTabBarClearance();
+  const clearance = useBottomClearance();
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView

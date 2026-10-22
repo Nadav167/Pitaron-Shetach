@@ -24,7 +24,7 @@ export type MapProps = {
   focus?: MapFocus | null;
   /**
    * Screen space covered by things floating over the map (the search bar
-   * on top, the tab bar and site card below). Framing the country or the
+   * on top, the site card below). Framing the country or the
    * results keeps clear of it, so no pin starts out hidden underneath.
    */
   overlayInsets?: { top: number; bottom: number };

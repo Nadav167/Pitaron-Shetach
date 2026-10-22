@@ -18,7 +18,7 @@ type Props = {
 };
 
 /**
- * The card a tapped map pin opens, floating above the tab bar: photo, name,
+ * The card a tapped map pin opens, floating at the bottom of the map: photo, name,
  * region · price, and the two things people want from the map, navigating
  * there (Waze) and the full details. Replaces the Leaflet popup and the
  * native Callout, so web and native behave alike and every control is a

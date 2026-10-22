@@ -155,17 +155,13 @@ The review and plan are on a design canvas: https://claude.ai/artifact/Epz52qBV9
 - **Theme:**
   - Paper's `colors.elevation` is now mapped to our surfaces (`paperTheme.ts`). Paper's purple-tinted defaults were why cards and menus looked lavender.
   - `accentDeep` and `textFaint` were darkened to pass 4.5:1.
-  - New tokens: `navBar`, `onNavBar` and `navBarActiveLabel` for the tab bar, which stays deep green at night. `TOUCH_TARGET` = 44 and `TAB_BAR` are also in `theme.ts`.
-- **Phone header** (`MobileHeader`): the brand, an account button (`AccountButton compact`, 44px, shows the user's initial) and a "⋯" menu with language, day/night and About. The old row overflowed in both languages. Desktop still uses `HeaderActions`.
-- **Phone web uses a side menu, not the tab bar** (Nadav, later the same day):
-  - `useResponsive().sideMenu` is true on web below the desktop breakpoint.
-  - There the header shows ☰ + brand + account, and `SideMenu` slides in from the right with the pages, About, language and day/night.
-  - The tab bar is hidden (`hasBottomTabBar`), and `useTabBarClearance()` drops to plain padding.
-  - The native app keeps the tab bar and the "⋯" menu.
-- **Tab bar (native app):**
-  - Labels under the icons, with short forms (`tabs.agentShort`, `tabs.itinerariesShort`).
-  - It sits above the iPhone home indicator (`insets.bottom`).
-  - Screens pad their bottom with `useTabBarClearance()` instead of hard-coded 110s.
+  - New tokens: `clusterFill` (map cluster bubbles, deep green in both modes) and `TOUCH_TARGET` = 44.
+- **Phone navigation is a side menu, web and native** (Nadav, later the same day; the bottom tab bar is gone everywhere):
+  - `MobileHeader` shows ☰ + brand on the right, and the account button (`AccountButton compact`, 44px, shows the user's initial) on the left. The old row of five buttons overflowed in both languages.
+  - `SideMenu` slides in from the right with the pages (current one highlighted), About, language and day/night. It closes on a choice, the backdrop, ✕, Escape or Android back.
+  - `app/(tabs)/_layout.tsx` keeps the tab navigator only for routing; its bar is always hidden. Desktop still uses `DesktopNav` + `HeaderActions`.
+  - Screens pad their bottom with `useBottomClearance()` (breathing room + the home-indicator inset) instead of hard-coded 110s.
+  - The side menu has not been run on a device yet.
 - **Cards** (`SiteCard`):
   - The whole card is the button; the "פרטים" button is gone.
   - Photo at 2:1, price on the name line, a kind badge, and amenity icons when known.

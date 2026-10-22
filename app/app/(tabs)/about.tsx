@@ -4,7 +4,7 @@ import { Text } from "react-native-paper";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTabBarClearance } from "@/hooks/useTabBarClearance";
+import { useBottomClearance } from "@/hooks/useBottomClearance";
 import { CONTACT_EMAIL } from "@/constants/contact";
 import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 
@@ -24,7 +24,7 @@ export default function AboutScreen() {
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
-  const clearance = useTabBarClearance();
+  const clearance = useBottomClearance();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   return (

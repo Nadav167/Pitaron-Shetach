@@ -8,7 +8,7 @@ import { useDistanceNote, useSiteFilters } from "@/hooks/useSiteFilters";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTabBarClearance } from "@/hooks/useTabBarClearance";
+import { useBottomClearance } from "@/hooks/useBottomClearance";
 import Map from "@/components/Map";
 import SiteList from "@/components/SiteList";
 import SiteFilterBar from "@/components/SiteFilterBar";
@@ -49,7 +49,7 @@ export default function MapScreen() {
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
-  const clearance = useTabBarClearance();
+  const clearance = useBottomClearance();
   const router = useRouter();
   const filters = useSiteFilters(campsites);
   const distanceNote = useDistanceNote(filters);
@@ -234,8 +234,7 @@ export default function MapScreen() {
         </View>
       )}
       {selected && (
-        // Just above the tab bar where there is one; else 16px off the edge.
-        <View style={[styles.cardWrap, { bottom: Math.max(clearance - spacing.sm, spacing.md) }]} pointerEvents="box-none">
+        <View style={[styles.cardWrap, { bottom: clearance }]} pointerEvents="box-none">
           <SelectedSiteCard
             campsite={selected}
             onOpen={() => openCampsite(selected)}

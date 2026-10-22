@@ -18,9 +18,7 @@
     "map": "מפה",
     "favorites": "מועדפים",
     "agent": "מתכנן הטיולים",
-    "itineraries": "המסלולים שלי",
-    "agentShort": "מתכנן",
-    "itinerariesShort": "מסלולים"
+    "itineraries": "המסלולים שלי"
   },
   "home": {
     "listView": "רשימה",
@@ -129,7 +127,6 @@
     "welcome": "שלום, {name}",
     "logIn": "התחברות",
     "logOut": "התנתקות",
-    "more": "עוד: שפה, מצב יום/לילה, אודות",
     "menu": "תפריט",
     "closeMenu": "סגירת התפריט"
   },

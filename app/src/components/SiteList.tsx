@@ -5,7 +5,7 @@ import SiteCard from "./SiteCard";
 import EmptyState from "./EmptyState";
 import { spacing } from "@/constants/theme";
 import { useLocale } from "@/context/LocaleContext";
-import { useTabBarClearance } from "@/hooks/useTabBarClearance";
+import { useBottomClearance } from "@/hooks/useBottomClearance";
 
 type Props = {
   campsites: Campsite[];
@@ -46,7 +46,7 @@ export default function SiteList({
   noteFor,
 }: Props) {
   const { t } = useLocale();
-  const clearance = useTabBarClearance();
+  const clearance = useBottomClearance();
 
   // The empty state is the FlatList's own ListEmptyComponent rather than a
   // separate early return: swapping the whole FlatList out for another view
@@ -68,7 +68,7 @@ export default function SiteList({
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={[
         styles.content,
-        // The last card scrolls clear of the floating tab bar.
+        // Room under the last card (and the iPhone home indicator).
         { paddingBottom: clearance },
         numColumns > 1 && styles.gridContent,
         contentMaxWidth ? { width: "100%", maxWidth: contentMaxWidth, marginHorizontal: "auto" } : undefined,

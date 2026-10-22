@@ -6,7 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
-import { useTabBarClearance } from "@/hooks/useTabBarClearance";
+import { useBottomClearance } from "@/hooks/useBottomClearance";
 import EmptyState from "@/components/EmptyState";
 import { fetchItineraries } from "@/services/itineraries";
 import { daysLabel, formatDate, planLabels } from "@/lib/itinerary";
@@ -24,7 +24,7 @@ export default function ItinerariesScreen() {
   const { t, locale, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
-  const clearance = useTabBarClearance();
+  const clearance = useBottomClearance();
   const router = useRouter();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 

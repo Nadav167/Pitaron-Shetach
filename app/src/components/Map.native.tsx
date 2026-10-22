@@ -195,7 +195,7 @@ export default function Map({
       initialRegion={INITIAL_REGION}
       minZoomLevel={MIN_ZOOM}
       // Keeps the framed area (and the platform's own controls and legal
-      // label) clear of the search bar above and the tab bar below.
+      // label) clear of the search bar above and the site card below.
       mapPadding={{ top: overlayInsets.top, bottom: overlayInsets.bottom, left: 0, right: 0 }}
       onMapReady={applyBoundaries}
       onRegionChangeComplete={onRegionChangeComplete}
@@ -232,7 +232,7 @@ export default function Map({
           const size = clusterSize(cluster.items.length);
           return (
             <Marker
-              key={`${cluster.key}|${colors.navBar}`}
+              key={`${cluster.key}|${colors.clusterFill}`}
               coordinate={{ latitude: cluster.lat, longitude: cluster.lng }}
               anchor={{ x: 0.5, y: 0.5 }}
               tracksViewChanges={false}
@@ -243,7 +243,7 @@ export default function Map({
                   styles.cluster,
                   // The deep green, as on web: white on night mode's lighter
                   // primary measured 3.3:1.
-                  { width: size, height: size, borderRadius: size / 2, backgroundColor: colors.navBar },
+                  { width: size, height: size, borderRadius: size / 2, backgroundColor: colors.clusterFill },
                 ]}
               >
                 <Text style={styles.clusterText}>{cluster.items.length}</Text>

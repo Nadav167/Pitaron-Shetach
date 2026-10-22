@@ -140,7 +140,7 @@ function FocusOn({ focus }: { focus: MapProps["focus"] }) {
   return null;
 }
 
-/** Lifts Leaflet's attribution line above the tab bar / site card. */
+/** Lifts Leaflet's attribution line above whatever floats at the bottom. */
 function AttributionClearance({ bottom }: { bottom: number }) {
   const map = useMap();
   useEffect(() => {
@@ -199,13 +199,13 @@ function PinLayer({
   // rebuilds the marker's DOM, so cluster icons are cached by count.
   // (globalThis: this file's component is itself called Map.)
   const clusterIcons = useRef(new globalThis.Map<string, L.DivIcon>());
-  // Clusters use the tab bar's deep green, not `primary`: night mode
+  // Clusters use a deep green (clusterFill), not `primary`: night mode
   // lightens primary, and white numbers on it measured 3.3:1.
   const iconForCluster = (count: number) => {
-    const cacheKey = `${count}|${colors.navBar}`;
+    const cacheKey = `${count}|${colors.clusterFill}`;
     let icon = clusterIcons.current.get(cacheKey);
     if (!icon) {
-      icon = clusterIcon(count, colors.navBar);
+      icon = clusterIcon(count, colors.clusterFill);
       clusterIcons.current.set(cacheKey, icon);
     }
     return icon;
@@ -289,7 +289,7 @@ function PinLayer({
  * web and `Map.native.tsx` for iOS/Android). Uses Leaflet + OpenStreetMap.
  *
  * A tapped pin no longer opens a Leaflet popup: the screen shows the site in
- * a card above the tab bar (SelectedSiteCard), the same on web and native,
+ * a card at the bottom (SelectedSiteCard), the same on web and native,
  * with room for a photo, Waze and the heart at full touch size.
  */
 export default function Map({

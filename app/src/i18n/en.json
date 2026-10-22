@@ -18,9 +18,7 @@
     "map": "Map",
     "favorites": "Favorites",
     "agent": "Trip planner",
-    "itineraries": "My itineraries",
-    "agentShort": "Planner",
-    "itinerariesShort": "Trips"
+    "itineraries": "My itineraries"
   },
   "home": {
     "listView": "List",
@@ -129,7 +127,6 @@
     "welcome": "Welcome, {name}",
     "logIn": "Log in",
     "logOut": "Log out",
-    "more": "More: language, day/night, about",
     "menu": "Menu",
     "closeMenu": "Close menu"
   },
