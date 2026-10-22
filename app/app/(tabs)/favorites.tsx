@@ -56,7 +56,11 @@ export default function FavoritesScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.titleOnly}>{title}</View>
-        <EmptyState message={t("favorites.empty")} />
+        <EmptyState
+          icon="heart-outline"
+          message={t("favorites.empty")}
+          action={{ label: t("favorites.browse"), onPress: () => router.push("/map") }}
+        />
       </View>
     );
   }
@@ -87,7 +91,7 @@ export default function FavoritesScreen() {
 function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
-    titleOnly: { padding: spacing.md },
+    titleOnly: { paddingHorizontal: spacing.md, paddingTop: spacing.sm },
     loading: { marginTop: spacing.xl },
     header: { paddingBottom: spacing.md },
     // react-native-paper's <Text> hardcodes textAlign: 'left' regardless of

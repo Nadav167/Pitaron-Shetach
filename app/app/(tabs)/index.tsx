@@ -35,7 +35,16 @@ export default function HomeScreen() {
     </View>
   ) : (
     <View style={styles.mobileHeader}>
-      <Text style={styles.mobileSlogan}>{t("common.slogan")}</Text>
+      {/* How many sites the list holds (or how many match), so it's clear
+          the list is worth scrolling, then the slogan beside it. */}
+      <View style={styles.titleRow}>
+        <Text style={styles.mobileCount} accessibilityRole="header">
+          {t("home.count").replace("{count}", String(filters.visible.length))}
+        </Text>
+        <Text style={styles.mobileSlogan} numberOfLines={1}>
+          {t("home.countSubtitle")}
+        </Text>
+      </View>
       <SiteFilterBar filters={filters} />
     </View>
   );
@@ -79,14 +88,23 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
 
     // Mobile header: the brand name itself is in MobileHeader, directly
     // above; this is the slogan under it, then search + chips.
-    mobileHeader: { paddingHorizontal: spacing.md, paddingTop: 0 },
+    mobileHeader: { paddingTop: 0, paddingBottom: spacing.sm },
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "baseline",
+      justifyContent: "space-between",
+      gap: spacing.sm,
+      marginBottom: spacing.sm + 4,
+    },
+    // Never wraps; the subtitle beside it gives way (ellipsis) instead.
+    mobileCount: { flexShrink: 0, fontFamily: fonts.display, fontSize: 26, color: colors.text, ...text },
     // react-native-paper's <Text> hardcodes textAlign: 'left' regardless
     // of RTL -- override explicitly (same fix as the detail screen).
     mobileSlogan: {
       fontFamily: fonts.bodyMedium,
+      flexShrink: 1,
       fontSize: 14,
       color: colors.textMuted,
-      marginBottom: spacing.md,
       ...text,
     },
 

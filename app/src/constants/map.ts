@@ -26,6 +26,9 @@ export const MIN_ZOOM = 7;
  */
 export const FAVORITE_PIN_COLOR = "#A61E1E";
 
+/** The "you are here" dot: the blue every map app uses for it. */
+export const USER_LOCATION_COLOR = "#2F7BEA";
+
 /**
  * All pins share one colour; the glyph inside tells the two kinds apart:
  * a moon for night camps (חניוני לילה: the Parks Authority's, KKL's and

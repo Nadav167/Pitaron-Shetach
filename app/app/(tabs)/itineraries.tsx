@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useTabBarClearance } from "@/hooks/useTabBarClearance";
 import EmptyState from "@/components/EmptyState";
 import { fetchItineraries } from "@/services/itineraries";
 import { daysLabel, formatDate, planLabels } from "@/lib/itinerary";
@@ -23,6 +24,7 @@ export default function ItinerariesScreen() {
   const { t, locale, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
+  const clearance = useTabBarClearance();
   const router = useRouter();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
@@ -74,7 +76,7 @@ export default function ItinerariesScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.padded}>{title}</View>
-        <View style={styles.empty}>
+        <View style={[styles.empty, { paddingBottom: clearance }]}>
           <MaterialCommunityIcons name="map-search-outline" size={44} color={colors.textFaint} />
           <Text style={styles.emptyText}>{t("itineraries.empty")}</Text>
           <Pressable style={styles.cta} onPress={() => router.push("/agent")} accessibilityRole="button">
@@ -94,7 +96,7 @@ export default function ItinerariesScreen() {
         keyExtractor={(item) => item.id}
         numColumns={columns}
         columnWrapperStyle={columns > 1 ? styles.row : undefined}
-        contentContainerStyle={[styles.list, isDesktop && styles.listDesktop]}
+        contentContainerStyle={[styles.list, { paddingBottom: clearance }, isDesktop && styles.listDesktop]}
         ListHeaderComponent={<View style={styles.header}>{title}</View>}
         renderItem={({ item }) => {
           const { t: planT, direction } = planLabels(item);
@@ -142,7 +144,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     pressed: { opacity: 0.8 },
 
     // Room at the bottom for the floating tab bar on phones.
-    list: { padding: spacing.md, paddingBottom: 110, gap: spacing.md },
+    list: { padding: spacing.md, gap: spacing.md },
     listDesktop: { width: "100%", maxWidth: 1000, alignSelf: "center", paddingBottom: spacing.xl },
     row: { gap: spacing.md },
 
@@ -179,7 +181,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     metaText: { fontFamily: fonts.bodyMedium, fontSize: 12, color: colors.primary },
     created: { fontFamily: fonts.body, fontSize: 12, color: colors.textFaint, writingDirection },
 
-    empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.md, padding: spacing.lg, paddingBottom: 110 },
+    empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.md, padding: spacing.lg },
     emptyText: {
       maxWidth: 360,
       fontFamily: fonts.body,

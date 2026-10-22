@@ -10,14 +10,17 @@
     "night": "night",
     "priceUnknown": "Price unknown",
     "unknown": "Unknown",
-    "back": "Back"
+    "back": "Back",
+    "close": "Close"
   },
   "tabs": {
     "home": "Home",
     "map": "Map",
     "favorites": "Favorites",
     "agent": "Trip planner",
-    "itineraries": "My itineraries"
+    "itineraries": "My itineraries",
+    "agentShort": "Planner",
+    "itinerariesShort": "Trips"
   },
   "home": {
     "listView": "List",
@@ -40,7 +43,11 @@
     "radius": {
       "label": "Sites within a radius of {city}:",
       "km": "{km} km"
-    }
+    },
+    "count": "{count} sites",
+    "countSubtitle": "Night camps and campsites",
+    "searchLabel": "Search by name, town or region",
+    "clearSearch": "Clear search"
   },
   "region": {
     "North": "North",
@@ -93,12 +100,25 @@
     "missingInfo": "Oops! We couldn't find some details about this place.",
     "missingInfoCall": "If you have questions, you can always try calling the number!",
     "distanceFrom": "About {km} km from {city}",
-    "phone": "Phone"
+    "phone": "Phone",
+    "kind": {
+      "nightCamp": "Night camp",
+      "campground": "Campground"
+    },
+    "kindLabel": "Type",
+    "call": "Call",
+    "share": "Share",
+    "linkCopied": "Link copied",
+    "shareFailed": "Couldn't share the link",
+    "readMore": "Read more",
+    "readLess": "Show less",
+    "priceNote": "About the price"
   },
   "favorites": {
     "title": "My favorites",
     "empty": "You haven't saved any sites yet",
-    "noMatches": "No favorites match your search"
+    "noMatches": "No favorites match your search",
+    "browse": "Browse the map"
   },
   "header": {
     "hebrew": "עברית",
@@ -108,7 +128,8 @@
     "darkMode": "Switch to dark mode",
     "welcome": "Welcome, {name}",
     "logIn": "Log in",
-    "logOut": "Log out"
+    "logOut": "Log out",
+    "more": "More: language, day/night, about"
   },
   "about": {
     "title": "About",
@@ -220,5 +241,22 @@
       "shopping": "Shopping",
       "other": "Stop"
     }
+  },
+  "filters": {
+    "button": "Filter and sort",
+    "buttonActive": "Filter and sort ({count} active)",
+    "title": "Filter and sort",
+    "close": "Close",
+    "regions": "Regions",
+    "freeOnly": "Free sites only",
+    "reset": "Reset",
+    "show": "Show {count} sites"
+  },
+  "map": {
+    "locate": "My location",
+    "locateDenied": "Location permission is off. You can allow it in your browser settings.",
+    "locateFailed": "We couldn't find your location",
+    "outsideIsrael": "Your location is outside the map area",
+    "showList": "List view"
   }
 }

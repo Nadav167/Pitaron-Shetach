@@ -10,14 +10,17 @@
     "night": "לילה",
     "priceUnknown": "מחיר לא ידוע",
     "unknown": "לא ידוע",
-    "back": "חזרה"
+    "back": "חזרה",
+    "close": "סגירה"
   },
   "tabs": {
     "home": "בית",
     "map": "מפה",
     "favorites": "מועדפים",
     "agent": "מתכנן הטיולים",
-    "itineraries": "המסלולים שלי"
+    "itineraries": "המסלולים שלי",
+    "agentShort": "מתכנן",
+    "itinerariesShort": "מסלולים"
   },
   "home": {
     "listView": "רשימה",
@@ -40,7 +43,11 @@
     "radius": {
       "label": "אתרים ברדיוס מ{city}:",
       "km": "{km} ק\"מ"
-    }
+    },
+    "count": "{count} אתרים",
+    "countSubtitle": "חניוני לילה וקמפינג בכל הארץ",
+    "searchLabel": "חיפוש לפי שם, עיר או אזור",
+    "clearSearch": "ניקוי החיפוש"
   },
   "region": {
     "North": "צפון",
@@ -93,12 +100,25 @@
     "missingInfo": "אוי! לא הצלחנו למצוא כמה פרטים על המקום.",
     "missingInfoCall": "אם יש שאלות, תמיד אפשר לנסות להתקשר למספר!",
     "distanceFrom": "כ-{km} ק\"מ מ{city}",
-    "phone": "טלפון"
+    "phone": "טלפון",
+    "kind": {
+      "nightCamp": "חניון לילה",
+      "campground": "קמפינג"
+    },
+    "kindLabel": "סוג",
+    "call": "חיוג",
+    "share": "שיתוף",
+    "linkCopied": "הקישור הועתק",
+    "shareFailed": "לא הצלחנו לשתף את הקישור",
+    "readMore": "קריאת הכל",
+    "readLess": "הצגת פחות",
+    "priceNote": "על המחיר"
   },
   "favorites": {
     "title": "המועדפים שלי",
     "empty": "עדיין לא הוספתם אתרים למועדפים",
-    "noMatches": "אין מועדפים שמתאימים לחיפוש"
+    "noMatches": "אין מועדפים שמתאימים לחיפוש",
+    "browse": "גלו אתרים במפה"
   },
   "header": {
     "hebrew": "עברית",
@@ -108,7 +128,8 @@
     "darkMode": "מעבר למצב לילה",
     "welcome": "שלום, {name}",
     "logIn": "התחברות",
-    "logOut": "התנתקות"
+    "logOut": "התנתקות",
+    "more": "עוד: שפה, מצב יום/לילה, אודות"
   },
   "about": {
     "title": "אודות",
@@ -220,5 +241,22 @@
       "shopping": "קניות",
       "other": "עצירה"
     }
+  },
+  "filters": {
+    "button": "סינון ומיון",
+    "buttonActive": "סינון ומיון ({count} פעילים)",
+    "title": "סינון ומיון",
+    "close": "סגירה",
+    "regions": "אזורים",
+    "freeOnly": "רק אתרים בחינם",
+    "reset": "איפוס",
+    "show": "הצגת {count} אתרים"
+  },
+  "map": {
+    "locate": "המיקום שלי",
+    "locateDenied": "אין הרשאה למיקום. אפשר לאשר אותה בהגדרות הדפדפן.",
+    "locateFailed": "לא הצלחנו למצוא את המיקום שלך",
+    "outsideIsrael": "המיקום שלך מחוץ לאזור המפה",
+    "showList": "תצוגת רשימה"
   }
 }

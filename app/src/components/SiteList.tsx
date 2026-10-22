@@ -5,6 +5,7 @@ import SiteCard from "./SiteCard";
 import EmptyState from "./EmptyState";
 import { spacing } from "@/constants/theme";
 import { useLocale } from "@/context/LocaleContext";
+import { useTabBarClearance } from "@/hooks/useTabBarClearance";
 
 type Props = {
   campsites: Campsite[];
@@ -45,6 +46,7 @@ export default function SiteList({
   noteFor,
 }: Props) {
   const { t } = useLocale();
+  const clearance = useTabBarClearance();
 
   // The empty state is the FlatList's own ListEmptyComponent rather than a
   // separate early return: swapping the whole FlatList out for another view
@@ -66,17 +68,31 @@ export default function SiteList({
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={[
         styles.content,
+        // The last card scrolls clear of the floating tab bar.
+        { paddingBottom: clearance },
         numColumns > 1 && styles.gridContent,
         contentMaxWidth ? { width: "100%", maxWidth: contentMaxWidth, marginHorizontal: "auto" } : undefined,
       ]}
       columnWrapperStyle={numColumns > 1 ? styles.row : undefined}
       renderItem={({ item }) => (
         <View style={numColumns > 1 ? gridItemStyle(numColumns) : undefined}>
-          <SiteCard campsite={item} note={noteFor?.(item)} onPress={() => onSelectCampsite(item)} />
+          <SiteCard
+            campsite={item}
+            note={noteFor?.(item)}
+            onPress={() => onSelectCampsite(item)}
+            // Photo-less sites become compact rows in a one-column list. A
+            // grid keeps every card the same shape, so there they keep the
+            // generic cover.
+            variant={numColumns === 1 && !hasPhoto(item) ? "compact" : "photo"}
+          />
         </View>
       )}
     />
   );
+}
+
+function hasPhoto(campsite: Campsite): boolean {
+  return campsite.photos.some((photo) => !photo.isPlaceholder);
 }
 
 // flexBasis (not flex:1/flexGrow) keeps every card the SAME width whether

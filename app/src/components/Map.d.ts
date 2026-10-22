@@ -1,5 +1,5 @@
 import type { ComponentType } from "react";
-import type { Campsite } from "@/types/campsite";
+import type { MapProps } from "@/types/map";
 
 /**
  * `@/components/Map` has no Map.tsx — Metro resolves it to Map.web.tsx on web
@@ -8,17 +8,11 @@ import type { Campsite } from "@/types/campsite";
  *
  * TypeScript doesn't implement that resolution, so without this declaration
  * every import of the bare module is a TS2307 error even though the bundle is
- * fine. Declaring the shared contract here also keeps the two implementations
- * honest: both must satisfy these props.
+ * fine. Both implementations type their props as the same `MapProps`
+ * (src/types/map.ts), which keeps them honest.
  *
  * Metro ignores .d.ts files, so this affects typechecking only.
  */
-declare const Map: ComponentType<{
-  campsites: Campsite[];
-  onSelectCampsite?: (campsite: Campsite) => void;
-  /** Zoom to the pinned campsites whenever they change (e.g. a search);
-   *  false/omitted keeps the whole-country view. */
-  fitToCampsites?: boolean;
-}>;
+declare const Map: ComponentType<MapProps>;
 
 export default Map;

@@ -8,6 +8,8 @@ import { useResponsive } from "@/hooks/useResponsive";
 import DesktopNav from "@/components/DesktopNav";
 import { useAuth } from "@/context/AuthContext";
 import MobileHeader from "@/components/MobileHeader";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { fonts, spacing, TAB_BAR } from "@/constants/theme";
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -25,20 +27,25 @@ export default function TabsLayout() {
   // (Home/Map/Favorites runs right-to-left, like the rest of the layout), safe-area handling and platform back-behavior all
   // keep working untouched. The active tab's icon sits in a plain centered
   // accent circle — no vertical pop — per the design pass.
+  //
+  // Each tab carries a short label under its icon: icon-only tabs left the
+  // compass (the trip planner) for people to guess. The active tab's icon
+  // sits in a wide accent pill, the label below it in a light tint.
+  const insets = useSafeAreaInsets();
   const renderIcon = (name: IconName) =>
     function TabIcon({ color, focused }: { color: string; focused: boolean }) {
       return (
         <View
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 20,
+            width: 48,
+            height: 28,
+            borderRadius: 14,
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: focused ? colors.accent : "transparent",
           }}
         >
-          <MaterialCommunityIcons name={name} size={20} color={focused ? colors.onAccent : color} />
+          <MaterialCommunityIcons name={name} size={19} color={focused ? colors.onAccent : color} />
         </View>
       );
     };
@@ -54,20 +61,28 @@ export default function TabsLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarShowLabel: false,
-          tabBarActiveTintColor: colors.onAccent,
-          tabBarInactiveTintColor: "rgba(245,241,230,0.8)",
+          tabBarShowLabel: true,
+          tabBarLabelPosition: "below-icon",
+          tabBarLabelStyle: { fontFamily: fonts.bodyMedium, fontSize: 11, lineHeight: 14, marginTop: 1 },
+          tabBarActiveTintColor: colors.navBarActiveLabel,
+          tabBarInactiveTintColor: colors.onNavBar,
           tabBarHideOnKeyboard: true,
           tabBarStyle: isDesktop
             ? { display: "none" }
             : {
                 position: "absolute",
-                left: 20,
-                right: 20,
-                bottom: 18,
-                height: 64,
-                borderRadius: 32,
-                backgroundColor: colors.primary,
+                left: TAB_BAR.side,
+                right: TAB_BAR.side,
+                // Above the iPhone home indicator rather than on top of it
+                // (insets.bottom is 0 on web and on phones without one).
+                bottom: TAB_BAR.bottom + insets.bottom,
+                height: TAB_BAR.height,
+                // The bar's own height already clears the screen edge, so
+                // React Navigation's automatic inset padding is turned off.
+                paddingBottom: 0,
+                paddingHorizontal: spacing.xs,
+                borderRadius: TAB_BAR.height / 2,
+                backgroundColor: colors.navBar,
                 borderTopWidth: 0,
                 elevation: 8,
                 shadowColor: "#000",
@@ -75,7 +90,9 @@ export default function TabsLayout() {
                 shadowRadius: 16,
                 shadowOffset: { width: 0, height: 8 },
               },
-          tabBarItemStyle: { height: 64, justifyContent: "center" },
+          // The item adds ~5px padding of its own; more than 4 here squeezed the
+          // label to an 8px sliver.
+          tabBarItemStyle: { height: TAB_BAR.height, paddingVertical: 4, justifyContent: "center" },
         }}
       >
         <Tabs.Screen
@@ -90,10 +107,13 @@ export default function TabsLayout() {
           name="favorites"
           options={{ title: t("tabs.favorites"), tabBarIcon: renderIcon("heart") }}
         />
+        {/* tabBarLabel is a short form of the title: with five tabs, each
+            gets about 65px, too narrow for "מתכנן הטיולים". */}
         <Tabs.Screen
           name="agent"
           options={{
             title: t("tabs.agent"),
+            tabBarLabel: t("tabs.agentShort"),
             tabBarIcon: renderIcon("compass-outline"),
             href: accountsEnabled ? undefined : null,
           }}
@@ -102,6 +122,7 @@ export default function TabsLayout() {
           name="itineraries"
           options={{
             title: t("tabs.itineraries"),
+            tabBarLabel: t("tabs.itinerariesShort"),
             tabBarIcon: renderIcon("map-marker-path"),
             href: status === "signedIn" ? undefined : null,
           }}

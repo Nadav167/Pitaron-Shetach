@@ -18,6 +18,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useTabBarClearance } from "@/hooks/useTabBarClearance";
 import EmptyState from "@/components/EmptyState";
 import { AgentError, sendAgentMessage } from "@/services/agent";
 import { loadJSON, saveJSON } from "@/lib/storage";
@@ -48,8 +49,6 @@ const WAIT_STAGES = [
   { afterMs: 8000, key: "agent.stillWorking" },
   { afterMs: 25000, key: "agent.thinkingLong" },
 ];
-/** Clearance for the floating tab bar on phone widths (see (tabs)/_layout). */
-const TAB_BAR_CLEARANCE = 64 + 18 + spacing.sm;
 
 export default function AgentScreen() {
   const { enabled, status, userId } = useAuth();
@@ -73,10 +72,11 @@ function LoginPrompt() {
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const router = useRouter();
+  const clearance = useTabBarClearance();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.promptContent}>
+    <ScrollView style={styles.container} contentContainerStyle={[styles.promptContent, { paddingBottom: clearance }]}>
       <View style={styles.promptCard}>
         <View style={styles.promptIcon}>
           <MaterialCommunityIcons name="compass-outline" size={30} color={colors.onPrimary} />
@@ -100,6 +100,8 @@ function AgentChat({ userId }: { userId: string }) {
   const { t, locale, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
+  // Room for the floating tab bar under the composer on phone widths.
+  const clearance = useTabBarClearance();
   const router = useRouter();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
@@ -261,7 +263,7 @@ function AgentChat({ userId }: { userId: string }) {
           )}
         </ScrollView>
 
-        <View style={[styles.composerArea, !isDesktop && { paddingBottom: TAB_BAR_CLEARANCE }]}>
+        <View style={[styles.composerArea, !isDesktop && { paddingBottom: clearance }]}>
           <View style={styles.composer}>
             <TextInput
               value={draft}
@@ -460,7 +462,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       writingDirection,
     },
 
-    promptContent: { flexGrow: 1, justifyContent: "center", padding: spacing.lg, paddingBottom: TAB_BAR_CLEARANCE },
+    promptContent: { flexGrow: 1, justifyContent: "center", padding: spacing.lg },
     promptCard: {
       alignSelf: "center",
       width: "100%",

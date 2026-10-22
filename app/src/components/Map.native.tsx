@@ -1,16 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { StyleSheet, View } from "react-native";
-import MapView, { Callout, Marker, Polygon, UrlTile, type Region } from "react-native-maps";
-import { Text } from "react-native-paper";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
+import MapView, { Marker, Polygon, UrlTile, type MapPressEvent, type Region } from "react-native-maps";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { Campsite } from "@/types/campsite";
-import { isNightCamp, localized, type Amenities } from "@/types/campsite";
-import { useLocale } from "@/context/LocaleContext";
+import { isNightCamp } from "@/types/campsite";
+import type { MapProps } from "@/types/map";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useFavorites } from "@/context/FavoritesContext";
-import { radius, spacing, type ColorTokens } from "@/constants/theme";
+import { fonts, type ColorTokens } from "@/constants/theme";
 import { MASK_OUTER_RING, MASK_RINGS, MASK_WINDOW_RING, type MaskPoint } from "@/data/mapMask";
-import { FAVORITE_PIN_COLOR, ISRAEL_PAN_LIMIT, ISRAEL_VIEW, MIN_ZOOM, PIN_GLYPH } from "@/constants/map";
+import {
+  FAVORITE_PIN_COLOR,
+  ISRAEL_PAN_LIMIT,
+  ISRAEL_VIEW,
+  MIN_ZOOM,
+  PIN_GLYPH,
+  USER_LOCATION_COLOR,
+} from "@/constants/map";
+import { CLUSTER_MAX_ZOOM, clusterPoints, clusterSize, type Cluster } from "@/lib/cluster";
 
 const INITIAL_REGION: Region = {
   latitude: (ISRAEL_VIEW.north + ISRAEL_VIEW.south) / 2,
@@ -26,11 +33,18 @@ const MASK_POLYGONS = MASK_RINGS.map((ring) => ring.map(toLatLng));
 
 const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
-type Props = {
-  campsites: Campsite[];
-  onSelectCampsite?: (campsite: Campsite) => void;
-  fitToCampsites?: boolean;
-};
+/**
+ * The map's zoom level (as in web maps: 256px tiles, zoom 0 = the whole
+ * world in one tile) for a region shown across the screen's width. The
+ * clustering in src/lib/cluster.ts works in those units.
+ */
+function zoomOf(region: Region): number {
+  const width = Dimensions.get("window").width;
+  return Math.log2((360 * (width / 256)) / region.longitudeDelta);
+}
+
+type Pinnable = Campsite & { coordinates: { lat: number; lng: number } };
+type ClusterInput = { id: string; lat: number; lng: number; campsite: Pinnable };
 
 /**
  * Native (iOS/Android) map. Uses react-native-maps with a raw OpenStreetMap
@@ -42,13 +56,19 @@ type Props = {
  *
  * Markers use a custom colored-circle + glyph view instead of the default
  * teardrop `pinColor`, matching Map.web.tsx's pins: one colour for all, a
- * moon (night camp) or tent (campground) inside, deep red for favorites.
+ * moon (night camp) or tent (campground) inside, deep red for favorites,
+ * larger and in the accent colour for the selected site. Nearby pins are
+ * grouped into numbered clusters (src/lib/cluster.ts), recomputed as the
+ * zoom changes; tapping one zooms to its pins.
  *
- * The callout carries the non-official warning but NOT the Waze/Google Maps
- * buttons or an add-to-favorites button (the web popup has both): touches on
- * individual controls inside a Callout don't propagate reliably on Android
- * (the whole callout is one tappable surface). Tapping it opens the detail
- * screen, where those buttons live and work.
+ * Custom marker views are snapshotted once (`tracksViewChanges={false}`):
+ * leaving it on re-renders every marker view on every frame, which made
+ * panning stutter with hundreds of pins on Android. A marker whose look
+ * changes (selected, favorite) is given a new key so it is drawn afresh.
+ *
+ * Tapping a pin selects it; the screen shows its card (SelectedSiteCard),
+ * which replaced the Callout: touches on controls inside a Callout don't
+ * reach them reliably on Android.
  *
  * Land that isn't Israel is painted over in the page's background colour
  * (see data/mapMask.ts): one frame covering everything outside the window
@@ -60,17 +80,36 @@ type Props = {
  * `onRegionChangeComplete` also pulls the camera back whenever its center
  * ends up outside the limit — that is what restrains Apple Maps on iOS.
  */
-export default function Map({ campsites, onSelectCampsite, fitToCampsites = false }: Props) {
-  const { locale, t, writingDirection } = useLocale();
+export default function Map({
+  campsites,
+  selectedId = null,
+  onPinPress,
+  onMapPress,
+  fitToCampsites = false,
+  userLocation = null,
+  focus = null,
+  overlayInsets = { top: 0, bottom: 0 },
+}: MapProps) {
   const colors = useThemeColors();
   const { isFavorite } = useFavorites();
-  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
+  const styles = useMemo(() => makeStyles(colors), [colors]);
+  const [zoom, setZoom] = useState(() => zoomOf(INITIAL_REGION));
 
   // Sites with no verified coordinates can't be pinned; they remain in the list.
-  const mappable = campsites.filter(
-    (campsite): campsite is Campsite & { coordinates: { lat: number; lng: number } } =>
-      campsite.coordinates !== null
+  const mappable = useMemo(
+    () => campsites.filter((campsite): campsite is Pinnable => campsite.coordinates !== null),
+    [campsites]
   );
+
+  const clusters = useMemo(() => {
+    const input: ClusterInput[] = mappable.map((campsite) => ({
+      id: campsite.id,
+      lat: campsite.coordinates.lat,
+      lng: campsite.coordinates.lng,
+      campsite,
+    }));
+    return clusterPoints(input, zoom);
+  }, [mappable, zoom]);
 
   const mapRef = useRef<MapView>(null);
 
@@ -92,7 +131,7 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
       } else {
         map.fitToCoordinates(
           mappable.map((c) => ({ latitude: c.coordinates.lat, longitude: c.coordinates.lng })),
-          { edgePadding: { top: 60, right: 40, bottom: 120, left: 40 }, animated: true }
+          { edgePadding: { top: 40, right: 40, bottom: 40, left: 40 }, animated: true }
         );
       }
     }, 300);
@@ -101,6 +140,16 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fitToCampsites, signature]);
 
+  useEffect(() => {
+    if (!focus) return;
+    const delta = 360 / 2 ** focus.zoom;
+    mapRef.current?.animateToRegion(
+      { latitude: focus.lat, longitude: focus.lng, latitudeDelta: delta, longitudeDelta: delta },
+      600
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [focus?.key]);
+
   const applyBoundaries = useCallback(() => {
     mapRef.current?.setMapBoundaries(
       { latitude: ISRAEL_PAN_LIMIT.north, longitude: ISRAEL_PAN_LIMIT.east },
@@ -108,7 +157,8 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
     );
   }, []);
 
-  const keepInsideIsrael = useCallback((region: Region) => {
+  const onRegionChangeComplete = useCallback((region: Region) => {
+    setZoom(zoomOf(region));
     const latitude = clamp(region.latitude, ISRAEL_PAN_LIMIT.south, ISRAEL_PAN_LIMIT.north);
     const longitude = clamp(region.longitude, ISRAEL_PAN_LIMIT.west, ISRAEL_PAN_LIMIT.east);
     if (latitude !== region.latitude || longitude !== region.longitude) {
@@ -116,14 +166,40 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
     }
   }, []);
 
+  const zoomInto = (cluster: Cluster<ClusterInput>) => {
+    const { south, west, north, east } = cluster.bounds;
+    if (north - south < 1e-4 && east - west < 1e-4) {
+      const delta = 360 / 2 ** (CLUSTER_MAX_ZOOM + 1);
+      mapRef.current?.animateToRegion(
+        { latitude: cluster.lat, longitude: cluster.lng, latitudeDelta: delta, longitudeDelta: delta },
+        400
+      );
+      return;
+    }
+    mapRef.current?.fitToCoordinates(
+      cluster.items.map((item) => ({ latitude: item.lat, longitude: item.lng })),
+      { edgePadding: { top: 60, right: 48, bottom: 60, left: 48 }, animated: true }
+    );
+  };
+
+  // Android reports a marker tap to the map as well, tagged "marker-press".
+  const handleMapPress = (event: MapPressEvent) => {
+    if (event.nativeEvent.action === "marker-press") return;
+    onMapPress?.();
+  };
+
   return (
     <MapView
       ref={mapRef}
       style={styles.map}
       initialRegion={INITIAL_REGION}
       minZoomLevel={MIN_ZOOM}
+      // Keeps the framed area (and the platform's own controls and legal
+      // label) clear of the search bar above and the tab bar below.
+      mapPadding={{ top: overlayInsets.top, bottom: overlayInsets.bottom, left: 0, right: 0 }}
       onMapReady={applyBoundaries}
-      onRegionChangeComplete={keepInsideIsrael}
+      onRegionChangeComplete={onRegionChangeComplete}
+      onPress={handleMapPress}
     >
       <UrlTile urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png" maximumZ={19} />
       <Polygon
@@ -142,73 +218,60 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
           strokeWidth={2}
         />
       ))}
-      {mappable.map((campsite) => {
-        const name = localized(campsite.name, locale);
-        const price = campsite.pricing.isFree
-          ? t("common.free")
-          : campsite.pricing.perNight != null
-          ? `₪${campsite.pricing.perNight}`
-          : t("common.priceUnknown");
+      {userLocation && (
+        <Marker
+          coordinate={{ latitude: userLocation.lat, longitude: userLocation.lng }}
+          anchor={{ x: 0.5, y: 0.5 }}
+          tracksViewChanges={false}
+        >
+          <View style={styles.userDot} />
+        </Marker>
+      )}
+      {clusters.map((cluster) => {
+        if (cluster.items.length > 1) {
+          const size = clusterSize(cluster.items.length);
+          return (
+            <Marker
+              key={`${cluster.key}|${colors.navBar}`}
+              coordinate={{ latitude: cluster.lat, longitude: cluster.lng }}
+              anchor={{ x: 0.5, y: 0.5 }}
+              tracksViewChanges={false}
+              onPress={() => zoomInto(cluster)}
+            >
+              <View
+                style={[
+                  styles.cluster,
+                  // The deep green, as on web: white on night mode's lighter
+                  // primary measured 3.3:1.
+                  { width: size, height: size, borderRadius: size / 2, backgroundColor: colors.navBar },
+                ]}
+              >
+                <Text style={styles.clusterText}>{cluster.items.length}</Text>
+              </View>
+            </Marker>
+          );
+        }
+        const { campsite } = cluster.items[0];
+        const selected = campsite.id === selectedId;
+        const favorite = isFavorite(campsite.id);
         // One green for every pin (deep red for favorites); the glyph tells
         // the kinds apart, as on web: moon = night camp, tent = campground.
-        const pinColor = isFavorite(campsite.id) ? FAVORITE_PIN_COLOR : colors.primary;
+        const pinColor = selected ? colors.accentDeep : favorite ? FAVORITE_PIN_COLOR : colors.primary;
         const pinGlyph = isNightCamp(campsite) ? PIN_GLYPH.official : PIN_GLYPH.unofficial;
-        const { note: hours, checkIn, checkOut } = campsite.openingHours;
-        const amenities = (Object.entries(campsite.amenities) as [keyof Amenities, boolean | undefined][])
-          .filter(([, enabled]) => enabled === true)
-          .map(([key]) => t(`site.amenity.${key}`));
-        const phone = campsite.contact.phone;
-
         return (
           <Marker
-            key={campsite.id}
-            coordinate={{
-              latitude: campsite.coordinates.lat,
-              longitude: campsite.coordinates.lng,
-            }}
-            anchor={{ x: 0.5, y: 1 }}
+            // A new key whenever the pin's look changes: with
+            // tracksViewChanges off, the old snapshot would stay otherwise.
+            key={`${campsite.id}|${selected ? "s" : favorite ? "f" : "n"}|${colors.primary}`}
+            coordinate={{ latitude: campsite.coordinates.lat, longitude: campsite.coordinates.lng }}
+            anchor={{ x: 0.5, y: 0.5 }}
+            tracksViewChanges={false}
+            zIndex={selected ? 1000 : undefined}
+            onPress={() => onPinPress?.(campsite)}
           >
-            <View style={[styles.pin, { backgroundColor: pinColor }]}>
-              <MaterialCommunityIcons name={pinGlyph} size={16} color="#FFFFFF" />
+            <View style={[styles.pin, selected && styles.pinSelected, { backgroundColor: pinColor }]}>
+              <MaterialCommunityIcons name={pinGlyph} size={selected ? 20 : 16} color="#FFFFFF" />
             </View>
-            <Callout tooltip={false} onPress={() => onSelectCampsite?.(campsite)}>
-              <View style={styles.callout}>
-                <Text variant="titleSmall" numberOfLines={2} style={styles.text}>
-                  {name}
-                </Text>
-                <Text variant="bodySmall" style={[styles.text, styles.muted]}>
-                  {`${t(`region.${campsite.region}`)} · ${price}`}
-                </Text>
-                {hours ? (
-                  <Text variant="bodySmall" numberOfLines={3} style={styles.text}>
-                    {`${t("site.openingHours")}: ${hours}`}
-                  </Text>
-                ) : null}
-                {checkIn || checkOut ? (
-                  <Text variant="bodySmall" style={styles.text}>
-                    {[checkIn && `${t("site.checkIn")} ${checkIn}`, checkOut && `${t("site.checkOut")} ${checkOut}`]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </Text>
-                ) : null}
-                {amenities.length > 0 ? (
-                  <Text variant="bodySmall" style={styles.text}>{`${t("site.amenities")}: ${amenities.join(", ")}`}</Text>
-                ) : null}
-                {phone ? <Text variant="bodySmall" style={styles.text}>{`${t("site.phone")}: ${phone}`}</Text> : null}
-
-                {!campsite.isOfficial && (
-                  <View style={styles.warning}>
-                    <Text variant="labelSmall" style={[styles.text, styles.warningText]}>
-                      {`⚠️ ${t("site.unofficialWarning")}`}
-                    </Text>
-                  </View>
-                )}
-
-                <Text variant="labelSmall" style={[styles.text, styles.cta]}>
-                  {t("site.viewDetails")}
-                </Text>
-              </View>
-            </Callout>
           </Marker>
         );
       })}
@@ -216,9 +279,9 @@ export default function Map({ campsites, onSelectCampsite, fitToCampsites = fals
   );
 }
 
-function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
+function makeStyles(colors: ColorTokens) {
   return StyleSheet.create({
-    map: { flex: 1 },
+    map: { flex: 1, backgroundColor: colors.background },
     pin: {
       width: 30,
       height: 30,
@@ -233,19 +296,26 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       shadowOffset: { width: 0, height: 2 },
       elevation: 4,
     },
-    callout: { width: 230, padding: spacing.sm, gap: spacing.xs },
-    // Paper's <Text> hardcodes textAlign: "left"; the layout is always RTL.
-    text: { textAlign: "right", writingDirection },
-    muted: { color: colors.textMuted },
-    warning: {
-      backgroundColor: colors.accentTint,
-      borderColor: colors.accent,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderRadius: radius.sm,
-      paddingHorizontal: spacing.sm,
-      paddingVertical: spacing.xs / 2,
+    pinSelected: { width: 40, height: 40, borderRadius: 20, borderWidth: 3 },
+    cluster: {
+      borderWidth: 3,
+      borderColor: "#FFFFFF",
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOpacity: 0.3,
+      shadowRadius: 4,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 4,
     },
-    warningText: { color: colors.accentDeep },
-    cta: { color: colors.primary, marginTop: spacing.xs },
+    clusterText: { fontFamily: fonts.bodyBold, fontSize: 14, color: "#FFFFFF" },
+    userDot: {
+      width: 18,
+      height: 18,
+      borderRadius: 9,
+      borderWidth: 3,
+      borderColor: "#FFFFFF",
+      backgroundColor: USER_LOCATION_COLOR,
+    },
   });
 }

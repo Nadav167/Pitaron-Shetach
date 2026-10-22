@@ -65,6 +65,19 @@ function buildTheme(base: MD3Theme, tokens: ColorTokens): MD3Theme {
       outlineVariant: tokens.border,
       error: tokens.danger,
       onError: "#FFFFFF",
+      // MD3 paints raised surfaces (elevated Card, Menu, Appbar `elevated`,
+      // Snackbar's container) from this table, not from `surface`. Paper's
+      // stock values are tinted with its purple primary, which is why cards
+      // and the sort menu came out lavender by day and purple-grey at night.
+      // Our surfaces are flat colours; depth comes from shadows.
+      elevation: {
+        level0: "transparent",
+        level1: tokens.surface,
+        level2: tokens.surface,
+        level3: tokens.surfaceAlt,
+        level4: tokens.surfaceAlt,
+        level5: tokens.surfaceAlt,
+      },
     },
   };
 }

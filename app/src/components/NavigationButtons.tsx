@@ -5,27 +5,28 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { Campsite } from "@/types/campsite";
 import { openNavigation } from "@/lib/navigation";
 import { useLocale } from "@/context/LocaleContext";
-import { spacing } from "@/constants/theme";
+import { useThemeColors } from "@/context/ThemeContext";
+import { fonts, radius, spacing } from "@/constants/theme";
 
 type Props = {
   campsite: Campsite;
-  /** `compact` fits inside a card; `full` is the detail screen. */
-  size?: "compact" | "full";
 };
 
 /**
  * Waze + Google Maps deep links, opened through React Native's Linking API.
+ * Waze is the filled, primary button: it's what most people in Israel
+ * drive with.
  *
  * Both buttons stay enabled even when the site has no verified coordinates —
  * `navigationUrls` falls back to a name search in that case, which is exactly
  * what parks.org.il itself tells people to do ("כתבו בוויז: <name>"). The
- * caveat is carried by the "location not verified" line on the card, not by
+ * caveat is carried by the "location not verified" line on the page, not by
  * disabling the button, because a name search still gets most people there.
  */
-export default function NavigationButtons({ campsite, size = "compact" }: Props) {
+export default function NavigationButtons({ campsite }: Props) {
   const { t } = useLocale();
+  const colors = useThemeColors();
   const [error, setError] = useState<string | null>(null);
-  const compact = size === "compact";
 
   const open = async (app: "waze" | "googleMaps") => {
     const result = await openNavigation(campsite, app);
@@ -36,24 +37,22 @@ export default function NavigationButtons({ campsite, size = "compact" }: Props)
     <>
       <View style={styles.row}>
         <Button
-          mode="contained-tonal"
+          mode="contained"
           icon={rtlIcon("waze")}
-          compact={compact}
           style={styles.button}
-          contentStyle={compact ? styles.compactContent : undefined}
-          labelStyle={compact ? styles.compactLabel : undefined}
+          contentStyle={styles.content}
+          labelStyle={styles.label}
           onPress={() => open("waze")}
           accessibilityLabel={`${t("site.navigateWaze")} – ${campsite.name.he}`}
         >
           {t("site.navigateWaze")}
         </Button>
         <Button
-          mode="contained-tonal"
+          mode="outlined"
           icon={rtlIcon("google-maps")}
-          compact={compact}
-          style={styles.button}
-          contentStyle={compact ? styles.compactContent : undefined}
-          labelStyle={compact ? styles.compactLabel : undefined}
+          style={[styles.button, { borderColor: colors.primary }]}
+          contentStyle={styles.content}
+          labelStyle={styles.label}
           onPress={() => open("googleMaps")}
           accessibilityLabel={`${t("site.navigateGoogleMaps")} – ${campsite.name.he}`}
         >
@@ -69,10 +68,12 @@ export default function NavigationButtons({ campsite, size = "compact" }: Props)
 }
 
 const styles = StyleSheet.create({
-  row: { flexDirection: "row", gap: spacing.sm, flexWrap: "wrap" },
-  button: { flexGrow: 1, flexBasis: 0, minWidth: 120 },
-  compactContent: { height: 34 },
-  compactLabel: { fontSize: 12, marginHorizontal: spacing.sm },
+  row: { flexDirection: "row", gap: spacing.sm },
+  button: { flex: 1, borderRadius: radius.md },
+  content: { height: 50 },
+  // Paper's default label margins plus the icon left "Google Maps" cut to
+  // "Google Ma…" at phone width; tighter margins let both labels fit.
+  label: { fontFamily: fonts.bodyBold, fontSize: 15, marginHorizontal: spacing.sm },
 });
 
 /**

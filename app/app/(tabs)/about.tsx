@@ -4,6 +4,7 @@ import { Text } from "react-native-paper";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useTabBarClearance } from "@/hooks/useTabBarClearance";
 import { CONTACT_EMAIL } from "@/constants/contact";
 import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 
@@ -23,11 +24,12 @@ export default function AboutScreen() {
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
+  const clearance = useTabBarClearance();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingBottom: clearance }, isDesktop && styles.contentDesktop]}>
         <Text variant="titleMedium" style={styles.pageTitle}>
           {t("about.title")}
         </Text>
@@ -80,7 +82,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     // The bottom padding clears the floating tab bar on phone-width screens.
-    content: { padding: spacing.lg, paddingBottom: 110 },
+    content: { padding: spacing.md },
     pageTitle: { fontFamily: fonts.displayBold, color: colors.textMuted, marginBottom: spacing.xs, ...text },
     contentDesktop: { width: "100%", maxWidth: 800, marginHorizontal: "auto" },
     brand: { fontFamily: fonts.display, fontSize: 30, color: colors.text, ...text },

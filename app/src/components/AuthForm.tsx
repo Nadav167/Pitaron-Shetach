@@ -15,6 +15,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import { useResponsive } from "@/hooks/useResponsive";
+import { useTabBarClearance } from "@/hooks/useTabBarClearance";
 import { fonts, radius, spacing, type ColorTokens } from "@/constants/theme";
 import { AccountError, MIN_PASSWORD_LENGTH } from "@/services/account";
 
@@ -46,10 +47,11 @@ export function AuthScreen({
 }) {
   const { styles } = useStyles();
   const { isDesktop } = useResponsive();
+  const clearance = useTabBarClearance();
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView
-        contentContainerStyle={[styles.content, isDesktop && styles.contentDesktop]}
+        contentContainerStyle={[styles.content, { paddingBottom: clearance }, isDesktop && styles.contentDesktop]}
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.title}>{title}</Text>
@@ -152,7 +154,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     // The bottom padding clears the floating tab bar on phone-width screens.
-    content: { padding: spacing.lg, paddingBottom: 110 },
+    content: { padding: spacing.md },
     contentDesktop: { width: "100%", maxWidth: 460, marginHorizontal: "auto", paddingTop: spacing.xl },
     title: { fontFamily: fonts.display, fontSize: 28, color: colors.text, ...text },
     subtitle: {

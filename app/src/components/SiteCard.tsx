@@ -1,14 +1,14 @@
 import React, { useMemo } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import { Card, Text } from "react-native-paper";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import type { Campsite } from "@/types/campsite";
-import { localized } from "@/types/campsite";
+import { isNightCamp, localized } from "@/types/campsite";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
-import { useFavorites } from "@/context/FavoritesContext";
-import HoverTip from "@/components/HoverTip";
 import CampsiteCover from "@/components/CampsiteCover";
+import FavoriteButton from "@/components/FavoriteButton";
+import { cardFacts } from "@/lib/campsiteText";
+import { PIN_GLYPH } from "@/constants/map";
 import { spacing, radius, fonts, type ColorTokens } from "@/constants/theme";
 
 type Props = {
@@ -16,159 +16,184 @@ type Props = {
   /** Extra line under the region, e.g. the distance from a searched town. */
   note?: string;
   onPress?: () => void;
+  /**
+   * `photo`: cover photo on top (2:1), details below. `compact`: a single
+   * row with a small tinted tile, for sites that have no photo of their
+   * own in a one-column list: 150 of the 405 sites, which as full-size
+   * cards were long runs of the same generic illustration.
+   */
+  variant?: "photo" | "compact";
 };
 
 /**
- * Rich, photo-forward card: cover photo with a favorite toggle, name,
- * region + price, hours, and a single "Details" button into the full
- * detail screen — that's also where the Waze/Google Maps links live now,
- * rather than duplicated on every card. Official/non-official sites look
- * the same here on purpose; the distinction lives in the filter chips and
- * the detail screen, not as a badge on every listing.
+ * A campsite in a list. The whole card is one button into the detail screen
+ * (it used to also carry a full-width "Details" button, a second tab stop
+ * with the same action that cost ~56px per card); the heart is the only
+ * other control. Waze/Google Maps live on the detail screen.
  */
-export default function SiteCard({ campsite, note, onPress }: Props) {
+export default function SiteCard({ campsite, note, onPress, variant = "photo" }: Props) {
   const { locale, t, writingDirection } = useLocale();
   const colors = useThemeColors();
-  const { isFavorite, toggleFavorite } = useFavorites();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   const name = localized(campsite.name, locale);
-  const priceLabel = campsite.pricing.isFree
-    ? t("common.free")
-    : campsite.pricing.perNight != null
-    ? `₪${campsite.pricing.perNight} ${t("common.perNight")}`
-    : t("common.priceUnknown");
+  const { price, hours, amenities } = cardFacts(campsite, t);
+  const region = t(`region.${campsite.region}`);
+  const nightCamp = isNightCamp(campsite);
+  const kindLabel = t(nightCamp ? "site.kind.nightCamp" : "site.kind.campground");
+  // One sentence for screen readers instead of every fragment separately.
+  const a11yLabel = [name, kindLabel, region, price, note].filter(Boolean).join(", ");
 
-  const favorite = isFavorite(campsite.id);
-  const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
+  const extraLines = (
+    <>
+      {note ? (
+        <View style={styles.metaItem}>
+          <MaterialCommunityIcons name="map-marker-distance" size={14} color={colors.primary} />
+          <Text style={styles.note} numberOfLines={1}>
+            {note}
+          </Text>
+        </View>
+      ) : null}
+      {!campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinates")}</Text>}
+    </>
+  );
+
+  if (variant === "compact") {
+    return (
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => [styles.card, styles.compactCard, pressed && styles.pressed]}
+        accessibilityRole="button"
+        accessibilityLabel={a11yLabel}
+      >
+        <View style={[styles.tile, { backgroundColor: nightCamp ? colors.primaryTint : colors.accentTint }]}>
+          <MaterialCommunityIcons
+            name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial}
+            size={28}
+            color={nightCamp ? colors.primary : colors.accentDeep}
+          />
+        </View>
+        <View style={styles.compactBody}>
+          <Text style={styles.name} numberOfLines={2}>
+            {name}
+          </Text>
+          <Text style={styles.meta} numberOfLines={1}>
+            {[region, price].join(" · ")}
+          </Text>
+          {hours ? (
+            <Text style={styles.meta} numberOfLines={1}>
+              {hours}
+            </Text>
+          ) : null}
+          {extraLines}
+        </View>
+        <FavoriteButton campsiteId={campsite.id} variant="plain" />
+      </Pressable>
+    );
+  }
 
   return (
-    <Card style={styles.card} mode="elevated" onPress={onPress}>
-      {/* Every card has a cover: the site's photo, or a generic camping
-          one in the same 16:9 box, so all cards share one structure. */}
-      <View style={styles.coverWrap}>
+    <Pressable
+      onPress={onPress}
+      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
+      accessibilityRole="button"
+      accessibilityLabel={a11yLabel}
+    >
+      <View>
         <CampsiteCover campsite={campsite} style={styles.cover} />
-        {/* HoverTip wraps its child in a view of its own, so the absolute
-            positioning lives on this outer wrapper, not on the button.
-            The bubble is left-aligned so it opens into the card rather
-            than past its (clipping) left edge. */}
-        <View style={styles.heartPosition}>
-          <HoverTip label={favoriteLabel} align="left">
-            <Pressable
-              style={styles.heartButton}
-              hitSlop={8}
-              onPress={() => toggleFavorite(campsite.id)}
-              accessibilityRole="button"
-              accessibilityLabel={favoriteLabel}
-            >
-              <MaterialCommunityIcons name={favorite ? "heart" : "heart-outline"} size={18} color="#FFFFFF" />
-            </Pressable>
-          </HoverTip>
+        {/* Top-left corner: the trailing corner of the right-to-left layout.
+            Absolute left/right doesn't mirror by itself the way flex rows
+            do, and it must not move when the language changes, so it is
+            physical. */}
+        <FavoriteButton campsiteId={campsite.id} style={styles.heartPosition} />
+        <View style={styles.kindBadge}>
+          <MaterialCommunityIcons name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial} size={13} color="#FFFFFF" />
+          <Text style={styles.kindText}>{kindLabel}</Text>
         </View>
       </View>
-      <Card.Content style={styles.content}>
-        <Text variant="titleMedium" style={styles.name} numberOfLines={2}>
-          {name}
-        </Text>
-
-        <View style={styles.metaRow}>
-          <View style={styles.metaItem}>
-            <MaterialCommunityIcons name="map-marker" size={14} color={colors.textMuted} />
-            <Text variant="bodySmall" style={styles.muted}>
-              {t(`region.${campsite.region}`)}
-            </Text>
-          </View>
-          <Text variant="bodySmall" style={styles.price}>
-            {priceLabel}
+      <View style={styles.content}>
+        <View style={styles.titleRow}>
+          <Text style={[styles.name, styles.flex]} numberOfLines={2}>
+            {name}
           </Text>
+          <Text style={styles.price}>{price}</Text>
         </View>
-
-        {note ? (
-          <View style={styles.metaItem}>
-            <MaterialCommunityIcons name="map-marker-distance" size={14} color={colors.primary} />
-            <Text variant="bodySmall" style={styles.note}>
-              {note}
-            </Text>
-          </View>
-        ) : null}
-
-        {campsite.openingHours.note ? (
-          <View style={styles.metaItem}>
-            <MaterialCommunityIcons name="clock-outline" size={14} color={colors.textMuted} />
-            <Text variant="bodySmall" style={styles.muted} numberOfLines={1}>
-              {campsite.openingHours.note}
-            </Text>
-          </View>
-        ) : null}
-
-        {!campsite.coordinates && (
-          <Text variant="labelSmall" style={styles.noCoords}>
-            {t("site.noCoordinates")}
+        <View style={styles.titleRow}>
+          <Text style={[styles.meta, styles.flex]} numberOfLines={1}>
+            {hours ? `${region} · ${hours}` : region}
           </Text>
-        )}
-
-        <Pressable style={styles.detailsButton} onPress={onPress}>
-          <Text style={styles.detailsLabel}>{t("site.viewDetails")}</Text>
-          {/* Points left — "forward" in the right-to-left layout, which is
-              the layout in every language. */}
-          <MaterialCommunityIcons name="chevron-left" size={16} color={colors.onPrimary} />
-        </Pressable>
-      </Card.Content>
-    </Card>
+          {amenities.length > 0 && (
+            <View style={styles.amenities} accessibilityLabel={amenities.map((a) => a.label).join(", ")}>
+              {amenities.slice(0, 4).map((amenity) => (
+                <MaterialCommunityIcons key={amenity.key} name={amenity.icon} size={16} color={colors.primaryLight} />
+              ))}
+            </View>
+          )}
+        </View>
+        {extraLines}
+      </View>
+    </Pressable>
   );
 }
 
 function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
+  // Always right-aligned (the layout is RTL in every language); the reading
+  // direction follows the language. Stating writingDirection also puts a
+  // one-line text's ellipsis at the END of the sentence: without it a Hebrew
+  // line was laid out left-to-right and cut off its first words instead.
+  const text = { textAlign: "right" as const, writingDirection };
   return StyleSheet.create({
-    card: { marginBottom: spacing.md, borderRadius: radius.lg, overflow: "hidden" },
-    coverWrap: { position: "relative" },
-    // 16:9, matching the mockup's photo proportions — a fixed short height
-    // regardless of card width (the previous 150px) made the photo look
-    // like a thin stretched banner on wide cards instead of a proper photo.
-    cover: { width: "100%", aspectRatio: 16 / 9, borderRadius: 0 },
-    heartPosition: {
+    card: {
+      marginBottom: spacing.md,
+      borderRadius: radius.lg,
+      overflow: "hidden",
+      backgroundColor: colors.surface,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: colors.border,
+      shadowColor: "#000",
+      shadowOpacity: 0.06,
+      shadowRadius: 8,
+      shadowOffset: { width: 0, height: 3 },
+      elevation: 1,
+    },
+    pressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
+    flex: { flex: 1 },
+    // 2:1: a real photo still reads as a photo, while a card is ~100px
+    // shorter than at 16:9, so more than one result fits on a phone screen.
+    cover: { width: "100%", aspectRatio: 2, borderRadius: 0 },
+    heartPosition: { position: "absolute", top: 4, left: 4 },
+    kindBadge: {
       position: "absolute",
-      top: 10,
-      // Top-left corner: the trailing corner of the right-to-left layout.
-      // Absolute left/right doesn't mirror by itself the way flex rows do,
-      // and it must not move when the language changes, so it is physical.
-      left: 10,
-    },
-    heartButton: {
-      width: 32,
-      height: 32,
-      borderRadius: 16,
-      backgroundColor: "rgba(17,24,20,0.38)",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    content: { paddingTop: spacing.md, gap: spacing.xs },
-    // react-native-paper's own <Text> component hardcodes
-    // `textAlign: 'left'` unconditionally (see Typography/Text.tsx) --
-    // it never mirrors under RTL on its own, so every Paper Text here
-    // needs an explicit override or Hebrew titles stay flush left.
-    name: { fontFamily: fonts.displayBold, color: colors.text, textAlign: "right", writingDirection },
-    metaRow: {
+      bottom: spacing.sm,
+      right: spacing.sm,
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "space-between",
-      gap: spacing.sm,
+      gap: 4,
+      paddingHorizontal: 10,
+      paddingVertical: 4,
+      borderRadius: radius.pill,
+      backgroundColor: "rgba(17,24,20,0.62)",
     },
+    kindText: { fontFamily: fonts.bodyBold, fontSize: 12, color: "#FFFFFF" },
+    content: { paddingHorizontal: spacing.md, paddingTop: 12, paddingBottom: 14, gap: 6 },
+    titleRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+    name: { fontFamily: fonts.displayBold, fontSize: 16.5, lineHeight: 22, color: colors.text, ...text },
+    price: { fontFamily: fonts.bodyBold, fontSize: 15, color: colors.accentDeep, writingDirection },
+    meta: { fontFamily: fonts.body, fontSize: 13.5, color: colors.textMuted, ...text },
+    amenities: { flexDirection: "row", gap: 6 },
     metaItem: { flexDirection: "row", alignItems: "center", gap: 5 },
-    muted: { color: colors.textMuted },
-    note: { color: colors.primary, fontFamily: fonts.bodyMedium, writingDirection },
-    price: { color: colors.accentDeep, fontFamily: fonts.bodyBold },
-    noCoords: { color: colors.textMuted, fontStyle: "italic", textAlign: "right", writingDirection },
-    detailsButton: {
-      marginTop: spacing.sm,
+    note: { flexShrink: 1, fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.primary, ...text },
+    noCoords: { fontFamily: fonts.body, fontSize: 12.5, color: colors.textMuted, fontStyle: "italic", ...text },
+
+    compactCard: {
       flexDirection: "row",
       alignItems: "center",
-      justifyContent: "center",
-      gap: 6,
-      paddingVertical: 12,
-      borderRadius: radius.md,
-      backgroundColor: colors.primary,
+      gap: 12,
+      padding: 10,
+      paddingEnd: 2,
+      marginBottom: spacing.sm + 2,
     },
-    detailsLabel: { color: colors.onPrimary, fontFamily: fonts.bodyBold, fontSize: 14 },
+    tile: { width: 72, height: 72, borderRadius: 14, alignItems: "center", justifyContent: "center" },
+    compactBody: { flex: 1, minWidth: 0, gap: 3 },
   });
 }

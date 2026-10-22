@@ -146,16 +146,51 @@ A chat "trip planner" (tab "מתכנן הטיולים"), for signed-in users onl
   - Photos: 255 of 405 sites have a real one.
 - **Not done:**
   - gocamping's ~213 listings (no coordinates; many closed). Most of them are probably now covered by tiuli/OSM.
-  - Map pin clustering. The south is crowded at country zoom; `leaflet.markercluster` would need a new dependency.
+  - ~~Map pin clustering~~ done 2026-10-22, see below.
   - Prices and hours for most OSM sites are unknown; only `fee=no` → free.
+  - Amenities are known for only 3-4 of 405 sites, so there is no amenity filter yet. Filling them in (OSM tags, tiuli pages) would make the card icons and a filter worthwhile.
+
+## Mobile UX pass (2026-10-22)
+The review and plan are on a design canvas: https://claude.ai/artifact/Epz52qBV9JvemswfEk5ymo. Nadav said to go ahead with all of it except RTL: the layout stays right-to-left in English too.
+- **Theme:**
+  - Paper's `colors.elevation` is now mapped to our surfaces (`paperTheme.ts`). Paper's purple-tinted defaults were why cards and menus looked lavender.
+  - `accentDeep` and `textFaint` were darkened to pass 4.5:1.
+  - New tokens: `navBar`, `onNavBar` and `navBarActiveLabel` for the tab bar, which stays deep green at night. `TOUCH_TARGET` = 44 and `TAB_BAR` are also in `theme.ts`.
+- **Phone header** (`MobileHeader`): the brand, an account button (`AccountButton compact`, 44px, shows the user's initial) and a "⋯" menu with language, day/night and About. The old row overflowed in both languages. Desktop still uses `HeaderActions`.
+- **Tab bar:**
+  - Labels under the icons, with short forms (`tabs.agentShort`, `tabs.itinerariesShort`).
+  - It sits above the iPhone home indicator (`insets.bottom`).
+  - Screens pad their bottom with `useTabBarClearance()` instead of hard-coded 110s.
+- **Cards** (`SiteCard`):
+  - The whole card is the button; the "פרטים" button is gone.
+  - Photo at 2:1, price on the name line, a kind badge, and amenity icons when known.
+  - Sites without a photo become a compact row in one-column lists (`variant="compact"`).
+  - The heart is `FavoriteButton`, with a 44px hit area.
+- **Filters:**
+  - Chips are a single scrolling row on phones (all / camping / night camps / free).
+  - The search bar's button opens `FilterSheet` (sort, regions, free only), with a badge showing the active count.
+  - New state in `useSiteFilters`: `freeOnly`, `regions`, `sheetFilterCount`.
+- **Map:**
+  - Pins are clustered by `src/lib/cluster.ts`, written in-house because installing `supercluster` was blocked. It does greedy grouping in Mercator pixels and is shared by web and native.
+  - Tapping a pin opens `SelectedSiteCard` (Waze / details / heart), which replaces the Leaflet popup and the native Callout.
+  - On phones the search bar floats over the map. Framing keeps clear of it (`overlayInsets`, `mapPadding` on native).
+  - The "near me" button works on web only (`src/lib/locate.ts`). Native needs `expo-location`, whose install was also blocked: ask Nadav, then add it.
+  - Native markers use `tracksViewChanges={false}` and re-key when their look changes.
+- **Site page:**
+  - Full-width photo with 44px back/share buttons, then three quick-fact tiles (price, check-in or region, call or kind).
+  - Long notes collapse (`ExpandableText`).
+  - Waze and Google Maps are pinned to the bottom on phones.
+  - Share uses the system sheet, or copies the link on desktop (`src/lib/share.ts`).
+- **Not verified on a device:** everything native (safe-area insets, marker snapshots, the Android map-press filter, share sheet). Checked on web at 390px and 1280px, Hebrew and English, day and night.
 
 ## Waiting on Nadav
 0. **Travel agent:** try it signed in on the live site (and on a phone). Confirm the Anthropic monthly spend limit is set.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.
 2. ~~About page copy~~ reviewed by Nadav 2026-10-18: removed the version line and the "where the data comes from" section.
 3. ~~Native persistence~~ done: AsyncStorage added, hydrated at startup in `src/lib/storage.ts` (not yet tested on a device).
-4. **Favorite control on the detail screen:** it's a labeled button ("הוספה לאתרים מועדפים"), not a heart in the app bar. The code comment says this was deliberate; confirm that's what you want.
-5. **Supabase:** `server/` runs (`/api/health` OK), but `/api/sites` needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`.
+4. **Map dependencies:** `expo-location` (near-me on iOS/Android) could not be installed in the 2026-10-22 session; it needs Nadav's OK in a session that allows it.
+5. **Favorite control on the detail screen:** it's a labeled button ("הוספה לאתרים מועדפים"), not a heart in the app bar. The code comment says this was deliberate; confirm that's what you want.
+6. **Supabase:** `server/` runs (`/api/health` OK), but `/api/sites` needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` in `server/.env`.
 
 ## Scraper: first live run (2026-10-18), not usable yet. DEFERRED by Nadav (too long for now)
 `node scripts/scrapeCampsites.js --out=<tmp>`. The committed JSON was **not** touched. Results:

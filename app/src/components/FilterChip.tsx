@@ -9,6 +9,8 @@ type Props = {
   icon?: string;
   selected: boolean;
   onPress: () => void;
+  /** Laid over the map: a shadow instead of a border, to stand off the tiles. */
+  floating?: boolean;
 };
 
 /**
@@ -23,15 +25,25 @@ type Props = {
  *    fixed on List.Item in the detail screen) — a Pressable we build
  *    ourselves mirrors for free via flexDirection: row + inherited CSS
  *    direction, no manual overrides needed.
+ *
+ * 40px tall (it was 37): with the 8px gap between rows that leaves no dead
+ * zone a thumb can land in, close to the 44pt guideline without making the
+ * row bulky.
  */
-export default function FilterChip({ label, icon, selected, onPress }: Props) {
+export default function FilterChip({ label, icon, selected, onPress, floating = false }: Props) {
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors), [colors]);
 
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.chip, selected && styles.chipActive]}
+      hitSlop={{ top: 4, bottom: 4 }}
+      style={({ pressed }) => [
+        styles.chip,
+        floating && styles.chipFloating,
+        selected && styles.chipActive,
+        pressed && styles.pressed,
+      ]}
       accessibilityRole="button"
       accessibilityState={{ selected }}
     >
@@ -52,22 +64,32 @@ function makeStyles(colors: ColorTokens) {
     chip: {
       flexDirection: "row",
       alignItems: "center",
+      justifyContent: "center",
       gap: 6,
+      minHeight: 40,
       borderRadius: radius.pill,
       borderWidth: 1.5,
       borderColor: colors.border,
       backgroundColor: colors.surface,
       paddingHorizontal: spacing.md,
-      paddingVertical: 8,
+    },
+    chipFloating: {
+      borderColor: "transparent",
+      shadowColor: "#000",
+      shadowOpacity: 0.14,
+      shadowRadius: 6,
+      shadowOffset: { width: 0, height: 2 },
+      elevation: 3,
     },
     chipActive: {
       backgroundColor: colors.primary,
       borderColor: colors.primary,
     },
+    pressed: { opacity: 0.85 },
     label: {
       fontFamily: fonts.bodyMedium,
-      fontSize: 13,
-      color: colors.textMuted,
+      fontSize: 14,
+      color: colors.text,
     },
     labelActive: {
       color: colors.onPrimary,

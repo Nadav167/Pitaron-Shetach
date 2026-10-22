@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { isNightCamp, localized, type Campsite } from "@/types/campsite";
+import { isNightCamp, localized, type Campsite, type Region } from "@/types/campsite";
 import type { City } from "@/data/cities";
 import { findCityInQuery, searchCampsites } from "@/lib/search";
 import { sortCampsites, type SortMode } from "@/lib/sort";
@@ -12,6 +12,20 @@ export type SourceFilter = "all" | "official" | "unofficial";
 export const RADIUS_OPTIONS_KM = [10, 25, 50, 100];
 const DEFAULT_RADIUS_KM = 25;
 
+/** Regions in the order the filter sheet lists them: north to south. */
+export const REGIONS_NORTH_TO_SOUTH: Region[] = [
+  "Golan",
+  "Galilee",
+  "North",
+  "Carmel",
+  "Center",
+  "Jerusalem",
+  "DeadSea",
+  "Negev",
+  "Arava",
+  "Eilat",
+];
+
 export type SiteFilters = {
   query: string;
   setQuery: (query: string) => void;
@@ -23,6 +37,17 @@ export type SiteFilters = {
   city: City | null;
   radiusKm: number;
   setRadiusKm: (km: number) => void;
+  /** Only sites the source says are free. */
+  freeOnly: boolean;
+  setFreeOnly: (freeOnly: boolean) => void;
+  /** Empty = every region. */
+  regions: ReadonlySet<Region>;
+  toggleRegion: (region: Region) => void;
+  /** How many of the filter sheet's settings differ from the defaults
+   *  (sort, free only, each region); shown as a badge on its button. */
+  sheetFilterCount: number;
+  /** Puts the filter sheet's settings back to their defaults. */
+  resetSheetFilters: () => void;
   /** Straight-line km from `city` to a site; undefined when there is no
    *  town in the query or the site has no verified coordinates. */
   distanceFor: (campsite: Campsite) => number | undefined;
@@ -46,6 +71,25 @@ export function useSiteFilters(campsites: Campsite[]): SiteFilters {
   const [query, setQuery] = useState("");
   const [sortMode, setSortMode] = useState<SortMode>("default");
   const [radiusKm, setRadiusKm] = useState(DEFAULT_RADIUS_KM);
+  const [freeOnly, setFreeOnly] = useState(false);
+  const [regions, setRegions] = useState<ReadonlySet<Region>>(() => new Set());
+
+  const toggleRegion = useCallback((region: Region) => {
+    setRegions((current) => {
+      const next = new Set(current);
+      if (next.has(region)) next.delete(region);
+      else next.add(region);
+      return next;
+    });
+  }, []);
+
+  const resetSheetFilters = useCallback(() => {
+    setSortMode("default");
+    setFreeOnly(false);
+    setRegions(new Set());
+  }, []);
+
+  const sheetFilterCount = (sortMode === "default" ? 0 : 1) + (freeOnly ? 1 : 0) + regions.size;
 
   const city = useMemo(() => findCityInQuery(query), [query]);
 
@@ -64,6 +108,8 @@ export function useSiteFilters(campsites: Campsite[]): SiteFilters {
     let list = campsites;
     if (sourceFilter === "official") list = list.filter(isNightCamp);
     else if (sourceFilter === "unofficial") list = list.filter((c) => !isNightCamp(c));
+    if (freeOnly) list = list.filter((c) => c.pricing.isFree);
+    if (regions.size > 0) list = list.filter((c) => regions.has(c.region));
 
     if (!city) return sortCampsites(searchCampsites(list, query), sortMode);
 
@@ -76,7 +122,7 @@ export function useSiteFilters(campsites: Campsite[]): SiteFilters {
       })
       .sort((a, b) => distances.get(a.id)! - distances.get(b.id)!);
     return sortCampsites([...unmeasured, ...measured], sortMode);
-  }, [campsites, sourceFilter, query, sortMode, city, distances, radiusKm]);
+  }, [campsites, sourceFilter, freeOnly, regions, query, sortMode, city, distances, radiusKm]);
 
   return {
     query,
@@ -88,6 +134,12 @@ export function useSiteFilters(campsites: Campsite[]): SiteFilters {
     city,
     radiusKm,
     setRadiusKm,
+    freeOnly,
+    setFreeOnly,
+    regions,
+    toggleRegion,
+    sheetFilterCount,
+    resetSheetFilters,
     distanceFor,
     visible,
   };
