@@ -42,7 +42,7 @@ const ACTION_BAR_HEIGHT = 50 + spacing.sm * 2;
  */
 export default function CampsiteDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { campsite, loading, error } = useCampsite(id);
+  const { campsite, loading } = useCampsite(id);
   const { locale, t, writingDirection } = useLocale();
   const { isFavorite, toggleFavorite } = useFavorites();
   const colors = useThemeColors();
@@ -75,7 +75,15 @@ export default function CampsiteDetailScreen() {
         {loading ? (
           <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />
         ) : (
-          <EmptyState message={error ?? t("common.error")} />
+          // Every site ships inside the app (useCampsite only refreshes it
+          // from the API), so no record means a wrong or outdated link, not
+          // a network problem. The raw fetch error ("Failed to fetch") used to
+          // be shown here instead.
+          <EmptyState
+            icon="map-marker-question-outline"
+            message={t("site.notFound")}
+            action={{ label: t("site.backHome"), onPress: () => router.replace("/") }}
+          />
         )}
       </View>
     );

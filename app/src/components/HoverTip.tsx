@@ -49,7 +49,7 @@ export default function HoverTip({ label, align = "center", children }: Props) {
     <View {...hoverProps}>
       {children}
       {visible && (
-        <View {...ltrProps} style={[styles.layer, styles[align]]} pointerEvents="none">
+        <View {...ltrProps} style={[styles.layer, styles[align], { pointerEvents: "none" }]}>
           <View style={styles.bubble}>
             <Text style={styles.label}>{label}</Text>
           </View>

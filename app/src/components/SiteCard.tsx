@@ -67,88 +67,96 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
       </Text>
     ) : null;
 
+  // The heart is a SIBLING of the card's main button, never inside it: on
+  // web a Pressable is a <button>, and a <button> inside a <button> is
+  // invalid HTML (React warned about it) that screen readers and keyboard
+  // focus handle badly.
   if (variant === "compact") {
     return (
-      <Pressable
-        onPress={onPress}
-        style={({ pressed }) => [styles.card, styles.compactCard, pressed && styles.pressed]}
-        accessibilityRole="button"
-        accessibilityLabel={a11yLabel}
-      >
-        <View style={[styles.tile, { backgroundColor: nightCamp ? colors.primaryTint : colors.accentTint }]}>
-          <MaterialCommunityIcons
-            name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial}
-            size={28}
-            color={nightCamp ? colors.primary : colors.accentDeep}
-          />
-        </View>
-        <View style={styles.compactBody}>
-          <Text style={styles.name} numberOfLines={1}>
-            {name}
-          </Text>
-          <Text style={styles.meta} numberOfLines={1}>
-            {[region, price].join(" · ")}
-          </Text>
-          {/* At most three short lines: never taller than the 72px tile,
-              so every compact row is the same 92px. */}
-          {detail
-            ? detailLine(styles.meta)
-            : !campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinates")}</Text>}
-        </View>
+      <View style={[styles.card, styles.compactCard]}>
+        <Pressable
+          onPress={onPress}
+          style={({ pressed }) => [styles.compactMain, pressed && styles.pressed]}
+          accessibilityRole="button"
+          accessibilityLabel={a11yLabel}
+        >
+          <View style={[styles.tile, { backgroundColor: nightCamp ? colors.primaryTint : colors.accentTint }]}>
+            <MaterialCommunityIcons
+              name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial}
+              size={28}
+              color={nightCamp ? colors.primary : colors.accentDeep}
+            />
+          </View>
+          <View style={styles.compactBody}>
+            <Text style={styles.name} numberOfLines={1}>
+              {name}
+            </Text>
+            <Text style={styles.meta} numberOfLines={1}>
+              {[region, price].join(" · ")}
+            </Text>
+            {/* At most three short lines: never taller than the 72px tile,
+                so every compact row is the same 92px. */}
+            {detail
+              ? detailLine(styles.meta)
+              : !campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinates")}</Text>}
+          </View>
+        </Pressable>
         <FavoriteButton campsiteId={campsite.id} variant="plain" />
-      </Pressable>
+      </View>
     );
   }
 
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => [styles.card, pressed && styles.pressed]}
-      accessibilityRole="button"
-      accessibilityLabel={a11yLabel}
-    >
-      <View>
-        <CampsiteCover campsite={campsite} style={styles.cover} />
-        {/* Top-left corner: the trailing corner of the right-to-left layout.
-            Absolute left/right doesn't mirror by itself the way flex rows
-            do, and it must not move when the language changes, so it is
-            physical. */}
-        <FavoriteButton campsiteId={campsite.id} style={styles.heartPosition} />
-        <View style={styles.kindBadge}>
-          <MaterialCommunityIcons name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial} size={13} color="#FFFFFF" />
-          <Text style={styles.kindText}>{kindLabel}</Text>
-        </View>
-        {!campsite.coordinates && (
-          <View style={[styles.kindBadge, styles.noCoordsBadge]}>
-            <MaterialCommunityIcons name="map-marker-question-outline" size={13} color="#FFFFFF" />
-            <Text style={styles.kindText}>{t("site.noCoordinates")}</Text>
+    <View style={styles.card}>
+      <Pressable
+        onPress={onPress}
+        style={({ pressed }) => pressed && styles.pressed}
+        accessibilityRole="button"
+        accessibilityLabel={a11yLabel}
+      >
+        <View>
+          <CampsiteCover campsite={campsite} style={styles.cover} />
+          <View style={styles.kindBadge}>
+            <MaterialCommunityIcons name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial} size={13} color="#FFFFFF" />
+            <Text style={styles.kindText}>{kindLabel}</Text>
           </View>
-        )}
-      </View>
-      <View style={styles.content}>
-        <View style={styles.titleRow}>
-          <Text style={[styles.name, styles.flex]} numberOfLines={1}>
-            {name}
-          </Text>
-          <Text style={styles.price}>{price}</Text>
-        </View>
-        <View style={styles.titleRow}>
-          <View style={[styles.flex, styles.metaItem]}>
-            <Text style={[styles.meta, styles.metaRegion]} numberOfLines={1}>
-              {detail ? `${region} ·` : region}
-            </Text>
-            {detailLine([styles.meta, styles.flex])}
-          </View>
-          {amenities.length > 0 && (
-            <View style={styles.amenities} accessibilityLabel={amenities.map((a) => a.label).join(", ")}>
-              {amenities.slice(0, 4).map((amenity) => (
-                <MaterialCommunityIcons key={amenity.key} name={amenity.icon} size={16} color={colors.primaryLight} />
-              ))}
+          {!campsite.coordinates && (
+            <View style={[styles.kindBadge, styles.noCoordsBadge]}>
+              <MaterialCommunityIcons name="map-marker-question-outline" size={13} color="#FFFFFF" />
+              <Text style={styles.kindText}>{t("site.noCoordinates")}</Text>
             </View>
           )}
         </View>
-      </View>
-    </Pressable>
+        <View style={styles.content}>
+          <View style={styles.titleRow}>
+            <Text style={[styles.name, styles.flex]} numberOfLines={1}>
+              {name}
+            </Text>
+            <Text style={styles.price}>{price}</Text>
+          </View>
+          <View style={styles.titleRow}>
+            <View style={[styles.flex, styles.metaItem]}>
+              <Text style={[styles.meta, styles.metaRegion]} numberOfLines={1}>
+                {detail ? `${region} ·` : region}
+              </Text>
+              {detailLine([styles.meta, styles.flex])}
+            </View>
+            {amenities.length > 0 && (
+              <View style={styles.amenities} accessibilityLabel={amenities.map((a) => a.label).join(", ")}>
+                {amenities.slice(0, 4).map((amenity) => (
+                  <MaterialCommunityIcons key={amenity.key} name={amenity.icon} size={16} color={colors.primaryLight} />
+                ))}
+              </View>
+            )}
+          </View>
+        </View>
+      </Pressable>
+      {/* Top-left corner of the photo: the trailing corner of the
+          right-to-left layout. Absolute left/right doesn't mirror by itself
+          the way flex rows do, and it must not move when the language
+          changes, so it is physical. */}
+      <FavoriteButton campsiteId={campsite.id} style={styles.heartPosition} />
+    </View>
   );
 }
 
@@ -172,7 +180,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       shadowOffset: { width: 0, height: 3 },
       elevation: 1,
     },
-    pressed: { opacity: 0.9, transform: [{ scale: 0.99 }] },
+    pressed: { opacity: 0.85 },
     flex: { flex: 1 },
     // 2:1: a real photo still reads as a photo, while a card is ~100px
     // shorter than at 16:9, so more than one result fits on a phone screen.
@@ -215,6 +223,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       marginBottom: spacing.sm + 2,
     },
     tile: { width: 72, height: 72, borderRadius: 14, alignItems: "center", justifyContent: "center" },
+    compactMain: { flex: 1, minWidth: 0, flexDirection: "row", alignItems: "center", gap: 12 },
     compactBody: { flex: 1, minWidth: 0, gap: 3 },
   });
 }

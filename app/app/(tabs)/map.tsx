@@ -112,7 +112,7 @@ export default function MapScreen() {
 
   const unmappableNote =
     unmappable > 0 ? (
-      <View style={styles.noteWrap} pointerEvents="none">
+      <View style={[styles.noteWrap, { pointerEvents: "none" }]}>
         {/* writingDirection: Paper's Text pins "ltr" on web, which moved
             the count to the wrong end of the Hebrew sentence. */}
         <Text variant="labelSmall" style={[styles.note, { writingDirection, textAlign: "center" }]}>
@@ -176,11 +176,11 @@ export default function MapScreen() {
             focus={focus}
           />
           {unmappableNote}
-          <View style={[styles.fabColumn, { top: spacing.md }]} pointerEvents="box-none">
+          <View style={[styles.fabColumn, { top: spacing.md, pointerEvents: "box-none" }]}>
             {locateButton}
           </View>
           {selected && (
-            <View style={[styles.cardWrap, styles.cardWrapDesktop]} pointerEvents="box-none">
+            <View style={[styles.cardWrap, styles.cardWrapDesktop, { pointerEvents: "box-none" }]}>
               <SelectedSiteCard
                 campsite={selected}
                 onOpen={() => openCampsite(selected)}
@@ -208,13 +208,12 @@ export default function MapScreen() {
       />
       {/* box-none: taps between the chips reach the map underneath. */}
       <View
-        style={styles.topOverlay}
-        pointerEvents="box-none"
+        style={[styles.topOverlay, { pointerEvents: "box-none" }]}
         onLayout={(event) => setOverlayTop(event.nativeEvent.layout.height)}
       >
         <SiteFilterBar filters={filters} floating />
       </View>
-      <View style={[styles.fabColumn, { top: overlayTop + spacing.sm }]} pointerEvents="box-none">
+      <View style={[styles.fabColumn, { top: overlayTop + spacing.sm, pointerEvents: "box-none" }]}>
         {locateButton}
         <Pressable
           onPress={() => router.push("/")}
@@ -234,7 +233,7 @@ export default function MapScreen() {
         </View>
       )}
       {selected && (
-        <View style={[styles.cardWrap, { bottom: clearance }]} pointerEvents="box-none">
+        <View style={[styles.cardWrap, { bottom: clearance, pointerEvents: "box-none" }]}>
           <SelectedSiteCard
             campsite={selected}
             onOpen={() => openCampsite(selected)}
