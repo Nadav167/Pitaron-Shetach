@@ -34,6 +34,9 @@
  * Ids are `osm-<type>-<osm id>` so that re-running keeps every id stable.
  * English names come from name:en, else from scripts/data/osmNameTranslations.json
  * (hand translations of the Hebrew-only names), else "Campsite near <town>".
+ * Hebrew names come from name:he / a Hebrew `name`, else from
+ * scripts/data/osmHebrewNames.json (hand translations of the English-only
+ * names, keyed by the OSM name), so the Hebrew site never shows a Latin name.
  *
  * USAGE
  *   node scripts/importOsmCampsites.js [--campsites=overpass.json] [--places=places.json]
@@ -60,6 +63,8 @@ const {
   parseArgs,
 } = require("./lib/importHelpers");
 const TRANSLATIONS = path.join(__dirname, "data/osmNameTranslations.json");
+const HEBREW_NAMES_FILE = path.join(__dirname, "data/osmHebrewNames.json");
+const HEBREW_NAMES = fs.existsSync(HEBREW_NAMES_FILE) ? JSON.parse(fs.readFileSync(HEBREW_NAMES_FILE, "utf8")) : {};
 
 const OVERPASS_MIRRORS = [
   "https://overpass.private.coffee/api/interpreter",
@@ -189,7 +194,7 @@ function toCampsite(element, places, translations, now) {
   const isCaravan = tags.tourism === "caravan_site";
 
   const rawName = tags["name:he"] || tags.name || "";
-  const he = HEBREW.test(rawName) ? rawName : tags["name:he"] || "";
+  const he = HEBREW.test(rawName) ? rawName : tags["name:he"] || HEBREW_NAMES[rawName] || "";
   let en = tags["name:en"] || (HEBREW.test(tags.name || "") ? "" : tags.name) || translations[he] || "";
   const near = nearestPlace(coordinates, places);
   const nearHe = near?.he || near?.en;
@@ -469,6 +474,13 @@ async function main() {
     fs.writeFileSync(
       path.join(path.dirname(TRANSLATIONS), "untranslated.json"),
       JSON.stringify([...new Set(untranslated.map((i) => i.record.name.he))], null, 1)
+    );
+  }
+  const noHebrew = items.filter((i) => i.named && !HEBREW.test(i.record.name.he));
+  if (noHebrew.length) {
+    console.warn(
+      `  ${noHebrew.length} names have no Hebrew; add them to ${path.relative(ROOT, HEBREW_NAMES_FILE)}: ` +
+        noHebrew.map((i) => i.record.name.en).join(", ")
     );
   }
 

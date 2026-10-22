@@ -1908,7 +1908,7 @@
     {
       "id": "osm-node-685075012",
       "name": {
-        "he": "Akhziv-Recreation Village",
+        "he": "כפר הנופש אכזיב",
         "en": "Akhziv-Recreation Village"
       },
       "coordinates": {
@@ -2488,7 +2488,7 @@
     {
       "id": "osm-node-1368812724",
       "name": {
-        "he": "Migdalor Beach",
+        "he": "חוף המגדלור",
         "en": "Migdalor Beach"
       },
       "coordinates": {
@@ -5106,7 +5106,7 @@
     {
       "id": "osm-node-5020955921",
       "name": {
-        "he": "Boarder Parking",
+        "he": "חניון הגבול",
         "en": "Boarder Parking"
       },
       "coordinates": {
@@ -5114,7 +5114,7 @@
         "lng": 34.9752
       },
       "isOfficial": false,
-      "kind": "campground",
+      "kind": "nightCamp",
       "region": "Eilat",
       "pricing": {
         "perNight": null,
@@ -5140,7 +5140,7 @@
     {
       "id": "osm-node-5078767825",
       "name": {
-        "he": "Maqhoul camping",
+        "he": "קמפינג מכחול",
         "en": "Maqhoul camping"
       },
       "coordinates": {
@@ -5174,7 +5174,7 @@
     {
       "id": "osm-node-5087080782",
       "name": {
-        "he": "yarza camping",
+        "he": "קמפינג ירזה",
         "en": "yarza camping"
       },
       "coordinates": {
@@ -5405,7 +5405,7 @@
     {
       "id": "osm-node-5335060622",
       "name": {
-        "he": "Farm Qartallo",
+        "he": "חוות קרטלו",
         "en": "Farm Qartallo"
       },
       "coordinates": {
@@ -6205,7 +6205,7 @@
     {
       "id": "osm-node-6705425389",
       "name": {
-        "he": "IVE Campamento",
+        "he": "מחנה IVE",
         "en": "IVE Campamento"
       },
       "coordinates": {
@@ -7811,7 +7811,7 @@
     {
       "id": "osm-node-10288753509",
       "name": {
-        "he": "Jasmin camp",
+        "he": "קמפינג יסמין",
         "en": "Jasmin camp"
       },
       "coordinates": {
@@ -9219,7 +9219,7 @@
     {
       "id": "osm-node-13388791481",
       "name": {
-        "he": "Grossman Parking Lot",
+        "he": "חניון גרוסמן",
         "en": "Grossman Parking Lot"
       },
       "coordinates": {
@@ -9924,7 +9924,7 @@
     {
       "id": "osm-way-381243751",
       "name": {
-        "he": "Desert Ship",
+        "he": "ספינת המדבר",
         "en": "Desert Ship"
       },
       "coordinates": {
@@ -10705,7 +10705,7 @@
     {
       "id": "osm-way-1082074461",
       "name": {
-        "he": "An Oasis of Hanan and Farhan",
+        "he": "נווה המדבר של חנאן ופרחאן",
         "en": "An Oasis of Hanan and Farhan"
       },
       "coordinates": {
@@ -11271,7 +11271,7 @@
     {
       "id": "osm-relation-18313334",
       "name": {
-        "he": "Tent Rise Sun",
+        "he": "אוהל השמש העולה",
         "en": "Tent Rise Sun"
       },
       "description": {
