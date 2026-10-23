@@ -2107,6 +2107,13 @@
       "directions": {
         "he": "כתובת: פארק הירדן (ליד הישוב חד נס)",
         "en": "Address: Jordan Park (near Had Nes)"
+      },
+      "closed": {
+        "since": "2023-10-10",
+        "note": {
+          "he": "סגור עד הודעה חדשה (לפי עדכון מ-10.10.2023)",
+          "en": "Closed until further notice (per an update of 10.10.2023)"
+        }
       }
     },
     {

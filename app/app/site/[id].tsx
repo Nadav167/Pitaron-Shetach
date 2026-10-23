@@ -242,6 +242,12 @@ export default function CampsiteDetailScreen() {
             )}
           </View>
 
+          {campsite.closed && (
+            <View style={styles.closedBanner} accessibilityRole="alert">
+              <MaterialCommunityIcons name="cancel" size={18} color={colors.danger} />
+              <Text style={styles.closedText}>{localized(campsite.closed.note, locale)}</Text>
+            </View>
+          )}
           {!campsite.isOfficial && <UnofficialNotice variant="full" direction={direction} />}
 
           <View style={styles.facts}>
@@ -525,6 +531,17 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr", ltr: b
     },
     provenance: { fontFamily: fonts.body, fontSize: 12.5, color: colors.textMuted, ...text },
     noCoords: { fontFamily: fonts.body, fontSize: 13, color: colors.textMuted, fontStyle: "italic", ...text },
+    closedBanner: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: spacing.sm,
+      padding: spacing.md,
+      borderRadius: radius.md,
+      borderWidth: 1,
+      borderColor: colors.danger,
+      backgroundColor: colors.dangerTint,
+    },
+    closedText: { flex: 1, fontFamily: fonts.bodyBold, fontSize: 15, color: colors.danger, ...text },
     actionBar: {
       position: "absolute",
       left: 0,

@@ -174,6 +174,12 @@ export type Campsite = {
   photos: Photo[];
   contact: Contact;
   rating?: number;
+  /**
+   * Set when the place is known to be closed (its own page says so). It
+   * stays listed, flagged, rather than vanishing: people who knew it get
+   * told, and it may reopen. Set by scripts/applySiteFixes.js.
+   */
+  closed?: { since?: string; note: Partial<LocalizedText> };
   source: CampsiteSource;
   updatedAt: string;
 };

@@ -2,7 +2,8 @@
 /**
  * applySiteFixes.js — applies scripts/data/siteFixes.json to the dataset:
  * renames OpenStreetMap night camps that had no name of their own, and
- * removes the empty ones (see the _comment in that file). Safe to re-run.
+ * removes the empty ones, and flags closed places (see the _comment in
+ * that file). Safe to re-run.
  *
  * Also drops the removed sites from app/backend/data/nearbyPlaces.json,
  * which is keyed by site id.
@@ -23,7 +24,13 @@ const dataset = JSON.parse(fs.readFileSync(CAMPSITES, "utf8"));
 const removed = new Set(fixes.remove);
 
 let renamed = 0;
+let closed = 0;
 for (const record of dataset.campsites) {
+  const closure = (fixes.closed || {})[record.id];
+  if (closure) {
+    record.closed = { since: closure.since, note: { he: closure.he, en: closure.en } };
+    closed++;
+  }
   const name = fixes.rename[record.id];
   if (name && (record.name.he !== name.he || record.name.en !== name.en)) {
     record.name = { he: name.he, en: name.en };
@@ -32,7 +39,7 @@ for (const record of dataset.campsites) {
 }
 const before = dataset.campsites.length;
 dataset.campsites = dataset.campsites.filter((record) => !removed.has(record.id));
-console.log(`Renamed ${renamed}, removed ${before - dataset.campsites.length}; ${dataset.campsites.length} sites`);
+console.log(`Renamed ${renamed}, closed ${closed}, removed ${before - dataset.campsites.length}; ${dataset.campsites.length} sites`);
 
 if (args["dry-run"]) return;
 fs.writeFileSync(CAMPSITES, JSON.stringify(dataset, null, 2) + "\n");

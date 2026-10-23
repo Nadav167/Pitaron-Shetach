@@ -46,7 +46,7 @@ export default function SelectedSiteCard({ campsite, onOpen, onClose }: Props) {
             {name}
           </Text>
           <Text style={styles.meta} numberOfLines={1}>
-            {`${t(`region.${campsite.region}`)} · ${price}`}
+            {[campsite.closed && t("site.closed"), t(`region.${campsite.region}`), price].filter(Boolean).join(" · ")}
           </Text>
           {hours ? (
             <Text style={styles.meta} numberOfLines={1}>

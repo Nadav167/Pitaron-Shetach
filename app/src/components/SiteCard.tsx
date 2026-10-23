@@ -94,7 +94,7 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
               {name}
             </Text>
             <Text style={styles.meta} numberOfLines={1}>
-              {[region, price].join(" · ")}
+              {[campsite.closed && t("site.closed"), region, price].filter(Boolean).join(" · ")}
             </Text>
             {/* At most three short lines: never taller than the 72px tile,
                 so every compact row is the same 92px. */}
@@ -120,6 +120,12 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
             <MaterialCommunityIcons name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial} size={13} color="#FFFFFF" />
             <Text style={styles.kindText}>{kindLabel}</Text>
           </View>
+          {campsite.closed && (
+            <View style={[styles.kindBadge, styles.closedBadge]}>
+              <MaterialCommunityIcons name="cancel" size={13} color="#FFFFFF" />
+              <Text style={styles.kindText}>{t("site.closed")}</Text>
+            </View>
+          )}
         </View>
         <View style={styles.content}>
           <View style={styles.titleRow}>
@@ -193,6 +199,8 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       backgroundColor: "rgba(17,24,20,0.62)",
     },
     kindText: { fontFamily: fonts.bodyBold, fontSize: 12, color: "#FFFFFF" },
+    // Bottom-left, opposite the kind badge.
+    closedBadge: { right: undefined, left: spacing.sm, backgroundColor: colors.danger },
     content: { paddingHorizontal: spacing.md, paddingTop: 12, paddingBottom: 14, gap: 6 },
     titleRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
     name: { fontFamily: fonts.displayBold, fontSize: 16.5, lineHeight: 22, color: colors.text, ...text },

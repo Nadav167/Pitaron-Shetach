@@ -47,7 +47,13 @@ export function campsiteIndex(): string {
         site.region,
         coords,
         priceLabel(site),
-        [site.isOfficial ? "official (INPA)" : "unofficial listing", isNightCamp(site) ? "night camp" : "campground"].join(", "),
+        [
+          site.closed && "CLOSED – do not recommend",
+          site.isOfficial ? "official (INPA)" : "unofficial listing",
+          isNightCamp(site) ? "night camp" : "campground",
+        ]
+          .filter(Boolean)
+          .join(", "),
         amenities.length ? amenities.join(",") : "amenities unknown",
       ].join(" | ");
     })
@@ -77,6 +83,7 @@ export function campsiteDetails(id: string) {
     amenitiesConfirmed: site.amenities,
     contact: site.contact,
     needsReview: site.source.needsReview ?? false,
+    closed: site.closed ?? null,
     appUrl: `https://pitaron-shetach.vercel.app/site/${site.id}`,
   };
 }
