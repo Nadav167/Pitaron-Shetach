@@ -15,6 +15,8 @@ import UnofficialNotice from "@/components/UnofficialNotice";
 import CampsiteCover from "@/components/CampsiteCover";
 import NavigationButtons from "@/components/NavigationButtons";
 import ExpandableText from "@/components/ExpandableText";
+import DesktopNav from "@/components/DesktopNav";
+import MobileHeader from "@/components/MobileHeader";
 import { cardFacts } from "@/lib/campsiteText";
 import { shareCampsite } from "@/lib/share";
 import { PIN_GLYPH } from "@/constants/map";
@@ -39,6 +41,11 @@ const ACTION_BAR_HEIGHT = 50 + spacing.sm * 2;
  * "take me there" is one tap from anywhere on the page. On desktop-width
  * screens the same content is a centered 800px column with the navigation
  * buttons inline.
+ *
+ * The page sits outside the tab navigator, so it renders the app's top bar
+ * itself (DesktopNav, or MobileHeader with its ☰ menu): language and
+ * day/night are one tap away here too (Nadav 2026-10-23). The bar takes
+ * care of the safe area, so the round buttons below it don't.
  */
 export default function CampsiteDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -59,7 +66,7 @@ export default function CampsiteDetailScreen() {
   const backButton = (
     <Pressable
       onPress={goBack}
-      style={[styles.roundButton, styles.backButton, { top: insets.top + spacing.sm }]}
+      style={[styles.roundButton, styles.backButton, { top: spacing.sm }]}
       accessibilityRole="button"
       accessibilityLabel={t("common.back")}
     >
@@ -68,9 +75,13 @@ export default function CampsiteDetailScreen() {
     </Pressable>
   );
 
+  const topBar = isDesktop ? <DesktopNav /> : <MobileHeader />;
+
   if (loading || !campsite) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top + TOUCH_TARGET + spacing.lg }]}>
+      <View style={styles.container}>
+        {topBar}
+        <View style={[styles.page, { paddingTop: TOUCH_TARGET + spacing.lg }]}>
         {backButton}
         {loading ? (
           <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />
@@ -85,6 +96,7 @@ export default function CampsiteDetailScreen() {
             action={{ label: t("site.backHome"), onPress: () => router.replace("/") }}
           />
         )}
+        </View>
       </View>
     );
   }
@@ -176,6 +188,8 @@ export default function CampsiteDetailScreen() {
 
   return (
     <View style={styles.container}>
+      {topBar}
+      <View style={styles.page}>
       <ScrollView
         contentContainerStyle={[
           isDesktop && styles.contentDesktop,
@@ -191,7 +205,7 @@ export default function CampsiteDetailScreen() {
             style={[
               styles.roundButton,
               // On desktop the cover is inset by the column's padding.
-              { left: isDesktop ? spacing.md * 2 : spacing.md, top: (isDesktop ? 0 : insets.top) + spacing.sm },
+              { left: isDesktop ? spacing.md * 2 : spacing.md, top: spacing.sm },
             ]}
             accessibilityRole="button"
             accessibilityLabel={t("site.share")}
@@ -355,6 +369,7 @@ export default function CampsiteDetailScreen() {
       </ScrollView>
 
       {backButton}
+      </View>
 
       {!isDesktop && (
         <View style={[styles.actionBar, { paddingBottom: spacing.sm + insets.bottom }]}>
@@ -378,6 +393,8 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
   const text = { textAlign: "right" as const, writingDirection };
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
+    // Everything under the top bar; the round buttons are placed in it.
+    page: { flex: 1 },
     // Caps and centers the detail content on wide windows instead of
     // letting it stretch edge to edge — same treatment as Home's desktop
     // layout, just narrower since this is single-column reading content
