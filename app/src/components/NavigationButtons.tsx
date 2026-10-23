@@ -10,6 +10,8 @@ import { fonts, radius, spacing } from "@/constants/theme";
 
 type Props = {
   campsite: Campsite;
+  /** The site page is left-to-right in English; elsewhere right-to-left. */
+  direction?: "rtl" | "ltr";
 };
 
 /**
@@ -23,7 +25,8 @@ type Props = {
  * caveat is carried by the "location not verified" line on the page, not by
  * disabling the button, because a name search still gets most people there.
  */
-export default function NavigationButtons({ campsite }: Props) {
+export default function NavigationButtons({ campsite, direction = "rtl" }: Props) {
+  const icon = (name: IconName) => buttonIcon(name, direction);
   const { t } = useLocale();
   const colors = useThemeColors();
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +41,7 @@ export default function NavigationButtons({ campsite }: Props) {
       <View style={styles.row}>
         <Button
           mode="contained"
-          icon={rtlIcon("waze")}
+          icon={icon("waze")}
           style={styles.button}
           contentStyle={styles.content}
           labelStyle={styles.label}
@@ -49,7 +52,7 @@ export default function NavigationButtons({ campsite }: Props) {
         </Button>
         <Button
           mode="outlined"
-          icon={rtlIcon("google-maps")}
+          icon={icon("google-maps")}
           style={[styles.button, { borderColor: colors.primary }]}
           contentStyle={styles.content}
           labelStyle={styles.label}
@@ -67,6 +70,8 @@ export default function NavigationButtons({ campsite }: Props) {
   );
 }
 
+type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
+
 const styles = StyleSheet.create({
   row: { flexDirection: "row", gap: spacing.sm },
   button: { flex: 1, borderRadius: radius.md },
@@ -81,10 +86,13 @@ const styles = StyleSheet.create({
  * negative right margin meant to tuck it toward the label in LTR). In this
  * app's right-to-left layout the icon sits on the right instead, so that
  * negative margin pushed it past the button's edge. The extra right margin
- * here cancels it out.
+ * here cancels it out. On the English site page, laid out left-to-right,
+ * the icon sits on the left and that same negative right margin pulls the
+ * label over it, so the icon needs more room on its right instead.
  */
-function rtlIcon(name: keyof typeof MaterialCommunityIcons.glyphMap) {
+function buttonIcon(name: IconName, direction: "rtl" | "ltr") {
+  const margin = direction === "rtl" ? { marginRight: spacing.md } : { marginRight: spacing.md + spacing.sm };
   return function ButtonIcon({ size, color }: { size: number; color: string }) {
-    return <MaterialCommunityIcons name={name} size={size} color={color} style={{ marginRight: spacing.md }} />;
+    return <MaterialCommunityIcons name={name} size={size} color={color} style={margin} />;
   };
 }

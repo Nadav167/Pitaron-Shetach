@@ -27,9 +27,11 @@ type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 /** Height of the Waze / Google Maps bar pinned to the bottom on phones. */
 const ACTION_BAR_HEIGHT = 50 + spacing.sm * 2;
 
-// The layout is always right-to-left, in every language (see LocaleContext),
-// so everything below is written for RTL outright rather than switched on
-// the locale. Text is plain React Native <Text>, not Paper's: Paper's pins
+// The app's layout is right-to-left in every language (see LocaleContext),
+// EXCEPT this page, which turns left-to-right in English (Nadav
+// 2026-10-23): `direction` on the page body flips its rows, and the few
+// physical sides below (the round buttons, the arrows, textAlign) follow
+// `ltr`. The top bar stays right-to-left, as on every other page. Text is plain React Native <Text>, not Paper's: Paper's pins
 // `textAlign: 'left'` and, on web, `writingDirection: 'ltr'`, and its
 // List.Item hard-codes physical paddings that left a wide gap between each
 // icon and its text in this layout.
@@ -58,7 +60,9 @@ export default function CampsiteDetailScreen() {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
 
-  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
+  const ltr = locale === "en";
+  const direction = ltr ? ("ltr" as const) : ("rtl" as const);
+  const styles = useMemo(() => makeStyles(colors, writingDirection, ltr), [colors, writingDirection, ltr]);
 
   // Opened straight from a shared link there is no screen to go back to.
   const goBack = () => (router.canGoBack() ? router.back() : router.replace("/"));
@@ -70,8 +74,8 @@ export default function CampsiteDetailScreen() {
       accessibilityRole="button"
       accessibilityLabel={t("common.back")}
     >
-      {/* Points right in every language: the layout never flips. */}
-      <MaterialCommunityIcons name="arrow-right" size={22} color={colors.text} />
+      {/* Points toward where reading starts: right in Hebrew, left in English. */}
+      <MaterialCommunityIcons name={ltr ? "arrow-left" : "arrow-right"} size={22} color={colors.text} />
     </Pressable>
   );
 
@@ -81,7 +85,7 @@ export default function CampsiteDetailScreen() {
     return (
       <View style={styles.container}>
         {topBar}
-        <View style={[styles.page, { paddingTop: TOUCH_TARGET + spacing.lg }]}>
+        <View style={[styles.page, { direction, paddingTop: TOUCH_TARGET + spacing.lg }]}>
         {backButton}
         {loading ? (
           <ActivityIndicator color={colors.primary} style={{ marginTop: spacing.xl }} />
@@ -189,7 +193,7 @@ export default function CampsiteDetailScreen() {
   return (
     <View style={styles.container}>
       {topBar}
-      <View style={styles.page}>
+      <View style={[styles.page, { direction }]}>
       <ScrollView
         contentContainerStyle={[
           isDesktop && styles.contentDesktop,
@@ -205,7 +209,7 @@ export default function CampsiteDetailScreen() {
             style={[
               styles.roundButton,
               // On desktop the cover is inset by the column's padding.
-              { left: isDesktop ? spacing.md * 2 : spacing.md, top: spacing.sm },
+              { [ltr ? "right" : "left"]: isDesktop ? spacing.md * 2 : spacing.md, top: spacing.sm },
             ]}
             accessibilityRole="button"
             accessibilityLabel={t("site.share")}
@@ -238,7 +242,7 @@ export default function CampsiteDetailScreen() {
             )}
           </View>
 
-          {!campsite.isOfficial && <UnofficialNotice variant="full" />}
+          {!campsite.isOfficial && <UnofficialNotice variant="full" direction={direction} />}
 
           <View style={styles.facts}>
             {facts.map((fact) => {
@@ -284,7 +288,7 @@ export default function CampsiteDetailScreen() {
           {isDesktop && (
             <>
               <Text style={styles.sectionTitle}>{t("site.navigate")}</Text>
-              <NavigationButtons campsite={campsite} />
+              <NavigationButtons campsite={campsite} direction={direction} />
             </>
           )}
           {!campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinatesLong")}</Text>}
@@ -349,7 +353,7 @@ export default function CampsiteDetailScreen() {
                       <Text style={styles.rowTitle}>{row.title}</Text>
                       {row.subtitle ? <Text style={styles.rowSubtitle}>{row.subtitle}</Text> : null}
                     </View>
-                    <MaterialCommunityIcons name="chevron-left" size={20} color={colors.textMuted} />
+                    <MaterialCommunityIcons name={ltr ? "chevron-right" : "chevron-left"} size={20} color={colors.textMuted} />
                   </Pressable>
                 ))}
               </View>
@@ -372,8 +376,8 @@ export default function CampsiteDetailScreen() {
       </View>
 
       {!isDesktop && (
-        <View style={[styles.actionBar, { paddingBottom: spacing.sm + insets.bottom }]}>
-          <NavigationButtons campsite={campsite} />
+        <View style={[styles.actionBar, { direction, paddingBottom: spacing.sm + insets.bottom }]}>
+          <NavigationButtons campsite={campsite} direction={direction} />
         </View>
       )}
 
@@ -389,8 +393,8 @@ export default function CampsiteDetailScreen() {
   );
 }
 
-function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
-  const text = { textAlign: "right" as const, writingDirection };
+function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr", ltr: boolean) {
+  const text = { textAlign: ltr ? ("left" as const) : ("right" as const), writingDirection };
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     // Everything under the top bar; the round buttons are placed in it.
@@ -417,9 +421,9 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       shadowOffset: { width: 0, height: 2 },
       elevation: 4,
     },
-    // Physical sides, like the rest of the fixed right-to-left layout: back
-    // on the right (where reading starts), share on the left.
-    backButton: { right: spacing.md },
+    // Physical sides: back where reading starts (right in Hebrew, left in
+    // English), share opposite it.
+    backButton: ltr ? { left: spacing.md } : { right: spacing.md },
     sheet: {
       marginTop: -22,
       borderTopLeftRadius: radius.lg,
@@ -432,7 +436,11 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     sheetDesktop: { marginTop: 0 },
     title: { fontFamily: fonts.display, fontSize: 26, lineHeight: 32, color: colors.text, ...text },
     badges: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
+    // maxWidth + a shrinking label: the long English "Official Nature and
+    // Parks Authority night camping ground" wraps instead of running off
+    // the screen.
     badge: {
+      maxWidth: "100%",
       flexDirection: "row",
       alignItems: "center",
       gap: 5,
@@ -441,7 +449,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       borderRadius: radius.pill,
     },
     badgeOutline: { borderWidth: StyleSheet.hairlineWidth, borderColor: colors.border, backgroundColor: colors.surface },
-    badgeText: { fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.textMuted, writingDirection },
+    badgeText: { flexShrink: 1, fontFamily: fonts.bodyMedium, fontSize: 13, color: colors.textMuted, writingDirection },
     facts: { flexDirection: "row", gap: spacing.sm },
     fact: {
       flex: 1,

@@ -8,6 +8,8 @@ import { radius, spacing, type ColorTokens } from "@/constants/theme";
 type Props = {
   /** `compact` for cards and map popups, `full` for the detail screen. */
   variant?: "compact" | "full";
+  /** The site page is left-to-right in English; everywhere else is right-to-left. */
+  direction?: "rtl" | "ltr";
 };
 
 /**
@@ -23,10 +25,10 @@ type Props = {
  * Deliberately small and low-contrast-but-legible: it has to register without
  * making the listing look like a scam, since most of these are real places.
  */
-export default function UnofficialNotice({ variant = "compact" }: Props) {
+export default function UnofficialNotice({ variant = "compact", direction = "rtl" }: Props) {
   const { t, writingDirection } = useLocale();
   const colors = useThemeColors();
-  const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
+  const styles = useMemo(() => makeStyles(colors, writingDirection, direction), [colors, writingDirection, direction]);
 
   return (
     <View style={[styles.container, variant === "full" && styles.full]}>
@@ -41,7 +43,7 @@ export default function UnofficialNotice({ variant = "compact" }: Props) {
   );
 }
 
-function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
+function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr", direction: "rtl" | "ltr") {
   return StyleSheet.create({
     container: {
       alignSelf: "flex-start",
@@ -59,6 +61,6 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     },
     // react-native-paper's <Text> hardcodes textAlign: 'left' regardless
     // of RTL (see Typography/Text.tsx) -- override explicitly.
-    text: { color: colors.accentDeep, textAlign: "right", writingDirection },
+    text: { color: colors.accentDeep, textAlign: direction === "ltr" ? "left" : "right", writingDirection },
   });
 }
