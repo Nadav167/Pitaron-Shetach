@@ -75,7 +75,6 @@
     "navigateGoogleMaps": "Google Maps",
     "navigationFailed": "Couldn't open the navigation app",
     "viewDetails": "Details",
-    "noCoordinates": "Exact location unverified",
     "noCoordinatesLong": "We couldn't verify coordinates for this site, so the navigation buttons search by name instead. Confirm the location before you set out.",
     "checkInOut": "Check-in and check-out",
     "checkIn": "Arrive by",

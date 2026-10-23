@@ -75,7 +75,6 @@
     "navigateGoogleMaps": "Google Maps",
     "navigationFailed": "לא הצלחנו לפתוח את אפליקציית הניווט",
     "viewDetails": "לפרטים",
-    "noCoordinates": "מיקום מדויק לא אומת",
     "noCoordinatesLong": "לא מצאנו נקודת ציון מאומתת לאתר הזה, ולכן כפתורי הניווט מחפשים לפי שם. ודאו את המיקום לפני הנסיעה.",
     "checkInOut": "כניסה ויציאה",
     "checkIn": "כניסה עד",

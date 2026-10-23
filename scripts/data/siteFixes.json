@@ -1,0 +1,40 @@
+{
+  "_comment": "Hand fixes for OpenStreetMap night camps that had no name of their own and were called after the nearest village (\"חניון לילה ליד X\", \"חניון לילה לא רשמי (3)\"). Nadav 2026-10-23: rename the ones that sit on a named stream, spring, peak or beach (found in the Geofabrik extract, distance in the note), remove the ones with no landmark, no description and no photo. importOsmCampsites.js skips the removed ids, so a re-import doesn't bring them back. Applied by scripts/applySiteFixes.js.",
+  "rename": {
+    "osm-node-683315617": { "he": "חוף גופרה", "en": "Gofra Beach", "note": "Ein Gofra spring 60 m; ikinneret.org.il Gofra beach" },
+    "osm-node-683315625": { "he": "חוף כורסי", "en": "Kursi Beach", "note": "Kursi beach 300 m" },
+    "osm-node-1921967649": { "he": "חניון לילה נחל יזרח", "en": "Nahal Yizrah Night Camp", "note": "Nahal Yizrah 300 m" },
+    "osm-node-2403801341": { "he": "חניון לילה גדות הירדן (עמיר)", "en": "Jordan Riverbank Night Camp (Amir)", "note": "Jordan River 150 m" },
+    "osm-node-2617515213": { "he": "שטח לינה ליד חניון נחל כסלון", "en": "Overflow Area by Nahal Kesalon Camp", "note": "Nahal Kesalon 20 m; 360 m from the official Nahal Kesalon camp" },
+    "osm-node-4866495941": { "he": "חניון לילה אגם ניצנים", "en": "Nitzanim Lake Night Camp", "note": "Nitzanim lake 60 m" },
+    "osm-node-5961542219": { "he": "חניון לילה מערת המנורה", "en": "Menorah Cave Night Camp", "note": "Menorah Cave 140 m" },
+    "osm-node-9717142730": { "he": "חוף דוגית", "en": "Dugit Beach", "note": "ikinneret.org.il Dugit beach" },
+    "osm-node-10694885887": { "he": "חניון לילה נחל עדינא", "en": "Nahal Adina Night Camp", "note": "Nahal Adina 150 m" },
+    "osm-node-10793168558": { "he": "חניון לילה נחל תבור", "en": "Nahal Tavor Night Camp", "note": "Nahal Tavor 10 m" },
+    "osm-node-10899482909": { "he": "חניון לילה נחל עפרן", "en": "Nahal Ofran Night Camp", "note": "Nahal Ofran 50 m" },
+    "osm-node-11200771803": { "he": "חניון לילה גבעת צהבון", "en": "Givat Tzahvon Night Camp", "note": "Givat Tzahvon 120 m" },
+    "osm-node-11506504052": { "he": "חניון לילה נחל חצץ (מרחב עם)", "en": "Nahal Hatzatz Night Camp (Merhav Am)", "note": "Nahal Hatzatz 90 m; 2.5 km from the other Nahal Hatzatz camp" },
+    "osm-node-11534549069": { "he": "חניון לילה נחל שעלבים", "en": "Nahal Sha'alvim Night Camp", "note": "Nahal Sha'alvim 90 m" },
+    "osm-node-11737486669": { "he": "חניון קרוואנים חאן מרחב עם", "en": "Khan Merhav Am Caravan Site", "note": "its description is Khan Merhav Am's" },
+    "osm-node-12761671801": { "he": "חניון לילה נחל עשוש", "en": "Nahal Ashosh Night Camp", "note": "Nahal Ashosh 180 m" },
+    "osm-node-12768934984": { "he": "חניון לילה תל פרג'", "en": "Tel Faraj Night Camp", "note": "Tel Faraj 190 m" },
+    "osm-node-13231429293": { "he": "חניון לילה נחל עשת", "en": "Nahal Eshet Night Camp", "note": "Nahal Eshet 40 m" },
+    "osm-node-14015000901": { "he": "חוף מעיין צבי", "en": "Ma'ayan Tzvi Beach", "note": "Ma'ayan Tzvi beach 30 m" },
+    "osm-way-308447979": { "he": "חניון לילה נחל גרעינית", "en": "Nahal Gar'init Night Camp", "note": "Nahal Gar'init 110 m" },
+    "osm-way-541771885": { "he": "חניון לילה נחל חצצון", "en": "Nahal Hatzatzon Night Camp", "note": "Nahal Hatzatzon 210 m" },
+    "osm-way-911755934": { "he": "חניון לילה נחל חימר", "en": "Nahal Hemar Night Camp", "note": "Nahal Hemar 70 m" },
+    "osm-way-1053682176": { "he": "חניון לילה בג'וריה", "en": "Bajuriya Night Camp", "note": "Bajuriya winter pool 70 m" }
+  },
+  "remove": [
+    "osm-node-685075007",
+    "osm-node-1368812719",
+    "osm-node-2352565261",
+    "osm-node-7114703385",
+    "osm-node-10883843390",
+    "osm-node-11707178769",
+    "osm-node-12464388369",
+    "osm-node-12846530902",
+    "osm-way-518900278",
+    "osm-way-1389396484"
+  ]
+}

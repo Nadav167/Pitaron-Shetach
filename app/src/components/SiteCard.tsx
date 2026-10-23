@@ -37,7 +37,7 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   const name = localized(campsite.name, locale);
-  const { price, hours, amenities } = cardFacts(campsite, t, locale);
+  const { price, amenities } = cardFacts(campsite, t, locale);
   const region = t(`region.${campsite.region}`);
   const nightCamp = isNightCamp(campsite);
   const kindLabel = t(nightCamp ? "site.kind.nightCamp" : "site.kind.campground");
@@ -47,12 +47,14 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
   // EVERY card has the same fixed set of lines, so all cards are the same
   // size and a grid row lines up: the name on one line (the full name is in
   // the accessibility label and on the site page), then one detail line.
-  // The detail line shows, in order of priority: the distance from a
-  // searched town, the arrival time / hours note, nothing extra. "Location
-  // not verified" is a badge on the photo (or the compact row's second
-  // line) rather than a line of its own. An extra line on some cards was
-  // what made one card in a grid row taller than its neighbours.
-  const detail = note ?? hours;
+  // The detail line is location only (Nadav 2026-10-23): the region, plus
+  // the distance from a searched town when there is one. Hours notes used
+  // to fill it too, and a long one ("עדכון 10.10.2023: הפארק סגור...") read
+  // like the start of a description, cut off mid-sentence. An extra
+  // line on some cards was what made one card in a grid row taller than its
+  // neighbours. (Cards no longer flag "location not verified": Nadav
+  // 2026-10-23. The site page still says so, next to the navigation.)
+  const detail = note;
   const detailLine = (style: object) =>
     note ? (
       <View style={styles.metaItem}>
@@ -96,9 +98,7 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
             </Text>
             {/* At most three short lines: never taller than the 72px tile,
                 so every compact row is the same 92px. */}
-            {detail
-              ? detailLine(styles.meta)
-              : !campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinates")}</Text>}
+            {detail ? detailLine(styles.meta) : null}
           </View>
         </Pressable>
         <FavoriteButton campsiteId={campsite.id} variant="plain" />
@@ -120,12 +120,6 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
             <MaterialCommunityIcons name={nightCamp ? PIN_GLYPH.official : PIN_GLYPH.unofficial} size={13} color="#FFFFFF" />
             <Text style={styles.kindText}>{kindLabel}</Text>
           </View>
-          {!campsite.coordinates && (
-            <View style={[styles.kindBadge, styles.noCoordsBadge]}>
-              <MaterialCommunityIcons name="map-marker-question-outline" size={13} color="#FFFFFF" />
-              <Text style={styles.kindText}>{t("site.noCoordinates")}</Text>
-            </View>
-          )}
         </View>
         <View style={styles.content}>
           <View style={styles.titleRow}>
@@ -209,10 +203,7 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     amenities: { flexDirection: "row", gap: 6 },
     metaItem: { flexDirection: "row", alignItems: "center", gap: 5, minWidth: 0 },
     metaRegion: { flexShrink: 0 },
-    // Bottom-left, opposite the kind badge.
-    noCoordsBadge: { right: undefined, left: spacing.sm },
     note: { flexShrink: 1, fontFamily: fonts.bodyMedium, fontSize: 13, lineHeight: 20, color: colors.primary, ...text },
-    noCoords: { fontFamily: fonts.body, fontSize: 12.5, lineHeight: 20, color: colors.textMuted, fontStyle: "italic", ...text },
 
     compactCard: {
       flexDirection: "row",

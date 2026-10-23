@@ -469,7 +469,10 @@ async function kklPage(url) {
   const start = lines.findIndex((line) => /סגור הודעות קק"ל למטיילים/.test(line));
   const end = lines.findIndex((line, i) => i > start && /^הרשמה לניוזלטר/.test(line));
   const image = (/og:image" content="([^"]*)/.exec(page) || [])[1] || null;
-  return start < 0 ? null : { url, body: lines.slice(start + 2, end), image };
+  // Most pages' og:image is KKL's generic placeholder (SVTemplate/img/
+  // pionet.jpg), not a photo of the camp: the app's own cover is better.
+  const photo = image && !/SVTemplate\/img\//.test(image) ? image : null;
+  return start < 0 ? null : { url, body: lines.slice(start + 2, end), image: photo };
 }
 
 async function kklPages() {

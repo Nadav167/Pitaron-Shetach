@@ -64,6 +64,8 @@ const {
 } = require("./lib/importHelpers");
 const TRANSLATIONS = path.join(__dirname, "data/osmNameTranslations.json");
 const HEBREW_NAMES_FILE = path.join(__dirname, "data/osmHebrewNames.json");
+// Unnamed spots removed by hand (scripts/data/siteFixes.json): never re-added.
+const REMOVED = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, "data/siteFixes.json"), "utf8")).remove);
 const HEBREW_NAMES = fs.existsSync(HEBREW_NAMES_FILE) ? JSON.parse(fs.readFileSync(HEBREW_NAMES_FILE, "utf8")) : {};
 
 const OVERPASS_MIRRORS = [
@@ -429,6 +431,7 @@ async function main() {
       continue;
     }
     if (/^(private|no)$/.test(element.tags.access || "") || element.tags.disused === "yes") continue;
+    if (REMOVED.has(`osm-${element.type}-${element.id}`)) continue;
     if (!looksLikeCampsite(element.tags, { lat: point.lat, lng: point.lon }, places)) {
       junk++;
       continue;

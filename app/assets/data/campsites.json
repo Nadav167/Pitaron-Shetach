@@ -2303,12 +2303,7 @@
         "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.62483%2C35.116&travelmode=driving"
       },
       "amenities": {},
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl.org.il/parking_lot_overnight_har_gachar/",
         "email": "TaliaB@kkl.org.il"
@@ -2497,8 +2492,8 @@
     {
       "id": "osm-node-683315617",
       "name": {
-        "he": "חניון לילה ליד עין גב",
-        "en": "Night campsite near Ein Gev"
+        "he": "חוף גופרה",
+        "en": "Gofra Beach"
       },
       "coordinates": {
         "lat": 32.80347,
@@ -2560,8 +2555,8 @@
     {
       "id": "osm-node-683315625",
       "name": {
-        "he": "חניון לילה ליד רמות",
-        "en": "Night campsite near Ramot"
+        "he": "חוף כורסי",
+        "en": "Kursi Beach"
       },
       "coordinates": {
         "lat": 32.82407,
@@ -2587,40 +2582,6 @@
         "name": "OpenStreetMap",
         "url": "https://www.openstreetmap.org/node/683315625",
         "coordsSource": "OpenStreetMap node 683315625",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
-      "id": "osm-node-685075007",
-      "name": {
-        "he": "חניון לילה ליד רמת יוחנן",
-        "en": "Night campsite near Ramat Yahanan"
-      },
-      "coordinates": {
-        "lat": 32.79496,
-        "lng": 35.14591
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Carmel",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=32.79496%2C35.14591&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.79496%2C35.14591&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/685075007",
-        "coordsSource": "OpenStreetMap node 685075007",
         "scrapedAt": "2026-10-19T21:35:42.721Z"
       },
       "updatedAt": "2026-10-19T21:35:42.721Z"
@@ -3326,40 +3287,6 @@
       "updatedAt": "2026-10-19T21:35:42.721Z"
     },
     {
-      "id": "osm-node-1368812719",
-      "name": {
-        "he": "חניון לילה ליד אילת",
-        "en": "Night campsite near Eilat"
-      },
-      "coordinates": {
-        "lat": 29.4979,
-        "lng": 34.91181
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Eilat",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=29.4979%2C34.91181&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=29.4979%2C34.91181&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/1368812719",
-        "coordsSource": "OpenStreetMap node 1368812719",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
       "id": "osm-node-1368812724",
       "name": {
         "he": "חוף המגדלור",
@@ -3443,8 +3370,8 @@
     {
       "id": "osm-node-1921967649",
       "name": {
-        "he": "חניון לא רשמי",
-        "en": "Unofficial campsite"
+        "he": "חניון לילה נחל יזרח",
+        "en": "Nahal Yizrah Night Camp"
       },
       "description": {
         "he": "חניון לילה לא רשמי. שטח נוח שהיה בעבר מתקן קידוח נפט.",
@@ -4123,44 +4050,10 @@
       }
     },
     {
-      "id": "osm-node-2352565261",
-      "name": {
-        "he": "חניון לילה ליד איתנים",
-        "en": "Night campsite near Eitanim"
-      },
-      "coordinates": {
-        "lat": 31.76676,
-        "lng": 35.08922
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Jerusalem",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=31.76676%2C35.08922&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=31.76676%2C35.08922&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/2352565261",
-        "coordsSource": "OpenStreetMap node 2352565261",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
       "id": "osm-node-2403801341",
       "name": {
-        "he": "חניון לילה ליד עמיר",
-        "en": "Night campsite near Amir"
+        "he": "חניון לילה גדות הירדן (עמיר)",
+        "en": "Jordan Riverbank Night Camp (Amir)"
       },
       "coordinates": {
         "lat": 33.17721,
@@ -4529,8 +4422,8 @@
     {
       "id": "osm-node-2617515213",
       "name": {
-        "he": "חניון לילה ליד אשתאול",
-        "en": "Night campsite near Eshtaol"
+        "he": "שטח לינה ליד חניון נחל כסלון",
+        "en": "Overflow Area by Nahal Kesalon Camp"
       },
       "description": {
         "he": "שטח עפר ליד הכביש. ניתן לישון פה אבל עדיף בחניון הרשמי.",
@@ -6973,8 +6866,8 @@
     {
       "id": "osm-node-4866495941",
       "name": {
-        "he": "חניון לילה לא רשמי",
-        "en": "Unofficial Overnight Campground"
+        "he": "חניון לילה אגם ניצנים",
+        "en": "Nitzanim Lake Night Camp"
       },
       "coordinates": {
         "lat": 31.74759,
@@ -7282,12 +7175,7 @@
         "water": true,
         "picnicTables": true
       },
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl.org.il/parking_lot_overnight_eithan/",
         "email": "BezalelY@kkl.org.il",
@@ -8204,12 +8092,7 @@
       "amenities": {
         "picnicTables": true
       },
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl-jnf.org/tourism-and-recreation/camping-picnic-sites/overnightcamping/overnight-north/overnight-switzerland/",
         "email": "MaayanBN@kkl.org.il"
@@ -8239,8 +8122,8 @@
     {
       "id": "osm-node-5961542219",
       "name": {
-        "he": "חניון לילה ליד אפיק",
-        "en": "Night campsite near Afik"
+        "he": "חניון לילה מערת המנורה",
+        "en": "Menorah Cave Night Camp"
       },
       "coordinates": {
         "lat": 32.76913,
@@ -8683,12 +8566,7 @@
         "water": true,
         "picnicTables": true
       },
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl.org.il/parking_lot_overnight_begin/",
         "email": "BezalelY@kkl.org.il"
@@ -9019,43 +8897,6 @@
         "name": "OpenStreetMap",
         "url": "https://www.openstreetmap.org/node/7015615989",
         "coordsSource": "OpenStreetMap node 7015615989",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
-      "id": "osm-node-7114703385",
-      "name": {
-        "he": "חניון לילה ליד אילת (2)",
-        "en": "Night campsite near Eilat (2)"
-      },
-      "description": {
-        "en": "Free campgrounds for RVs and tents"
-      },
-      "coordinates": {
-        "lat": 29.54757,
-        "lng": 34.96917
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Eilat",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=29.54757%2C34.96917&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=29.54757%2C34.96917&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/7114703385",
-        "coordsSource": "OpenStreetMap node 7114703385",
         "scrapedAt": "2026-10-19T21:35:42.721Z"
       },
       "updatedAt": "2026-10-19T21:35:42.721Z"
@@ -10741,8 +10582,8 @@
     {
       "id": "osm-node-9717142730",
       "name": {
-        "he": "חניון לילה ליד רמות (2)",
-        "en": "Night campsite near Ramot (2)"
+        "he": "חוף דוגית",
+        "en": "Dugit Beach"
       },
       "coordinates": {
         "lat": 32.85125,
@@ -10979,8 +10820,8 @@
     {
       "id": "osm-node-10694885887",
       "name": {
-        "he": "חניון לילה ליד כפר הנוקדים",
-        "en": "Night campsite near Kfar Hanokdim"
+        "he": "חניון לילה נחל עדינא",
+        "en": "Nahal Adina Night Camp"
       },
       "coordinates": {
         "lat": 31.30577,
@@ -11018,8 +10859,8 @@
     {
       "id": "osm-node-10793168558",
       "name": {
-        "he": "חניון לילה ליד כפר קיש",
-        "en": "Night campsite near Kfar Kish"
+        "he": "חניון לילה נחל תבור",
+        "en": "Nahal Tavor Night Camp"
       },
       "coordinates": {
         "lat": 32.65721,
@@ -11050,47 +10891,10 @@
       "updatedAt": "2026-10-19T21:35:42.721Z"
     },
     {
-      "id": "osm-node-10883843390",
-      "name": {
-        "he": "חניון לילה ליד כפר גלעדי",
-        "en": "Night campsite near Kfar Giladi"
-      },
-      "description": {
-        "en": "Free, Room for a couple of small tents - mostly for INT hikers, Bathrooms and water, Not much shade, Next to Roaring Lion parking lot"
-      },
-      "coordinates": {
-        "lat": 33.23965,
-        "lng": 35.57669
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Galilee",
-      "pricing": {
-        "perNight": 0,
-        "currency": "ILS",
-        "isFree": true
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=33.23965%2C35.57669&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.23965%2C35.57669&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/10883843390",
-        "coordsSource": "OpenStreetMap node 10883843390",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
       "id": "osm-node-10899482909",
       "name": {
-        "he": "חניון לילה לא רשמי (3)",
-        "en": "Unofficial night camp (3)"
+        "he": "חניון לילה נחל עפרן",
+        "en": "Nahal Ofran Night Camp"
       },
       "coordinates": {
         "lat": 30.85853,
@@ -11358,8 +11162,8 @@
     {
       "id": "osm-node-11200771803",
       "name": {
-        "he": "חניון לילה לא רשמי (4)",
-        "en": "Unofficial night camp (4)"
+        "he": "חניון לילה גבעת צהבון",
+        "en": "Givat Tzahvon Night Camp"
       },
       "coordinates": {
         "lat": 30.4568,
@@ -11457,8 +11261,8 @@
     {
       "id": "osm-node-11506504052",
       "name": {
-        "he": "חניון לילה ליד מרחב עם",
-        "en": "Night campsite near Merhav Am"
+        "he": "חניון לילה נחל חצץ (מרחב עם)",
+        "en": "Nahal Hatzatz Night Camp (Merhav Am)"
       },
       "description": {
         "he": "חניון לילה לא מוסדר",
@@ -11546,8 +11350,8 @@
     {
       "id": "osm-node-11534549069",
       "name": {
-        "he": "חניון לילה ליד משמר איילון",
-        "en": "Night campsite near Mishmar Ayyalon"
+        "he": "חניון לילה נחל שעלבים",
+        "en": "Nahal Sha'alvim Night Camp"
       },
       "coordinates": {
         "lat": 31.87603,
@@ -11678,44 +11482,10 @@
       }
     },
     {
-      "id": "osm-node-11707178769",
-      "name": {
-        "he": "חניון לילה ליד רמת גן",
-        "en": "Night campsite near Ramat Gan"
-      },
-      "coordinates": {
-        "lat": 32.04924,
-        "lng": 34.81208
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Center",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=32.04924%2C34.81208&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.04924%2C34.81208&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/11707178769",
-        "coordsSource": "OpenStreetMap node 11707178769",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
       "id": "osm-node-11737486669",
       "name": {
-        "he": "חניון קרוואנים ליד מרחב עם",
-        "en": "Caravan site near Merhav Am"
+        "he": "חניון קרוואנים חאן מרחב עם",
+        "en": "Khan Merhav Am Caravan Site"
       },
       "coordinates": {
         "lat": 30.892,
@@ -11891,12 +11661,7 @@
         "water": true,
         "picnicTables": true
       },
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl.org.il/parking_lot_overnight_shoresh/",
         "email": "BezalelY@kkl.org.il",
@@ -12006,12 +11771,7 @@
       "amenities": {
         "picnicTables": true
       },
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl-jnf.org/tourism-and-recreation/camping-picnic-sites/overnightcamping/overnight-north/overnight-har-dvora/",
         "email": "Maayanbn@kkl.org.il"
@@ -12069,12 +11829,7 @@
         "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.64686%2C34.97156&travelmode=driving"
       },
       "amenities": {},
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "phone": "04-9950102",
         "website": "https://www.kkl.org.il/recreation_areas_overnight_ofer_forest/",
@@ -12179,12 +11934,7 @@
       "amenities": {
         "picnicTables": true
       },
-      "photos": [
-        {
-          "url": "https://www.kkl.org.il/travel/SVTemplate/img/pionet.jpg",
-          "credit": "קק\"ל"
-        }
-      ],
+      "photos": [],
       "contact": {
         "website": "https://www.kkl-jnf.org/tourism-and-recreation/camping-picnic-sites/overnightcamping/overnight-south/vermeulen/",
         "email": "MaliM@kkl.org.il"
@@ -12212,44 +11962,10 @@
       }
     },
     {
-      "id": "osm-node-12464388369",
-      "name": {
-        "he": "חניון לילה ליד צופר",
-        "en": "Night campsite near Zofar"
-      },
-      "coordinates": {
-        "lat": 30.54154,
-        "lng": 35.17767
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Arava",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=30.54154%2C35.17767&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=30.54154%2C35.17767&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/12464388369",
-        "coordsSource": "OpenStreetMap node 12464388369",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
       "id": "osm-node-12761671801",
       "name": {
-        "he": "חניון לילה ליד צוקים",
-        "en": "Night campsite near Zukim"
+        "he": "חניון לילה נחל עשוש",
+        "en": "Nahal Ashosh Night Camp"
       },
       "description": {
         "he": "חניון מחוץ לשמורה",
@@ -12286,8 +12002,8 @@
     {
       "id": "osm-node-12768934984",
       "name": {
-        "he": "חניון לילה ליד קשת",
-        "en": "Night campsite near Keshet"
+        "he": "חניון לילה תל פרג'",
+        "en": "Tel Faraj Night Camp"
       },
       "coordinates": {
         "lat": 32.95604,
@@ -12313,40 +12029,6 @@
         "name": "OpenStreetMap",
         "url": "https://www.openstreetmap.org/node/12768934984",
         "coordsSource": "OpenStreetMap node 12768934984",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
-      "id": "osm-node-12846530902",
-      "name": {
-        "he": "חניון לילה ליד אניעם",
-        "en": "Night campsite near Aniam"
-      },
-      "coordinates": {
-        "lat": 32.94121,
-        "lng": 35.70066
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Golan",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=32.94121%2C35.70066&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.94121%2C35.70066&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/node/12846530902",
-        "coordsSource": "OpenStreetMap node 12846530902",
         "scrapedAt": "2026-10-19T21:35:42.721Z"
       },
       "updatedAt": "2026-10-19T21:35:42.721Z"
@@ -12549,8 +12231,8 @@
     {
       "id": "osm-node-13231429293",
       "name": {
-        "he": "חניון לילה ליד באר מנוחה",
-        "en": "Night campsite near Beer Menuha"
+        "he": "חניון לילה נחל עשת",
+        "en": "Nahal Eshet Night Camp"
       },
       "coordinates": {
         "lat": 30.33157,
@@ -12970,8 +12652,8 @@
     {
       "id": "osm-node-14015000901",
       "name": {
-        "he": "חניון לילה לא רשמי (5)",
-        "en": "Unofficial Overnight Campground (5)"
+        "he": "חוף מעיין צבי",
+        "en": "Ma'ayan Tzvi Beach"
       },
       "coordinates": {
         "lat": 32.57965,
@@ -13482,8 +13164,8 @@
     {
       "id": "osm-way-308447979",
       "name": {
-        "he": "חניון לילה ליד אילת (3)",
-        "en": "Night campsite near Eilat (3)"
+        "he": "חניון לילה נחל גרעינית",
+        "en": "Nahal Gar'init Night Camp"
       },
       "coordinates": {
         "lat": 29.51015,
@@ -13875,40 +13557,6 @@
       }
     },
     {
-      "id": "osm-way-518900278",
-      "name": {
-        "he": "חניון לילה ליד שאר ישוב",
-        "en": "Night campsite near Shaar Yashuv"
-      },
-      "coordinates": {
-        "lat": 33.22954,
-        "lng": 35.65164
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Golan",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=33.22954%2C35.65164&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=33.22954%2C35.65164&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/way/518900278",
-        "coordsSource": "OpenStreetMap way 518900278",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
-    },
-    {
       "id": "osm-way-530976199",
       "name": {
         "he": "חניון לילה גב חולית",
@@ -14053,8 +13701,8 @@
     {
       "id": "osm-way-541771885",
       "name": {
-        "he": "חניון לילה ליד מצפה שלם",
-        "en": "Night campsite near Mitspe Shalem"
+        "he": "חניון לילה נחל חצצון",
+        "en": "Nahal Hatzatzon Night Camp"
       },
       "description": {
         "en": "Unofficial"
@@ -14353,8 +14001,8 @@
     {
       "id": "osm-way-911755934",
       "name": {
-        "he": "חניון לילה ליד נווה זוהר",
-        "en": "Night campsite near Neve Zohar"
+        "he": "חניון לילה נחל חימר",
+        "en": "Nahal Hemar Night Camp"
       },
       "coordinates": {
         "lat": 31.13351,
@@ -14599,8 +14247,8 @@
     {
       "id": "osm-way-1053682176",
       "name": {
-        "he": "חניון לילה ליד חיספין",
-        "en": "Night campsite near Chispin"
+        "he": "חניון לילה בג'וריה",
+        "en": "Bajuriya Night Camp"
       },
       "coordinates": {
         "lat": 32.86404,
@@ -15263,40 +14911,6 @@
         "he": "WAZE: חוות ספר המדבר היכן אנחנו ממוקמים? • 25 דקות נסיעה מירושלים. • 20 דקות נסיעה ממערב גוש עציון. • 5 דקות מהיישוב תקוע.",
         "en": "Waze: Havat Sfar HaMidbar. Where are we? • 25 minutes' drive from Jerusalem. • 20 minutes' drive from western Gush Etzion. • 5 minutes from Tekoa."
       }
-    },
-    {
-      "id": "osm-way-1389396484",
-      "name": {
-        "he": "חניון לילה ליד חוות ראש תאנה",
-        "en": "Night campsite near חוות ראש תאנה"
-      },
-      "coordinates": {
-        "lat": 32.01464,
-        "lng": 35.37386
-      },
-      "isOfficial": false,
-      "kind": "nightCamp",
-      "region": "Center",
-      "pricing": {
-        "perNight": null,
-        "currency": "ILS",
-        "isFree": false
-      },
-      "openingHours": {},
-      "navigationUrls": {
-        "waze": "https://waze.com/ul?ll=32.01464%2C35.37386&navigate=yes&zoom=17",
-        "googleMaps": "https://www.google.com/maps/dir/?api=1&destination=32.01464%2C35.37386&travelmode=driving"
-      },
-      "amenities": {},
-      "photos": [],
-      "contact": {},
-      "source": {
-        "name": "OpenStreetMap",
-        "url": "https://www.openstreetmap.org/way/1389396484",
-        "coordsSource": "OpenStreetMap way 1389396484",
-        "scrapedAt": "2026-10-19T21:35:42.721Z"
-      },
-      "updatedAt": "2026-10-19T21:35:42.721Z"
     },
     {
       "id": "osm-way-1488957197",
