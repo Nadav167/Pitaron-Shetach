@@ -198,6 +198,19 @@ The review and plan are on a design canvas: https://claude.ai/artifact/Epz52qBV9
 - **External services:** tiles and routes are fetched from the browser, only when a PDF is downloaded (about 20 tiles plus one route request per day). Both allow cross-origin requests and want attribution, which is drawn on the map.
 - **Not done:** the "Print" view (`itineraryPrint.ts`) has no map yet. It opens its tab synchronously, and the map is async.
 
+## Site details enrichment (2026-10-23): 405 → 411 sites, 279 filled in
+- **What:** Nadav asked to research every site, since many had no info. `scripts/enrichCampsites.js` fills only what's empty, never overwrites, and lists each contributing page in `source.extraSources`. Sources, most trusted first:
+  1. **parks.org.il WordPress API** (`/wp-json/wp/v2/free_camping`, `/camping`): 108 free INPA "sign camps" and 18 paid camps, with facilities, access (4X4), cell reception, directions, photos and nearby trails. 6 free camps the dataset lacked were added (`inpa-free-<id>`).
+  2. **kkl.org.il:** 18 forest night camps, paired by hand in `KKL_PAGES` (the pages carry no coordinates). Current KKL notices ("no water since 12.8.2026", "toilets closed") go first in the description, dated.
+  3. **ikinneret.org.il:** 18 Kinneret beaches, paired by hand in `KINNERET_BEACHES`: camping rules, facilities, and the parking tariff as the price note.
+  4. **tiuli.com:** a full re-crawl (`lib/tiuliPage.js`) for the facility row, the access note, the summary, directions and phone. Only the short summary is taken, never tiuli's article text (it's their copy).
+- **Safety rules in the matcher:** water and toilets are only set true from a facility list, never from prose. A khan or business is never matched to a free night camp next to it. A source's coordinates can be wrong (INPA puts בארות עדה 16 km off), so an exact name wins over plain proximity.
+- **App:** new `directions` field shown as "איך מגיעים" on the site page; descriptions are clamped to 5 lines with "קריאת הכל"; the provenance line lists every source; the planner's `campsiteDetails` returns directions.
+- **Flagged `needsReview`:** ikinneret says camping is NOT allowed at חוף צמח, כפר הנופש מעגן (rooms only) and חוף כפר נחום. The warning opens their description; Nadav to decide whether to remove them.
+- **Not found anywhere:** prices of ~95 private businesses (khans, Bedouin tents, farms) are not published online; their tiuli pages have phones. ~100 unnamed OSM spots ("חניון לילה ליד X") have no information online at all. English descriptions were not written (the English UI shows the Hebrew text).
+- **Not rebuilt:** `nearbyPlaces.json` for the 6 new camps (needs the 210 MB Geofabrik download).
+- **Re-run:** save a tiuli crawl (`crawl(720)` in `lib/tiuliPage.js`, ~15 min), then `node scripts/enrichCampsites.js --tiuli=<file> [--cache=<dir>]` on the pre-enrichment data.
+
 ## Waiting on Nadav
 0. **Travel agent:** try it signed in on the live site (and on a phone). Confirm the Anthropic monthly spend limit is set.
 1. **Fresh live test** of everything above, ideally on a real phone too. Native (iOS/Android) has not been run at all this round.

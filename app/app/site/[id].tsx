@@ -91,6 +91,7 @@ export default function CampsiteDetailScreen() {
 
   const name = localized(campsite.name, locale);
   const description = campsite.description ? localized(campsite.description, locale) : "";
+  const directions = campsite.directions ? localized(campsite.directions, locale) : "";
   const favorite = isFavorite(campsite.id);
   const nightCamp = isNightCamp(campsite);
   const { price } = cardFacts(campsite, t);
@@ -109,6 +110,8 @@ export default function CampsiteDetailScreen() {
   const hasMissingInfo = (!campsite.pricing.isFree && campsite.pricing.perNight == null) || !hoursNote;
   const missingInfoMessage = phone ? `${t("site.missingInfo")} ${t("site.missingInfoCall")}` : t("site.missingInfo");
   const coordsSource = coordsSourceName(campsite);
+  // The import's own source, then any that filled in details later.
+  const dataSources = [...new Set([campsite.source.name, ...(campsite.source.extraSources ?? []).map((s) => s.name)])].join(", ");
   const coverCredit = campsite.photos.find((photo) => !photo.isPlaceholder)?.credit ?? null;
   const favoriteLabel = favorite ? t("site.removeFromFavorites") : t("site.addToFavorites");
 
@@ -244,7 +247,9 @@ export default function CampsiteDetailScreen() {
             })}
           </View>
 
-          {description ? <Text style={styles.body}>{description}</Text> : null}
+          {description ? (
+            <ExpandableText text={description} lines={5} style={styles.body} toggleStyle={styles.toggle} />
+          ) : null}
 
           {/* The one favorite control on this screen: a labeled button in
               the page itself, rather than a bare heart in a corner. */}
@@ -277,6 +282,13 @@ export default function CampsiteDetailScreen() {
               ) : null}
             </>
           )}
+
+          {directions ? (
+            <>
+              <Text style={styles.sectionTitle}>{t("site.directions")}</Text>
+              <ExpandableText text={directions} style={styles.body} toggleStyle={styles.toggle} />
+            </>
+          ) : null}
 
           {campsite.pricing.note ? (
             <>
@@ -332,7 +344,7 @@ export default function CampsiteDetailScreen() {
               the wrong place; showing where a record came from lets someone
               check the source rather than trust us blindly. */}
           <View style={styles.provenanceBlock}>
-            <Text style={styles.provenance}>{`${t("site.dataFrom")}: ${campsite.source.name}`}</Text>
+            <Text style={styles.provenance}>{`${t("site.dataFrom")}: ${dataSources}`}</Text>
             {coordsSource && <Text style={styles.provenance}>{`${t("site.coordsFrom")}: ${coordsSource}`}</Text>}
             {/* Commons photos are CC-licensed and must credit author + licence. */}
             {coverCredit && <Text style={styles.provenance}>{`${t("site.photoFrom")}: ${coverCredit}`}</Text>}

@@ -70,6 +70,7 @@ export function campsiteDetails(id: string) {
     coordinates: site.coordinates,
     description: site.description ?? null,
     address: site.address ?? null,
+    directions: site.directions ?? null,
     pricing: site.pricing,
     openingHours: site.openingHours,
     // Absent keys mean "unknown", not "no".

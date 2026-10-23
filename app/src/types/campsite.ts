@@ -137,6 +137,12 @@ export type CampsiteSource = {
   scrapedAt?: string;
   /** Set when sources disagree or a value needs a human eyeball before trusting. */
   needsReview?: boolean;
+  /**
+   * Other pages that filled in details of this record after it was
+   * imported (scripts/enrichCampsites.js): the Nature and Parks Authority's
+   * page for the same camp, tiuli.com's.
+   */
+  extraSources?: { name: string; url: string }[];
 };
 
 export type Campsite = {
@@ -155,6 +161,8 @@ export type Campsite = {
   kind?: "nightCamp" | "campground";
   region: Region;
   address?: string;
+  /** How to get there, as the source words it ("מכביש 90, כ-6 ק״מ צפונית לאילת..."). */
+  directions?: Partial<LocalizedText>;
   pricing: Pricing;
   openingHours: OpeningHours;
   navigationUrls: NavigationUrls;
