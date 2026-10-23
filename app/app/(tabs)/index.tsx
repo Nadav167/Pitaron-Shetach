@@ -35,16 +35,11 @@ export default function HomeScreen() {
     </View>
   ) : (
     <View style={styles.mobileHeader}>
-      {/* How many sites the list holds (or how many match), so it's clear
-          the list is worth scrolling, then the slogan beside it. */}
-      <View style={styles.titleRow}>
-        <Text style={styles.mobileCount} accessibilityRole="header">
-          {t("home.count").replace("{count}", String(filters.visible.length))}
-        </Text>
-        <Text style={styles.mobileSlogan} numberOfLines={1}>
-          {t("home.countSubtitle")}
-        </Text>
-      </View>
+      {/* What the list is. (The site count that used to head it, "401
+          אתרים", was removed at Nadav's request, 2026-10-23.) */}
+      <Text style={styles.mobileSlogan} numberOfLines={1} accessibilityRole="header">
+        {t("home.countSubtitle")}
+      </Text>
       <SiteFilterBar filters={filters} />
     </View>
   );
@@ -89,22 +84,13 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
     // Mobile header: the brand name itself is in MobileHeader, directly
     // above; this is the slogan under it, then search + chips.
     mobileHeader: { paddingTop: 0, paddingBottom: spacing.sm },
-    titleRow: {
-      flexDirection: "row",
-      alignItems: "baseline",
-      justifyContent: "space-between",
-      gap: spacing.sm,
-      marginBottom: spacing.sm + 4,
-    },
-    // Never wraps; the subtitle beside it gives way (ellipsis) instead.
-    mobileCount: { flexShrink: 0, fontFamily: fonts.display, fontSize: 26, color: colors.text, ...text },
     // react-native-paper's <Text> hardcodes textAlign: 'left' regardless
     // of RTL -- override explicitly (same fix as the detail screen).
     mobileSlogan: {
       fontFamily: fonts.bodyMedium,
-      flexShrink: 1,
-      fontSize: 14,
+      fontSize: 15,
       color: colors.textMuted,
+      marginBottom: spacing.sm + 4,
       ...text,
     },
 

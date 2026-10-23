@@ -41,7 +41,6 @@
       "label": "אתרים ברדיוס מ{city}:",
       "km": "{km} ק\"מ"
     },
-    "count": "{count} אתרים",
     "countSubtitle": "חניוני לילה וקמפינג בכל הארץ",
     "searchLabel": "חיפוש לפי שם, עיר או אזור",
     "clearSearch": "ניקוי החיפוש"

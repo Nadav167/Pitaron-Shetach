@@ -41,7 +41,6 @@
       "label": "Sites within a radius of {city}:",
       "km": "{km} km"
     },
-    "count": "{count} sites",
     "countSubtitle": "Night camps and campsites",
     "searchLabel": "Search by name, town or region",
     "clearSearch": "Clear search"
