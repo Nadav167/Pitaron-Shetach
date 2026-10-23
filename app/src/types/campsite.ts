@@ -64,6 +64,8 @@ export type Pricing = {
   isFree: boolean;
   /** Free-text caveat, e.g. "child/soldier rates differ, bungalows priced separately". */
   note?: string;
+  /** `note` in English (scripts/applyEnglishText.js); read both through `priceNote`. */
+  noteEn?: string;
 };
 
 export type Weekday = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
@@ -71,6 +73,8 @@ export type Weekday = "sun" | "mon" | "tue" | "wed" | "thu" | "fri" | "sat";
 export type OpeningHours = {
   /** Free-text fallback — what the sources actually publish, usually in Hebrew. */
   note?: string;
+  /** `note` in English (scripts/applyEnglishText.js); read both through `hoursNote`. */
+  noteEn?: string;
   /** Latest arrival time at the gate, e.g. "19:00". Official sites enforce this. */
   checkIn?: string;
   /** Vacate-by time, e.g. "12:00". */
@@ -198,6 +202,21 @@ export const REGIONS: Region[] = [
 export function localized(text: LocalizedText | Partial<LocalizedText> | undefined, locale: Locale): string {
   if (!text) return "";
   return text[locale] ?? text.he ?? text.en ?? "";
+}
+
+/**
+ * The free-text notes in the visitor's language. The sources publish them
+ * in Hebrew; the English ones are translations kept separately, so a note
+ * with no translation yet falls back to the Hebrew rather than vanishing.
+ */
+export function hoursNote(campsite: Campsite, locale: Locale): string | undefined {
+  const { note, noteEn } = campsite.openingHours;
+  return (locale === "en" && noteEn) || note || undefined;
+}
+
+export function priceNote(campsite: Campsite, locale: Locale): string | undefined {
+  const { note, noteEn } = campsite.pricing;
+  return (locale === "en" && noteEn) || note || undefined;
 }
 
 /** Night camp (חניון לילה: moon pin, "חניוני לילה" filter) or campground (tent pin). */

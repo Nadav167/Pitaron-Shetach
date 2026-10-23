@@ -18,7 +18,7 @@ import ExpandableText from "@/components/ExpandableText";
 import { cardFacts } from "@/lib/campsiteText";
 import { shareCampsite } from "@/lib/share";
 import { PIN_GLYPH } from "@/constants/map";
-import { coordsSourceName, isNightCamp, localized, type Amenities } from "@/types/campsite";
+import { coordsSourceName, hoursNote, isNightCamp, localized, priceNote, type Amenities } from "@/types/campsite";
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -94,8 +94,10 @@ export default function CampsiteDetailScreen() {
   const directions = campsite.directions ? localized(campsite.directions, locale) : "";
   const favorite = isFavorite(campsite.id);
   const nightCamp = isNightCamp(campsite);
-  const { price } = cardFacts(campsite, t);
-  const { checkIn, checkOut, note: hoursNote } = campsite.openingHours;
+  const { price } = cardFacts(campsite, t, locale);
+  const { checkIn, checkOut } = campsite.openingHours;
+  const hoursText = hoursNote(campsite, locale);
+  const priceText = priceNote(campsite, locale);
   const phone = campsite.contact.phone;
 
   // An amenity key that's absent means "unknown", not "absent" — only keys the
@@ -107,7 +109,7 @@ export default function CampsiteDetailScreen() {
   // Price or hours came back empty from the source. Say so in plain words
   // (and point at the phone number, when there is one) rather than leaving
   // a bare "unknown" for the visitor to puzzle over.
-  const hasMissingInfo = (!campsite.pricing.isFree && campsite.pricing.perNight == null) || !hoursNote;
+  const hasMissingInfo = (!campsite.pricing.isFree && campsite.pricing.perNight == null) || !hoursText;
   const missingInfoMessage = phone ? `${t("site.missingInfo")} ${t("site.missingInfoCall")}` : t("site.missingInfo");
   const coordsSource = coordsSourceName(campsite);
   // The import's own source, then any that filled in details later.
@@ -273,12 +275,12 @@ export default function CampsiteDetailScreen() {
           )}
           {!campsite.coordinates && <Text style={styles.noCoords}>{t("site.noCoordinatesLong")}</Text>}
 
-          {(hoursNote || hoursLines.length > 0) && (
+          {(hoursText || hoursLines.length > 0) && (
             <>
               <Text style={styles.sectionTitle}>{t("site.openingHours")}</Text>
               {hoursLines.length > 0 && <Text style={styles.body}>{hoursLines.join(" · ")}</Text>}
-              {hoursNote ? (
-                <ExpandableText text={hoursNote} style={styles.body} toggleStyle={styles.toggle} />
+              {hoursText ? (
+                <ExpandableText text={hoursText} style={styles.body} toggleStyle={styles.toggle} />
               ) : null}
             </>
           )}
@@ -290,10 +292,10 @@ export default function CampsiteDetailScreen() {
             </>
           ) : null}
 
-          {campsite.pricing.note ? (
+          {priceText ? (
             <>
               <Text style={styles.sectionTitle}>{t("site.priceNote")}</Text>
-              <ExpandableText text={campsite.pricing.note} style={styles.body} toggleStyle={styles.toggle} />
+              <ExpandableText text={priceText} style={styles.body} toggleStyle={styles.toggle} />
             </>
           ) : null}
 

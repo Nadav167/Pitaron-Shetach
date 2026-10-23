@@ -29,7 +29,7 @@ export default function SelectedSiteCard({ campsite, onOpen, onClose }: Props) {
   const colors = useThemeColors();
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
   const name = localized(campsite.name, locale);
-  const { price, hours } = cardFacts(campsite, t);
+  const { price, hours } = cardFacts(campsite, t, locale);
 
   return (
     <View style={styles.card}>

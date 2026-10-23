@@ -1,5 +1,5 @@
 import type MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import type { Amenities, Campsite } from "@/types/campsite";
+import { hoursNote, type Amenities, type Campsite, type Locale } from "@/types/campsite";
 
 type IconName = keyof typeof MaterialCommunityIcons.glyphMap;
 
@@ -29,15 +29,15 @@ export type CardFacts = {
  * list where every price is per night, and dropping it lets the price share
  * the name's line.
  */
-export function cardFacts(campsite: Campsite, t: (path: string) => string): CardFacts {
+export function cardFacts(campsite: Campsite, t: (path: string) => string, locale: Locale): CardFacts {
   const price = campsite.pricing.isFree
     ? t("common.free")
     : campsite.pricing.perNight != null
     ? `₪${campsite.pricing.perNight}`
     : t("common.priceUnknown");
 
-  const { checkIn, note } = campsite.openingHours;
-  const hours = checkIn ? `${t("site.checkIn")} ${checkIn}` : note || undefined;
+  const { checkIn } = campsite.openingHours;
+  const hours = checkIn ? `${t("site.checkIn")} ${checkIn}` : hoursNote(campsite, locale);
 
   const amenities = (Object.keys(AMENITY_ICONS) as (keyof Amenities)[])
     .filter((key) => campsite.amenities[key] === true)

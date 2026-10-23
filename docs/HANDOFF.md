@@ -207,9 +207,10 @@ The review and plan are on a design canvas: https://claude.ai/artifact/Epz52qBV9
 - **Safety rules in the matcher:** water and toilets are only set true from a facility list, never from prose. A khan or business is never matched to a free night camp next to it. A source's coordinates can be wrong (INPA puts בארות עדה 16 km off), so an exact name wins over plain proximity.
 - **App:** new `directions` field shown as "איך מגיעים" on the site page; descriptions are clamped to 5 lines with "קריאת הכל"; the provenance line lists every source; the planner's `campsiteDetails` returns directions.
 - **Flagged `needsReview`:** ikinneret says camping is NOT allowed at חוף צמח, כפר הנופש מעגן (rooms only) and חוף כפר נחום. The warning opens their description; Nadav to decide whether to remove them.
-- **Not found anywhere:** prices of ~95 private businesses (khans, Bedouin tents, farms) are not published online; their tiuli pages have phones. ~100 unnamed OSM spots ("חניון לילה ליד X") have no information online at all. English descriptions were not written (the English UI shows the Hebrew text).
-- **Not rebuilt:** `nearbyPlaces.json` for the 6 new camps (needs the 210 MB Geofabrik download).
-- **Re-run:** save a tiuli crawl (`crawl(720)` in `lib/tiuliPage.js`, ~15 min), then `node scripts/enrichCampsites.js --tiuli=<file> [--cache=<dir>]` on the pre-enrichment data.
+- **Not found anywhere:** prices of ~95 private businesses (khans, Bedouin tents, farms) are not published online; their tiuli pages have phones. ~100 unnamed OSM spots ("חניון לילה ליד X") have no information online at all. 
+- **English (2026-10-23):** every description, direction, price note and hours note has an English version. Translations are in `scripts/data/englishText.json` (Hebrew line → English, 883 lines). `node scripts/applyEnglishText.js` writes `description.en`, `directions.en`, `pricing.noteEn` and `openingHours.noteEn`; run it after every enrichment. Lines with no translation are listed in `scripts/data/untranslatedText.json`, and the app shows the Hebrew for them (`hoursNote` / `priceNote` in `types/campsite.ts`).
+- **nearbyPlaces.json** was rebuilt on 2026-10-23 from the Geofabrik extract and now covers the 6 new camps.
+- **Re-run:** save a tiuli crawl (`crawl(720)` in `lib/tiuliPage.js`, ~15 min), then `node scripts/enrichCampsites.js --tiuli=<file> [--cache=<dir>]` on the pre-enrichment data, then `node scripts/applyEnglishText.js`.
 
 ## Waiting on Nadav
 0. **Travel agent:** try it signed in on the live site (and on a phone). Confirm the Anthropic monthly spend limit is set.

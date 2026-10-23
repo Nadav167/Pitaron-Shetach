@@ -37,7 +37,7 @@ export default function SiteCard({ campsite, note, onPress, variant = "photo" }:
   const styles = useMemo(() => makeStyles(colors, writingDirection), [colors, writingDirection]);
 
   const name = localized(campsite.name, locale);
-  const { price, hours, amenities } = cardFacts(campsite, t);
+  const { price, hours, amenities } = cardFacts(campsite, t, locale);
   const region = t(`region.${campsite.region}`);
   const nightCamp = isNightCamp(campsite);
   const kindLabel = t(nightCamp ? "site.kind.nightCamp" : "site.kind.campground");
