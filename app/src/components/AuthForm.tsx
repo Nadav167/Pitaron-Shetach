@@ -25,9 +25,10 @@ import { AccountError, MIN_PASSWORD_LENGTH } from "@/services/account";
  * error box. Plain React Native rather than Paper's TextInput, whose
  * floating label and outline are positioned for left-to-right layouts.
  *
- * Like the rest of the app, the layout is always right-to-left; only the
- * reading direction of the text follows the language. Email and password
- * are always typed left-to-right.
+ * In Hebrew the layout is right-to-left, like the rest of the app; in
+ * English these pages turn left-to-right (Nadav 2026-10-23, as the site
+ * pages did): `direction` on the page flips the rows, and the text
+ * alignment follows. Email and password are always typed left-to-right.
  */
 
 function useStyles() {
@@ -46,12 +47,15 @@ export function AuthScreen({
   children: React.ReactNode;
 }) {
   const { styles } = useStyles();
+  const { writingDirection } = useLocale();
   const { isDesktop } = useResponsive();
   const clearance = useBottomClearance();
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === "ios" ? "padding" : undefined}>
       <ScrollView
-        contentContainerStyle={[styles.content, { paddingBottom: clearance }, isDesktop && styles.contentDesktop]}
+        // direction inline, on the content: on web it doesn't take effect
+        // from a StyleSheet class or on KeyboardAvoidingView.
+        contentContainerStyle={[styles.content, { direction: writingDirection, paddingBottom: clearance }, isDesktop && styles.contentDesktop]}
         keyboardShouldPersistTaps="handled"
       >
         <Text style={styles.title}>{title}</Text>
@@ -150,7 +154,9 @@ export function AuthSwitch({ prompt, action, onPress }: { prompt: string; action
 }
 
 function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
-  const text = { textAlign: "right" as const, writingDirection };
+  // English (the only left-to-right language) lays these pages out left-to-right.
+  const align = writingDirection === "ltr" ? ("left" as const) : ("right" as const);
+  const text = { textAlign: align, writingDirection };
   return StyleSheet.create({
     container: { flex: 1, backgroundColor: colors.background },
     // The bottom padding clears the floating tab bar on phone-width screens.
@@ -191,9 +197,9 @@ function makeStyles(colors: ColorTokens, writingDirection: "rtl" | "ltr") {
       fontFamily: fonts.body,
       fontSize: 15,
       color: colors.text,
-      textAlign: "right",
+      textAlign: align,
     },
-    // In the right-to-left row this sits at the left end of the field.
+    // At the end of the row: the left end of the field in Hebrew, the right in English.
     eye: { paddingHorizontal: spacing.md, height: 44, alignItems: "center", justifyContent: "center" },
     hint: { fontFamily: fonts.body, fontSize: 12, color: colors.textFaint, ...text },
     error: {
