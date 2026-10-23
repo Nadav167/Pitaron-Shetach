@@ -24,7 +24,6 @@
     "listView": "List",
     "mapView": "Map",
     "emptySites": "No sites found",
-    "unmappableNote": "{count} sites aren't on the map — no verified location",
     "filter": {
       "all": "All",
       "official": "Night parkings",

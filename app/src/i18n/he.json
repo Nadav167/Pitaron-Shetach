@@ -24,7 +24,6 @@
     "listView": "רשימה",
     "mapView": "מפה",
     "emptySites": "לא נמצאו אתרים",
-    "unmappableNote": "{count} אתרים אינם מוצגים במפה כי אין להם מיקום מאומת",
     "filter": {
       "all": "הכל",
       "official": "חניוני לילה",

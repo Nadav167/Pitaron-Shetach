@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { ActivityIndicator, Snackbar, Text } from "react-native-paper";
+import { ActivityIndicator, Snackbar } from "react-native-paper";
 import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useCampsites } from "@/hooks/useSites";
@@ -15,7 +15,7 @@ import SiteFilterBar from "@/components/SiteFilterBar";
 import SelectedSiteCard from "@/components/SelectedSiteCard";
 import { canLocate, locate, type LocateError } from "@/lib/locate";
 import { ISRAEL_PAN_LIMIT } from "@/constants/map";
-import { radius, spacing, TOUCH_TARGET, type ColorTokens } from "@/constants/theme";
+import { spacing, TOUCH_TARGET, type ColorTokens } from "@/constants/theme";
 import type { Campsite, Coordinates } from "@/types/campsite";
 import type { MapFocus } from "@/types/map";
 
@@ -46,7 +46,7 @@ const insideIsrael = ({ lat, lng }: Coordinates) =>
  */
 export default function MapScreen() {
   const { campsites, loading } = useCampsites();
-  const { t, writingDirection } = useLocale();
+  const { t } = useLocale();
   const colors = useThemeColors();
   const { isDesktop } = useResponsive();
   const clearance = useBottomClearance();
@@ -69,10 +69,6 @@ export default function MapScreen() {
   // the unfiltered map stays framed on the whole country.
   const isFiltered =
     filters.query.trim() !== "" || filters.sourceFilter !== "all" || filters.freeOnly || filters.regions.size > 0;
-
-  // Sites without verified coordinates can't be pinned; say so rather than
-  // silently showing fewer pins than there are results.
-  const unmappable = filters.visible.filter((c) => !c.coordinates).length;
 
   const selected = useMemo(
     () => (selectedId ? filters.visible.find((c) => c.id === selectedId) ?? null : null),
@@ -109,17 +105,6 @@ export default function MapScreen() {
       </View>
     );
   }
-
-  const unmappableNote =
-    unmappable > 0 ? (
-      <View style={[styles.noteWrap, { pointerEvents: "none" }]}>
-        {/* writingDirection: Paper's Text pins "ltr" on web, which moved
-            the count to the wrong end of the Hebrew sentence. */}
-        <Text variant="labelSmall" style={[styles.note, { writingDirection, textAlign: "center" }]}>
-          {t("home.unmappableNote").replace("{count}", String(unmappable))}
-        </Text>
-      </View>
-    ) : null;
 
   const locateButton = canLocate ? (
     <Pressable
@@ -175,7 +160,6 @@ export default function MapScreen() {
             userLocation={userLocation}
             focus={focus}
           />
-          {unmappableNote}
           <View style={[styles.fabColumn, { top: spacing.md, pointerEvents: "box-none" }]}>
             {locateButton}
           </View>
@@ -224,14 +208,6 @@ export default function MapScreen() {
           <MaterialCommunityIcons name="format-list-bulleted" size={21} color={colors.primary} />
         </Pressable>
       </View>
-      {/* Beside the round buttons, not under them. */}
-      {unmappableNote && (
-        <View
-          style={{ position: "absolute", zIndex: OVERLAY_Z, top: overlayTop - spacing.sm, left: 0, right: TOUCH_TARGET + spacing.md }}
-        >
-          {unmappableNote}
-        </View>
-      )}
       {selected && (
         <View style={[styles.cardWrap, { bottom: clearance, pointerEvents: "box-none" }]}>
           <SelectedSiteCard
@@ -288,21 +264,5 @@ function makeStyles(colors: ColorTokens) {
     },
     cardWrap: { zIndex: OVERLAY_Z, position: "absolute", left: spacing.md, right: spacing.md },
     cardWrapDesktop: { bottom: spacing.lg, left: undefined, right: spacing.lg, width: 380 },
-    noteWrap: {
-      zIndex: OVERLAY_Z,
-      position: "absolute",
-      top: spacing.md,
-      left: spacing.md,
-      right: spacing.md,
-      alignItems: "center",
-    },
-    note: {
-      backgroundColor: colors.surface,
-      color: colors.textMuted,
-      paddingHorizontal: spacing.md,
-      paddingVertical: spacing.xs,
-      borderRadius: radius.pill,
-      overflow: "hidden",
-    },
   });
 }
