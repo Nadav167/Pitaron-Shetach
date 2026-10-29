@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, Text as RNText, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import BrandMark from "@/components/BrandMark";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import AccountButton from "@/components/AccountButton";
@@ -42,9 +43,7 @@ export default function MobileHeader() {
           <MaterialCommunityIcons name="menu" size={26} color={colors.text} />
         </Pressable>
         <Pressable style={styles.brand} onPress={() => router.push("/")} accessibilityRole="link" accessibilityLabel={t("common.appName")}>
-          <View style={styles.brandMark}>
-            <MaterialCommunityIcons name="pine-tree" size={18} color={colors.onPrimary} />
-          </View>
+          <BrandMark style={styles.brandMark} size={32} />
           <RNText style={styles.brandName}>{t("common.appName")}</RNText>
         </Pressable>
       </View>

@@ -3,6 +3,7 @@ import { Animated, Easing, Modal, Pressable, ScrollView, StyleSheet, Text, View,
 import { usePathname, useRouter, type Href } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import BrandMark from "@/components/BrandMark";
 import { useLocale } from "@/context/LocaleContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useAuth } from "@/context/AuthContext";
@@ -110,9 +111,7 @@ export default function SideMenu({ visible, onClose }: Props) {
       >
         <View style={styles.headerRow}>
           <View style={styles.brand}>
-            <View style={styles.brandMark}>
-              <MaterialCommunityIcons name="pine-tree" size={18} color={colors.onPrimary} />
-            </View>
+            <BrandMark style={styles.brandMark} size={32} />
             <Text style={styles.brandName}>{t("common.appName")}</Text>
           </View>
           <Pressable onPress={onClose} style={styles.closeButton} accessibilityRole="button" accessibilityLabel={t("header.closeMenu")}>
