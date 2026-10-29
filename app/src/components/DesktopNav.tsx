@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Pressable, StyleSheet, Text as RNText, View } from "react-native";
 import { useRouter, usePathname, type Href } from "expo-router";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import BrandMark from "@/components/BrandMark";
 import { useLocale } from "@/context/LocaleContext";
 import { useThemeColors } from "@/context/ThemeContext";
 import HeaderActions from "@/components/HeaderActions";
@@ -40,9 +40,7 @@ export default function DesktopNav() {
   return (
     <View style={styles.bar}>
       <Pressable style={styles.brand} onPress={() => router.push("/")}>
-        <View style={styles.brandMark}>
-          <MaterialCommunityIcons name="pine-tree" size={17} color={colors.onPrimary} />
-        </View>
+        <BrandMark style={styles.brandMark} size={30} />
         <RNText style={styles.brandName}>{t("common.appName")}</RNText>
       </Pressable>
 
