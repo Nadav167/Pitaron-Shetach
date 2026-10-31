@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Pressable, StyleSheet, Text as RNText, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text as RNText, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -30,8 +30,14 @@ export default function MobileHeader() {
   const styles = useMemo(() => makeStyles(colors), [colors]);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // In Safari on iPhone the page runs under the status bar, which iOS
+  // frosts, and the safe-area inset still reads 0 there, so the brand row
+  // sat inside the blur (Nadav 2026-10-31). On web, drop the row below it;
+  // the native app gets the real inset from insets.top.
+  const topGap = Platform.OS === "web" ? spacing.lg : spacing.xs;
+
   return (
-    <View style={[styles.bar, { paddingTop: insets.top + spacing.xs }]}>
+    <View style={[styles.bar, { paddingTop: insets.top + topGap }]}>
       <View style={styles.start}>
         <Pressable
           style={styles.menuButton}
