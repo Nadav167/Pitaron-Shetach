@@ -1,77 +1,81 @@
-# CampingIL
+# Pitron Shetach · פתרון שטח
 
-An app and website that show every night parking / camping site in
-Israel — photos, location, prices, opening hours, contact info, and
-amenities (water, electricity, toilets, and more).
+A map of every camping and night-parking site in Israel — about 400 sites, with photos, location, prices, opening hours, contact details and amenities — plus an AI trip planner that builds itineraries around them.
 
-This is the project **skeleton**: navigation, screens, a typed data model,
-an Express API, and a Supabase/PostGIS schema are all wired up with
-placeholder/mock data so the app runs end-to-end before any real site
-data exists.
+**Live:** https://pitaron-shetach.vercel.app
+
+Hebrew-first (full RTL) with an English toggle. One codebase runs as a website and as an iOS/Android app.
+
+## Features
+
+- **Map and search** over ~405 campsites: filters by region, amenities and site type (night camp / campground), search that works in Hebrew and English, tolerates typos and matches by town radius.
+- **Site pages** with photos (credited per CC BY-SA), prices, gate hours, contact info and amenities (water, electricity, toilets, shade, 4x4 access, cell reception…).
+- **User accounts** (Supabase Auth): register, log in, and keep favorites in the database. Guest favorites are merged into the account on login.
+- **AI trip planner** for signed-in users: answers camping questions and plans multi-day trips using the app's own campsites and real places near them, then saves the itinerary to the user's account. Itineraries export to PDF.
 
 ## Stack
 
-| Layer     | Choice                                                                 |
-|-----------|-------------------------------------------------------------------------|
-| App + web | [Expo](https://expo.dev) (React Native + Expo Router), rendering the same codebase to iOS, Android, and web via react-native-web |
-| Backend   | Node.js + Express (TypeScript), routes → controllers → services        |
-| Database  | PostgreSQL via [Supabase](https://supabase.com), with PostGIS for geospatial queries |
-| Maps      | [Leaflet](https://leafletjs.com)/OpenStreetMap on web, `react-native-maps` with OSM tiles on native — no API key needed |
-| Language  | Hebrew (RTL) primary, English toggle, via a small built-in i18n context |
+| Layer | Choice |
+|---|---|
+| App + website | Expo (React Native + Expo Router), web via react-native-web, TypeScript |
+| Maps | Leaflet / OpenStreetMap on web, `react-native-maps` on native |
+| Database & auth | Supabase (PostgreSQL + PostGIS), Row Level Security |
+| Serverless API | Vercel functions (`app/api/`) for the AI agent |
+| REST API | Node.js + Express, routes → controllers → services (`server/`) |
+| AI | Anthropic Claude API with tool use |
+| Data collection | Node.js scripts with Puppeteer, Cheerio and OpenStreetMap extracts |
 
-See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for how the pieces fit
-together and what's intentionally not built yet.
+## How it works
+
+```
+ Expo app (web / iOS / Android)
+   │  Supabase Auth + favorites (RLS: each user sees only their rows)
+   │  campsite dataset (app/assets/data/campsites.json)
+   ▼
+ /api/agent/chat  (Vercel function)
+   │  tool-use loop: get_campsite_details · find_nearby_places · save_itinerary
+   ▼
+ Claude API  +  Supabase (itineraries, per-user daily limits in SQL)
+```
+
+**Campsite data.** `scripts/` builds the dataset from several sources: a hand-checked core set, OpenStreetMap
+(`importOsmCampsites.js`) and tiuli.com (`importTiuliCampsites.js`). The importers drop mistagged points, skip
+duplicates within 500 m (or 2 km with a shared name word), name unnamed sites by the nearest town, add English
+names, and attach Commons photos found near each site. `buildNearbyPlaces.js` precomputes the named places within
+20 km of every site from an OSM extract, so the agent doesn't depend on a live, rate-limited API.
+
+**Trip planner.** `app/backend/agent/runAgent.ts` runs a manual tool-use loop: it calls the model, runs any tools
+it asks for in parallel, sends the results back, and repeats until it answers in text (max 10 rounds). The campsite
+index sits in a cached system prompt. Database calls use the caller's own token, so Row Level Security applies.
+Usage is capped in SQL (`agent_consume()`): 30 messages and 3 itineraries per user per day.
+
+**PDF export.** Itineraries are drawn page by page on a canvas and packed by a small hand-written PDF writer,
+because canvas renders Hebrew right-to-left correctly where PDF libraries don't.
 
 ## Project layout
 
 ```
-app/       Expo app (iOS, Android, and the website)
-server/    Express API
-supabase/  SQL migrations for the Postgres schema
-docs/      Architecture notes
+app/        Expo app and website, plus the Vercel functions (app/api) and agent backend (app/backend)
+server/     Express REST API
+supabase/   SQL migrations (schema, accounts, favorites, agent tables)
+scripts/    Data import and enrichment scripts
+docs/       Architecture notes and current status (HANDOFF.md)
 ```
 
-## Getting started
-
-### 1. Install dependencies
-
-From the repo root (this is an npm workspaces monorepo):
+## Running locally
 
 ```bash
-npm install
+npm install                        # npm workspaces: app + server
+cp app/.env.example app/.env       # EXPO_PUBLIC_SUPABASE_URL / _ANON_KEY, ANTHROPIC_API_KEY for the agent
+npm run app                        # Expo: press w for web, or scan the QR code
+npm run agent:dev                  # optional: agent API on :8787
 ```
 
-> This skeleton lists the packages each part of the stack needs in
-> `app/package.json` and `server/package.json`, but does **not** run the
-> install for you — per `CLAUDE.md`, new dependencies should be confirmed
-> before installing. Review the dependency lists, then run `npm install`.
+Without Supabase keys the account features are hidden and the rest of the app still works.
 
-### 2. Set up Supabase
+See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) and [`supabase/README.md`](supabase/README.md) for details.
 
-Follow [`supabase/README.md`](supabase/README.md) to create a project and
-apply `supabase/migrations/0001_init.sql`.
+## Data sources
 
-### 3. Configure environment variables
-
-```bash
-cp server/.env.example server/.env   # fill in SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY
-cp app/.env.example app/.env         # points the app at the local API by default
-```
-
-### 4. Run it
-
-```bash
-npm run server   # starts the Express API on :4000
-npm run app      # starts Expo — press w for web, or scan the QR code for iOS/Android
-```
-
-Without a configured API, the app falls back to bundled mock sites so the
-UI is still browsable (a small banner says so on the home screen).
-
-## Data model
-
-A `Site` (see `app/src/types/site.ts` / `server/src/types/site.ts`) has:
-bilingual name + description, coordinates, region, price per night,
-opening hours, an amenities flag set (water, electricity, toilets,
-shower, shade, picnic tables, waste disposal, 4x4-required, cell
-reception), photos, and contact info (phone/website/email).
+OpenStreetMap contributors (ODbL), Wikimedia Commons (photo credits shown per site), Israel Nature and Parks
+Authority and tiuli.com public listings.
