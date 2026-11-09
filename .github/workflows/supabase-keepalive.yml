@@ -5,10 +5,11 @@
 # (campsite data ships inside the app and is unaffected). Every 3 days this
 # runs one tiny read against the database through the public REST API.
 #
-# Needs two repository secrets (Settings → Secrets and variables → Actions):
-#   SUPABASE_URL       same value as EXPO_PUBLIC_SUPABASE_URL in app/.env
-#   SUPABASE_ANON_KEY  same value as EXPO_PUBLIC_SUPABASE_ANON_KEY in app/.env
-# Only the public anon key: never put the service-role key here.
+# The URL and key below are the same public values as EXPO_PUBLIC_SUPABASE_URL
+# and EXPO_PUBLIC_SUPABASE_ANON_KEY in app/.env. They already ship in
+# the live site's JavaScript, and the database's Row Level Security decides
+# what they can reach, so they are safe to keep here. Never put the
+# service-role / secret key in this file.
 #
 # Note: GitHub turns off scheduled workflows in a repo with no commits for
 # 60 days, and emails before it does. Re-enable it from the Actions tab.
@@ -27,17 +28,15 @@ jobs:
     steps:
       - name: Query the database
         env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_URL: https://wmnxnxsyanbdyfbpccwb.supabase.co
+          SUPABASE_ANON_KEY: sb_publishable_aqtH3Mb1Ba63_U9Ng4v19g_fEk89Le5
         run: |
-          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
-            echo "::error::Set the SUPABASE_URL and SUPABASE_ANON_KEY repository secrets."
-            exit 1
-          fi
           # `sites` is publicly readable (see supabase/migrations/0001_init.sql).
+          # Only the apikey header: the project uses a new-style
+          # sb_publishable_ key, which is not a JWT, so it can't go in an
+          # Authorization: Bearer header.
           status=$(curl -sS -o /dev/null -w "%{http_code}" \
             "${SUPABASE_URL%/}/rest/v1/sites?select=id&limit=1" \
-            -H "apikey: $SUPABASE_ANON_KEY" \
-            -H "Authorization: Bearer $SUPABASE_ANON_KEY")
+            -H "apikey: $SUPABASE_ANON_KEY")
           echo "Supabase answered HTTP $status"
           [ "$status" -lt 400 ]
