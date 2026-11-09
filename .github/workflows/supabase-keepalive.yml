@@ -31,12 +31,15 @@ jobs:
           SUPABASE_URL: https://wmnxnxsyanbdyfbpccwb.supabase.co
           SUPABASE_ANON_KEY: sb_publishable_aqtH3Mb1Ba63_U9Ng4v19g_fEk89Le5
         run: |
-          # `sites` is publicly readable (see supabase/migrations/0001_init.sql).
+          # `favorites` is the table the app itself uses (0003). Row Level
+          # Security hands an anonymous caller an empty list, but the query
+          # still runs in Postgres, which is the activity Supabase counts.
+          # (`sites` from 0001 was never created in the live project.)
           # Only the apikey header: the project uses a new-style
           # sb_publishable_ key, which is not a JWT, so it can't go in an
           # Authorization: Bearer header.
           status=$(curl -sS -o /dev/null -w "%{http_code}" \
-            "${SUPABASE_URL%/}/rest/v1/sites?select=id&limit=1" \
+            "${SUPABASE_URL%/}/rest/v1/favorites?select=user_id&limit=1" \
             -H "apikey: $SUPABASE_ANON_KEY")
           echo "Supabase answered HTTP $status"
           [ "$status" -lt 400 ]
