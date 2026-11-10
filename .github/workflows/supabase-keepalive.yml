@@ -2,7 +2,7 @@
 #
 # Supabase pauses free-tier projects that see no activity for 7 days, which
 # would take down accounts, favorites, itineraries and the travel agent
-# (campsite data ships inside the app and is unaffected). Every 3 days this
+# (campsite data ships inside the app and is unaffected). Every day this
 # runs one tiny read against the database through the public REST API.
 #
 # The URL and key below are the same public values as EXPO_PUBLIC_SUPABASE_URL
@@ -11,6 +11,9 @@
 # what they can reach, so they are safe to keep here. Never put the
 # service-role / secret key in this file.
 #
+# Every 3 days was not enough: the project was paused on 2026-11-10 even
+# though that day's ping got HTTP 200, so it now runs daily.
+#
 # Note: GitHub turns off scheduled workflows in a repo with no commits for
 # 60 days, and emails before it does. Re-enable it from the Actions tab.
 
@@ -18,7 +21,7 @@ name: Supabase keep-alive
 
 on:
   schedule:
-    - cron: "17 6 */3 * *"
+    - cron: "17 6 * * *"
   workflow_dispatch:
 
 jobs:
